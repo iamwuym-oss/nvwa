@@ -1,0 +1,26 @@
+﻿[package]
+name = "nuwa-backup"
+version = "0.1.0"
+edition = "2021"
+description = "Nüwa Backup — Phase 1: Minimal File Backup/Restore CLI (女娲备份)"
+
+[dependencies]
+# JSON 序列化
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+# SHA-256 校验（pure Rust，缓存可用）
+sha2 = "0.10"
+
+# UUID 生成（缓存可用）
+uuid = { version = "1", features = ["v4"] }
+
+# 时间戳（缓存可用）
+chrono = { version = "0.4", features = ["serde"] }
+
+# 可选 zstd 压缩（缓存可用）
+zstd = { version = "0.13", optional = true }
+
+[features]
+default = []
+compress = ["zstd"]
