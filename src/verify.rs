@@ -1,5 +1,5 @@
-// ============================================================================
-// verify.rs — 备份验证器
+﻿// ============================================================================
+// verify.rs -- Backup verification
 // ============================================================================
 
 use crate::checksum;
@@ -27,16 +27,16 @@ pub fn execute_verify(backup_dir: &Path) -> Result<VerifyResult, NuwaError> {
     };
 
     println!(
-        "验证备份 '{}' (创建于 {})",
+        "Verifying backup '{}' (created at {})",
         manifest.backup_id, manifest.created_at
     );
-    println!("共 {} 个文件", result.total_files);
+    println!("Total files: {}", result.total_files);
 
     for entry in &manifest.files {
         let stored_path = backup_dir.join("files").join(&entry.stored_path);
 
         if !stored_path.exists() {
-            println!("✗ 文件缺失：{}", entry.relative_path);
+            println!("File missing: {}", entry.relative_path);
             result.inaccessible += 1;
             result.failed_files.push(entry.relative_path.clone());
             continue;
@@ -47,36 +47,36 @@ pub fn execute_verify(backup_dir: &Path) -> Result<VerifyResult, NuwaError> {
                 result.passed += 1;
             }
             Ok(false) => {
-                println!("✗ 校验和不匹配：{}", entry.relative_path);
+                println!("Checksum mismatch: {}", entry.relative_path);
                 result.failed += 1;
                 result.failed_files.push(entry.relative_path.clone());
             }
             Err(e) => {
-                println!("✗ 无法验证：{} ({})", entry.relative_path, e);
+                println!("Cannot verify: {} ({})", entry.relative_path, e);
                 result.inaccessible += 1;
                 result.failed_files.push(entry.relative_path.clone());
             }
         }
     }
 
-    println!("\n通过: {}/{}", result.passed, result.total_files);
+    println!("\nPassed: {}/{}", result.passed, result.total_files);
     if result.failed > 0 {
-        println!("校验失败: {}", result.failed);
+        println!("Checksum failures: {}", result.failed);
     }
     if result.inaccessible > 0 {
-        println!("无法访问: {}", result.inaccessible);
+        println!("Inaccessible: {}", result.inaccessible);
     }
 
     if result.failed > 0 || result.inaccessible > 0 {
-        println!("\n建议：删除此备份点并重新创建备份");
+        println!("\nRecommendation: delete this backup point and recreate the backup");
         return Err(NuwaError::VerificationFailed {
             detail: format!(
-                "{} 个文件校验不匹配，{} 个文件无法访问",
+                "{} files have checksum mismatches, {} files are inaccessible",
                 result.failed, result.inaccessible
             ),
         });
     }
 
-    println!("\n✓ 备份验证通过");
+    println!("\nBackup verification passed");
     Ok(result)
 }

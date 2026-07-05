@@ -1,104 +1,107 @@
 // ============================================================================
-// list.rs — Nüwa Backup 备份点列表
+// list.rs -- Nuwa Backup backup point listing
 //
-// 设计原则：
-// 1. 扫描目标路径下的所有备份点目录
-// 2. 读取每个备份点的 manifest.json 获取元信息
-// 3. 按时间倒序排列（最新的排最前）
-// 4. 显示每个备份点的：时间、源路径、文件数、总大小
-// 5. 对于 manifest 损坏的备份点，依然列出并标记为"异常"
-//    — 原因：损坏的备份点仍可让用户知道"曾经有这个备份"
-//    — 但会明确提示用户需要运行 verify 检查
+// Design principles:
+// 1. Scan all backup point directories in the destination path
+// 2. Read manifest.json from each backup point for metadata
+// 3. Sort by time descending (newest first)
+// 4. Display for each backup point: time, source path, file count, total size
+// 5. For backup points with corrupted manifests, still list them and mark as "abnormal"
+//    -- Reason: even a corrupted backup point lets users know "this backup existed"
+//    -- But clearly prompt users to run verify for checking
 // ============================================================================
 
 use crate::errors::NuwaError;
 use crate::manifest::Manifest;
 use std::path::Path;
 
-/// 单个备份点的摘要信息
+/// Summary information for a single backup point
 pub struct BackupPointSummary {
-    /// 备份目录名称
+    /// Backup directory name
     pub dir_name: String,
-    /// 备份目录的完整路径
+    /// Full path to backup directory
     pub full_path: String,
-    /// 备份 ID（UUID）
+    /// Backup ID (UUID)
     pub backup_id: String,
-    /// 备份创建时间
+    /// Backup creation time
     pub created_at: String,
-    /// 源路径
+    /// Source path
     pub source_root: String,
-    /// 文件数量
+    /// Number of files
     pub file_count: u64,
-    /// 总大小（字节）
+    /// Total size (bytes)
     pub total_bytes: u64,
-    /// Manifest 是否可正常读取
+    /// Whether the manifest is readable
     pub manifest_ok: bool,
 }
 
-/// 执行列表操作
+/// Execute list operation
 ///
-/// ## 参数
-/// * `dest_path` — 备份目标根路径
+/// ## Parameters
+/// * dest_path -- Backup destination root path
 ///
-/// ## 流程
-/// 1. 遍历目标根路径下的所有子目录
-/// 2. 尝试读取每个子目录的 manifest.json
-/// 3. 汇总所有备份点信息
+/// ## Flow
+/// 1. Traverse all subdirectories in the destination root path
+/// 2. Attempt to read manifest.json from each subdirectory
+/// 3. Aggregate all backup point information
 ///
-/// ## 返回
-/// * `Vec<BackupPointSummary>` — 所有备份点的信息列表
+/// ## Returns
+/// * Vec<BackupPointSummary> -- List of all backup point information
 pub fn execute_list(dest_path: &Path) -> Result<Vec<BackupPointSummary>, NuwaError> {
-    // ===== 检查目标路径是否存在 =====
+    // ===== Check if destination path exists =====
     if !dest_path.exists() {
         return Err(NuwaError::InvalidArgument {
-            detail: format!("目标路径不存在：'{}'", dest_path.display()),
+            detail: format!("Destination path does not exist: '{}'", dest_path.display()),
             suggestion:
-                "请确认备份目标路径是否正确。使用绝对路径，例如：nuwa list --dest D:\\Backup"
+                "Please verify the backup destination path. Use an absolute path, e.g.: nuwa list --dest D:\\Backup"
                     .to_string(),
         });
     }
 
     if !dest_path.is_dir() {
         return Err(NuwaError::InvalidArgument {
-            detail: format!("目标路径不是目录：'{}'", dest_path.display()),
-            suggestion: "请输入备份根目录的路径，而非文件路径".to_string(),
+            detail: format!(
+                "Destination path is not a directory: '{}'",
+                dest_path.display()
+            ),
+            suggestion: "Enter the backup root directory path, not a file path".to_string(),
         });
     }
 
     let mut summaries: Vec<BackupPointSummary> = Vec::new();
 
-    // ===== 遍历目标根路径下的所有条目 =====
+    // ===== Traverse all entries in the destination root path =====
     let entries = std::fs::read_dir(dest_path).map_err(|e| NuwaError::Io {
         source: Some(e),
         path: Some(dest_path.to_path_buf()),
-        detail: "无法读取目标目录".to_string(),
-        suggestion: "请检查目录权限和路径是否正确".to_string(),
+        detail: "Cannot read destination directory".to_string(),
+        suggestion: "Check directory permissions and path".to_string(),
     })?;
 
     for entry in entries {
         let entry = entry.map_err(|e| NuwaError::Io {
             source: Some(e),
             path: Some(dest_path.to_path_buf()),
-            detail: "遍历目录时出错".to_string(),
-            suggestion: "可能某个子目录权限不足".to_string(),
+            detail: "Error while traversing directory".to_string(),
+            suggestion: "A subdirectory may have insufficient permissions".to_string(),
         })?;
 
         let path = entry.path();
 
-        // 只处理子目录（每个备份点是一个目录）
+        // Only process subdirectories (each backup point is a directory)
         if !path.is_dir() {
             continue;
         }
 
         let dir_name = entry.file_name().to_string_lossy().to_string();
 
-        // 跳过隐藏目录（以 . 开头）
-        // 原因：避免将系统目录或临时目录误认为备份点
+        // Skip hidden directories (starting with .)
+        // Reason: avoid mistaking system or temp directories as backup points
         if dir_name.starts_with('.') {
             continue;
         }
 
-        // ===== 尝试读取 Manifest =====
+        // ===== Attempt to read Manifest =====
         let manifest_path = path.join("manifest.json");
         let summary = if manifest_path.exists() {
             match Manifest::from_file(&manifest_path) {
@@ -113,13 +116,13 @@ pub fn execute_list(dest_path: &Path) -> Result<Vec<BackupPointSummary>, NuwaErr
                     manifest_ok: true,
                 },
                 Err(_) => {
-                    // Manifest 损坏 — 仍列出但标记异常
+                    // Manifest corrupted -- still list but mark as abnormal
                     BackupPointSummary {
                         dir_name: dir_name.clone(),
                         full_path: path.to_string_lossy().to_string(),
-                        backup_id: "未知".to_string(),
-                        created_at: "未知".to_string(),
-                        source_root: "未知 (Manifest 损坏)".to_string(),
+                        backup_id: "unknown".to_string(),
+                        created_at: "unknown".to_string(),
+                        source_root: "unknown (manifest corrupted)".to_string(),
                         file_count: 0,
                         total_bytes: 0,
                         manifest_ok: false,
@@ -127,16 +130,16 @@ pub fn execute_list(dest_path: &Path) -> Result<Vec<BackupPointSummary>, NuwaErr
                 }
             }
         } else {
-            // 没有 manifest.json — 跳过非备份目录
+            // No manifest.json -- skip non-backup directories
             continue;
         };
 
         summaries.push(summary);
     }
 
-    // ===== 按时间倒序排列（最新的排最前） =====
-    // 原因：用户通常先查看最近的备份点
-    // 如果创建时间未知，排在最后
+    // ===== Sort by time descending (newest first) =====
+    // Reason: users typically check the most recent backup points first
+    // Entries with unknown creation time are placed last
     summaries.sort_by(|a, b| {
         if a.manifest_ok && b.manifest_ok {
             b.created_at.cmp(&a.created_at)
@@ -150,25 +153,28 @@ pub fn execute_list(dest_path: &Path) -> Result<Vec<BackupPointSummary>, NuwaErr
     Ok(summaries)
 }
 
-/// 打印备份点列表到控制台
+/// Print backup point list to console
 pub fn print_list(summaries: &[BackupPointSummary]) {
     if summaries.is_empty() {
-        println!("没有找到备份点。");
-        println!("请先执行 nuwa backup --source <path> --dest <path> 创建备份。");
+        println!("No backup points found.");
+        println!("Run 'nuwa backup --source <path> --dest <path>' to create a backup first.");
         return;
     }
 
-    println!("备份目标中的备份点 (共 {} 个):\n", summaries.len());
+    println!(
+        "Backup points in destination (total: {}):\n",
+        summaries.len()
+    );
 
     for (i, s) in summaries.iter().enumerate() {
         if !s.manifest_ok {
-            println!("  {}. ⚠ [异常] {}", i + 1, s.dir_name);
-            println!("     路径: {}", s.full_path);
-            println!("     Manifest 损坏，请运行 verify 检查\n");
+            println!("  {}. ! [ABNORMAL] {}", i + 1, s.dir_name);
+            println!("     Path: {}", s.full_path);
+            println!("     Manifest corrupted. Run verify to check.\n");
             continue;
         }
 
-        // 格式化文件大小
+        // Format file size
         let size_str = if s.total_bytes > 1024 * 1024 * 1024 {
             format!(
                 "{:.2} GB",
@@ -183,10 +189,10 @@ pub fn print_list(summaries: &[BackupPointSummary]) {
         };
 
         println!("  {}. {}", i + 1, s.dir_name);
-        println!("     备份时间: {}", s.created_at);
-        println!("     源路径:   {}", s.source_root);
-        println!("     文件数:   {} | 总大小: {}", s.file_count, size_str);
-        println!("     备份 ID:  {}", s.backup_id);
+        println!("     Backup time: {}", s.created_at);
+        println!("     Source:      {}", s.source_root);
+        println!("     Files: {} | Total size: {}", s.file_count, size_str);
+        println!("     Backup ID:   {}", s.backup_id);
         println!();
     }
 }

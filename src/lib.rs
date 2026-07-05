@@ -1,18 +1,23 @@
 // ============================================================================
-// lib.rs — Nüwa Backup 库入口
-//
-// 将二进制 crate 转换为"二进制 + 库"的混合模式
-// 原因：Rust 集成测试只能访问库 crate 的公共 API
-// 通过 lib.rs 和 main.rs 的分离，实现"一个 crate，两种入口"
+// lib.rs -- Nuwa Backup library entry point
 // ============================================================================
 
 pub mod backup;
 pub mod checksum;
 pub mod cli;
+pub mod cli_output;
+pub mod config;
 pub mod diskspace;
 pub mod errors;
+pub mod history;
 pub mod list;
 pub mod manifest;
+pub mod path_support;
+pub mod prune;
 pub mod restore;
+pub mod scheduler;
 pub mod storage;
 pub mod verify;
+
+#[cfg(feature = "gui")]
+pub mod gui;

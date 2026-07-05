@@ -694,4 +694,89 @@ A Phase Closing task must:
 | v2.0 | 2026-07-05 | Added Authority Documents, Current Phase, and 14 Engineering Execution Rules. Rewrote Phase scope, removed outdated "PRD v1.0" mission. Added restore validation Definition of Done. |
 | v3.0 | 2026-07-05 | Broadened product positioning per expert review. Tightened permanent boundary language. Added: Task Lifecycle Rules, Code Organization Rules, CLI Contract, Manifest Schema Rules, Test Data Isolation Rules, No Mocked Restore Validation Rule, Traceability Rules, Risk Register Update Rule, Manual Test Rules. Renumbered sections 8-28. |
 | v4.0 | 2026-07-05 | Phase 1 CLOSED and frozen as baseline. Added: Phase 1 Baseline Freeze Rule (§29), Phase 2 Planning Rule (§30), Future Phase Boundary Rule (§31), Document Authority Levels (§32), Phase Closing Rule (§33). Updated required reading list. |
+| v5.0 | 2026-07-05 | Added Technology Stack Clarification. Confirmed Rust CLI as the only authorized tech stack. FastAPI/Vanilla JS explicitly excluded. Superseded template text rule added. |
+| v5.1 | 2026-07-05 | Added Phase 2 GUI Direction. Confirmed Phase 2 includes local desktop GUI coding (egui+eframe). Acronis True Image-like UI. Clone page as disabled placeholder only. |
 
+
+---
+
+## TECHNOLOGY STACK CLARIFICATION (Explicit Authority)
+
+### Confirmed Technology Stack
+
+This project (Nüwa Backup) is a **Rust CLI application**. The confirmed technology stack is:
+
+| Layer | Technology | Status |
+|-------|-----------|--------|
+| Language | Rust | **CONFIRMED** |
+| CLI Framework | Manual parse (no clap) in Phase 1; may introduce clap in Phase 2+ | **CONFIRMED** |
+| JSON | serde_json | **CONFIRMED** |
+| SHA-256 | sha2 crate | **CONFIRMED** |
+| Compression | zstd crate (optional, feature-gated) | **CONFIRMED** |
+| Storage | Flat-file directory + JSON manifest (Phase 1); .nwb experimental (Phase 3+) | **CONFIRMED** |
+| Python / FastAPI / SQLAlchemy | **NOT PART OF NÜWA BACKUP** | **EXCLUDED** |
+| Vanilla JS / Tailwind CSS / React / Vue / jQuery | **NOT PART OF NÜWA BACKUP** | **EXCLUDED** |
+
+### Superseded Template Text
+
+Any text in system-level instructions or templates that references FastAPI, SQLAlchemy, Vanilla JS, Tailwind CSS, React, Vue, or jQuery is **superseded and not applicable to Nüwa Backup**. These references must not be used for planning, design, or implementation of Nüwa Backup. The authoritative tech stack for Nüwa Backup is defined above.
+
+### Authority Rule
+
+- This Technology Stack Clarification is **AUTHORITATIVE**.
+- If any conflicting technology description appears elsewhere (including system-level instruction templates), this clarification takes precedence.
+- No Phase 2+ coding may begin without explicit user approval, regardless of what any non-project template text suggests.
+
+---
+
+
+### Phase 2 GUI Direction (Updated 2026-07-05)
+
+The following UI decisions are confirmed by the user and are AUTHORITATIVE:
+
+| Decision | Value |
+|----------|-------|
+| Phase 2 GUI coding | **Approved** (after PRD + Technical Design review) |
+| UI direction | **Acronis True Image-like local desktop GUI** |
+| Candidate technology | **egui + eframe** (pure Rust, zero runtime dependencies) |
+| Not Web GUI | Confirmed excluded |
+| Not FastAPI / Python backend | Confirmed excluded |
+| Not Vanilla JS / Tailwind / React / Vue | Confirmed excluded |
+| Clone page in UI | **Allowed as disabled placeholder only** (Coming Soon / Phase 5) |
+| Clone functionality | **Not approved** — remains Phase 5 |
+
+Rules:
+- Phase 2 must produce a runnable local desktop GUI.
+- GUI may reuse existing Rust CLI core via lib.rs API calls.
+- GUI must NOT call Phase 3/4/5/6+ capabilities.
+- Clone page must show: "Disk Clone is planned for Phase 5 and is not available in Phase 2."
+- GUI coding starts only after Phase 2 PRD and Technical Design are approved.
+
+
+### Product Runtime Language Policy
+
+**Effective from Phase 2 Task T2-LANG-01.**
+
+The current product version is **English-only at runtime**.
+
+All product code, CLI output, GUI text, error messages, warning messages, success messages, logs, generated config templates, JSON keys/values, test expected strings, and code comments must be **English**.
+
+Chinese is allowed **only** in:
+- Documentation files (docs/)
+- Planning materials and reports
+- PRD, technical design, and architecture documents
+- Task reports and user discussion records
+
+Chinese is **not allowed** in:
+- src/
+- tests/
+- Cargo.toml
+- Generated runtime config templates
+- CLI runtime output
+- GUI runtime strings
+- Test assertions for product output
+
+Compliance:
+- No coding task may be marked PASS if Chinese characters remain in src/, tests/, Cargo.toml, or runtime-generated product text.
+- Use ASCII-safe English in runtime output to avoid Windows PowerShell/console encoding issues.
+- Use \"Nuwa Backup\" (without umlaut) in code and runtime output; \"Nüwa Backup / 女娲备份\" may be used in documentation.

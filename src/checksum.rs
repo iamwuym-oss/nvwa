@@ -1,5 +1,5 @@
-// ============================================================================
-// checksum.rs — SHA-256 校验和工具
+﻿// ============================================================================
+// checksum.rs -- SHA-256 checksum utilities
 // ============================================================================
 
 use sha2::{Digest, Sha256};
@@ -41,7 +41,7 @@ pub fn verify_file_checksum(path: &Path, expected: &str) -> Result<bool, crate::
 mod tests {
     use super::*;
 
-    /// 空文件 SHA-256 应为已知标准值
+    /// Empty file SHA-256 should match the known standard value
     #[test]
     fn test_sha256_empty_file() {
         let dir = std::env::temp_dir().join("nuwa_test_sha256_e");
@@ -56,7 +56,7 @@ mod tests {
         let _ = std::fs::remove_dir_all(&dir);
     }
 
-    /// SHA-256 格式验证
+    /// SHA-256 format verification
     #[test]
     fn test_sha256_format() {
         let dir = std::env::temp_dir().join("nuwa_test_sha256_fmt");
@@ -69,7 +69,7 @@ mod tests {
         let _ = std::fs::remove_dir_all(&dir);
     }
 
-    /// 内存和文件的 SHA-256 应一致
+    /// Memory and file SHA-256 should match
     #[test]
     fn test_sha256_bytes_consistency() {
         let data = b"Consistency test data";

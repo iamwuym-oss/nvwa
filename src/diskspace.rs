@@ -1,16 +1,16 @@
 // ============================================================================
-// diskspace.rs — 目标盘剩余空间检查
+// diskspace.rs - Target disk free space check
 //
-// 实现原理：
-// 在 Windows 上通过 kernel32!GetDiskFreeSpaceExW API 获取目标路径所在磁盘的
-// 剩余可用空间。这是 Windows 原生 API，无需额外 crate。
+// Implementation:
+// On Windows, uses kernel32!GetDiskFreeSpaceExW API to query free space on the
+// target path's drive. This is a native Windows API, no extra crate needed.
 //
-// 在非 Windows 平台上退化为可写性检查（与之前相同）。
+// On non-Windows platforms, falls back to writability check (same as before).
 //
-// 安全设计：
-// - 备份前检查剩余空间是否 >= 需要空间 × (1 + 安全余量)
-// - 安全余量 = 10%，防止极端情况下的空间耗尽
-// - 空间不足时返回带明确数字的错误，不产生半截备份
+// Safety design:
+// - Checks before backup that free space >= needed space × (1 + safety margin)
+// - Safety margin = 10%, prevents edge-case space exhaustion
+// - Returns error with specific numbers on insufficient space, no partial backup
 // ============================================================================
 
 use crate::errors::NuwaError;
@@ -35,11 +35,11 @@ mod platform {
         ) -> i32;
     }
 
-    /// 获取指定路径所在磁盘的剩余可用空间（字节）
+    /// Get free disk space (in bytes) for the drive containing the specified path
     ///
-    /// 返回 (可用空间, 总空间)
+    /// Returns (free_bytes, total_bytes)
     pub fn free_space(path: &Path) -> Result<(u64, u64), NuwaError> {
-        // 将路径转为 Windows 宽字符（UTF-16）格式
+        // Convert path to Windows wide character (UTF-16) format
         let wide: Vec<u16> = OsStr::new(&path)
             .encode_wide()
             .chain(std::iter::once(0))
@@ -48,19 +48,20 @@ mod platform {
         let mut free_bytes: u64 = 0;
         let mut total_bytes: u64 = 0;
 
-        // 安全调用 Win32 API
-        // 注意：GetDiskFreeSpaceExW 返回 0 表示失败，非 0 表示成功
+        // Safe call to Win32 API
+        // Note: GetDiskFreeSpaceExW returns 0 for failure, non-zero for success
         let ret = unsafe {
             GetDiskFreeSpaceExW(wide.as_ptr(), &mut free_bytes, &mut total_bytes, null_mut())
         };
 
         if ret == 0 {
-            // API 调用失败（例如路径无效或无法访问）
+            // API call failed (e.g. invalid path or inaccessible)
             Err(NuwaError::Io {
                 source: None,
                 path: Some(path.to_path_buf()),
-                detail: "无法查询目标磁盘空间（GetDiskFreeSpaceExW 调用失败）".to_string(),
-                suggestion: "请确认目标路径是一个有效的磁盘路径".to_string(),
+                detail: "Cannot query target disk space (GetDiskFreeSpaceExW call failed)"
+                    .to_string(),
+                suggestion: "Please confirm the target path is a valid disk path".to_string(),
             })
         } else {
             Ok((free_bytes, total_bytes))
@@ -72,79 +73,88 @@ mod platform {
 mod platform {
     use super::*;
 
-    /// 非 Windows 平台：空间检查不可用，退化为可写性检查
+    /// Non-Windows platform: space check unavailable, fall back to writability check
     pub fn free_space(path: &Path) -> Result<(u64, u64), NuwaError> {
-        // 在非 Windows 平台上，无法可靠检查剩余空间
-        // 返回 (0, 0) 表示不可用，调用方应退化为可写性检查
         Err(NuwaError::General {
-            detail: format!("空间检查在非 Windows 平台上不可用：{}", path.display()),
-            suggestion: "将执行基本的可写性检查".to_string(),
+            detail: format!(
+                "Space check is not available on non-Windows platforms: {}",
+                path.display()
+            ),
+            suggestion: "A basic writability check will be performed instead".to_string(),
         })
     }
 }
 
-/// 检查目标路径是否有足够的空间容纳备份数据
+/// Check if the target path has sufficient space for the backup data
 ///
-/// ## 参数
-/// * `dest_root` — 备份目标根路径
-/// * `needed_bytes` — 备份数据所需的总字节数（含安全余量）
+/// ## Parameters
+/// * dest_root - Backup destination root path
+/// *
+/// * `needed_bytes` - Total bytes needed for backup data (including safety margin)
 ///
-/// ## 返回值
-/// * `Ok(())` — 空间充足
-/// * `Err(NuwaError::Io { detail: "disk_space" })` — 空间不足
-/// * `Err(...)` — 无法检查（退化为可写性检查）
+/// ## Returns
+/// * Ok(()) - Sufficient space
+/// * Err(NuwaError::Io { detail: "disk_space" }) - Insufficient space
+/// * Err(...) - Cannot check (falls back to writability check)
 ///
-/// ## 安全余量
-/// 调用方应在 `needed_bytes` 中已包含 10% 安全余量
+/// ## Safety margin
+/// Caller should already include the 10% safety margin in
+/// Caller should already include the 10% safety margin in `needed_bytes`.
 pub fn check_disk_space(dest_root: &Path, needed_bytes: u64) -> Result<(), NuwaError> {
-    // Step 1: 确保目标路径存在（如果不存在则尝试创建）
+    // Step 1: Ensure the destination path exists (create if it does not)
     if !dest_root.exists() {
         std::fs::create_dir_all(dest_root).map_err(|e| NuwaError::Io {
             source: Some(e),
             path: Some(dest_root.to_path_buf()),
-            detail: "无法创建目标目录".to_string(),
-            suggestion: "检查路径是否合法以及权限是否充足".to_string(),
+            detail: "Cannot create destination directory".to_string(),
+            suggestion: "Check that the path is valid and permissions are sufficient".to_string(),
         })?;
     }
 
-    // Step 2: 尝试获取磁盘剩余空间
+    // Step 2: Attempt to get free disk space
     match platform::free_space(dest_root) {
         Ok((free_bytes, _total_bytes)) => {
-            // 检查可用空间是否足够
+            // Check if available space is sufficient
             if free_bytes < needed_bytes {
                 return Err(NuwaError::disk_space(needed_bytes, free_bytes, dest_root));
             }
 
-            // 空间充足，打印友好提示
+            // Space is sufficient, print friendly message
             let free_mb = free_bytes / (1024 * 1024);
             let need_mb = needed_bytes / (1024 * 1024);
             if free_mb > 1024 {
                 println!(
-                    "✓ 目标盘空间充足：可用 {:.1} GB，需要 {} MB",
+                    "Destination disk space OK: {:.1} GB free, need {} MB",
                     free_bytes as f64 / (1024.0 * 1024.0 * 1024.0),
                     need_mb
                 );
             } else {
-                println!("✓ 目标盘空间：可用 {} MB，需要 {} MB", free_mb, need_mb);
+                println!(
+                    "Destination disk space: {} MB free, need {} MB",
+                    free_mb, need_mb
+                );
             }
             Ok(())
         }
         Err(_) => {
-            // Step 3: API 不可用时，退化为可写性检查
-            // 注意：这是 PARTIAL 实现，仅在无法调用 Win32 API 时降级
+            // Step 3: When API is unavailable, fall back to writability check
+            // Note: This is a PARTIAL implementation, only used when Win32 API is unavailable
             let test_file = dest_root.join(".nuwa_space_check.tmp");
             match std::fs::write(&test_file, b"ok") {
                 Ok(_) => {
                     let _ = std::fs::remove_file(&test_file);
-                    println!("⚠ 无法检查磁盘剩余空间（仅验证了路径可写），请确保目标有足够空间");
-                    println!("  预计需要约 {} MB 空间", needed_bytes / (1024 * 1024));
+                    println!("Warning: cannot check disk free space (only verified path is writable). Ensure sufficient space.");
+                    println!(
+                        "  Estimated space needed: ~{} MB",
+                        needed_bytes / (1024 * 1024)
+                    );
                     Ok(())
                 }
                 Err(e) => Err(NuwaError::Io {
                     source: Some(e),
                     path: Some(dest_root.to_path_buf()),
-                    detail: "目标路径不可写".to_string(),
-                    suggestion: "检查权限和磁盘空间".to_string(),
+                    detail: "Destination path is not writable".to_string(),
+                    suggestion: "Check permissions and disk space".to_string(),
                 }),
             }
         }

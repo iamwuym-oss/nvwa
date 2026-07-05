@@ -1,7 +1,7 @@
 ﻿# Nüwa Backup — Project Engineering Memory
 
 **Version:** 0.1.0
-**Last Updated:** 2026-07-05
+**Last Updated:** 2026-07-05 (Updated Task 2.0B)
 **Current Phase:** Phase 1 — Minimal File Backup/Restore CLI (CLOSED)
 **Phase 1 Status:** CLOSED (PARTIAL — non-Windows space check limitation accepted)
 
@@ -138,3 +138,73 @@ Every task must pass these before marking DONE:
 - `cargo clippy --all-targets -- -D warnings`
 - `cargo build`
 - `cargo test`
+
+
+## 9. AGENTS.md Contamination Cleanup (Task 2.0B)
+
+During Task 2.0B (2026-07-05), the following was found and addressed:
+
+| Finding | Detail |
+|---------|--------|
+| AGENTS.md disk file | **Clean** — No FastAPI / SQLAlchemy / Vanilla JS / Tailwind CSS text present |
+| Contamination source | System-level instruction template (not part of any project file) |
+| Action taken | Added explicit Technology Stack Clarification to AGENTS.md stating Rust CLI is the only confirmed stack |
+| Superseded text | Any FastAPI/Vanilla JS references are superseded and not applicable to Nüwa Backup |
+| Phase 2 planning must use | `docs/phase-2/Phase_2_Planning_Source_Baseline.md` as the authoritative planning baseline |
+| Phase 2 coding still requires | Explicit user approval |
+
+### Updated Every New Task Must Read List
+
+Before any coding task begins, Codex MUST now also read:
+
+9. **docs/phase-2/Phase_2_Planning_Source_Baseline.md** — Phase 2 planning authority baseline, confirmed/optional/forbidden scope.
+
+
+## 10. Phase 2 UI Decision (Task 2.0B Updated)
+
+**Date:** 2026-07-05
+**Status:** User confirmed — Phase 2 includes local desktop GUI coding.
+
+### Key Decisions
+
+| Decision | Value |
+|----------|-------|
+| Phase 2 GUI coding | **Approved** (as part of Phase 2 scope, after PRD + Technical Design) |
+| UI direction | **Acronis True Image-like local desktop GUI** |
+| Candidate technology | **egui + eframe** (pure Rust) |
+| Not Web GUI | Confirmed excluded |
+| Not FastAPI / Vanilla JS | Confirmed excluded |
+| Clone page in UI | **Allowed as disabled placeholder only** |
+| Clone functionality | **Not approved** — remains Phase 5 |
+
+### Phase 2 Planning Must Use
+
+1. `docs/phase-2/Phase_2_Revised_Plan.md` (v2) — Confirmed scope and timeline
+2. `docs/phase-2/Phase_2_UI_Direction_Decision.md` — UI decisions record
+3. `docs/phase-2/Phase_2_Planning_Source_Baseline.md` — Audit trail and contamination cleanup
+
+
+## 11. Product Runtime Language Policy
+
+**Status:** Active (enforced from Task T2-LANG-01)
+
+The current product version is English-only at runtime.
+
+| Context | Language | Example |
+|---------|----------|---------|
+| Code (src/, tests/) | English only | println!(\"Backup complete\") |
+| Cargo.toml | English only | description = \"Nuwa Backup\" |
+| CLI output | English only | [OK] Backup completed |
+| GUI text | English only | Dashboard, Backup Now |
+| Error messages | English only | Source path not found |
+| Generated config | English only | # Nuwa Backup config file |
+| Documentation (docs/) | Chinese allowed | Planning reports, PRD, design docs |
+
+### Compliance Check
+
+Before marking any coding task PASS, verify:
+1. Select-String -Path src,tests -Recurse -Include *.rs,*.toml -Pattern '[\\u4e00-\\u9fff]' returns no matches.
+2. All runtime-visible strings are English.
+3. Generated config templates are English-only.
+
+Chinese characters in src/, tests/, or Cargo.toml are a blocking defect.

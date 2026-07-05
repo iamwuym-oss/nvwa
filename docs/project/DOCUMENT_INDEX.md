@@ -63,18 +63,57 @@ authority level, and applicability.
 
 ---
 
-## docs/phase-2/ — Phase 2 Planning Phase (Coding Requires Approval)
+## docs/phase-2/ — Phase 2 Implementation Phase (Task-Specific Coding Approval)
 
 | Document | Authority | Purpose |
 |----------|-----------|---------|
-| *(reserved)* | — | No documents yet |
+| `Phase_2_PRD.md` | AUTHORITATIVE | Phase 2 product requirements and approved coding basis for task-specific implementation |
+| `Phase_2_Technical_Design.md` | AUTHORITATIVE | Phase 2 technical design and approved engineering basis for task-specific implementation |
+| `Phase_2_Revised_Plan.md` | AUTHORITATIVE | Phase 2 revised plan: 6 usability features + local desktop GUI implementation + Clone disabled placeholder. .nwb moved to Phase 3. |
+| `Phase_2_Planning_Source_Baseline.md` | AUTHORITATIVE | Phase 2 planning source baseline: confirmed/optional/forbidden scope, contamination cleanup record, required user decisions |
+| `Phase_2_UI_Direction_Decision.md` | AUTHORITATIVE | Phase 2 UI direction: local desktop GUI, Acronis True Image-like, egui+eframe. Clone page as disabled placeholder. Not Web GUI. Not FastAPI. |
 
-Phase 2 is reserved for: scheduler, retention policy, backup history, SMB
-network target, GUI initial prototypes.
+Phase 2 implementation has started under task-specific approval.
 
-Phase 2 must NOT implement: `.nwb`, VSS, volume-level backup, disk-level
-backup, WinPE, system restore, cloning, differential/incremental backup,
-encryption.
+Current task status:
+- T2-01 — Configuration system / backup job: DONE / PASS
+- T2-02 — Backup history / SQLite schema: DONE / PASS
+- T2-03 — CLI output enhancement: DONE / PASS
+- T2-04 — Retention policy / prune: DONE / PASS
+- T2-05 — Windows Task Scheduler: DONE / PASS
+- T2-06 — SMB / UNC path support: DONE / PASS (manual SMB validation completed on \\localhost\C$ admin share; backup/list/verify/restore all confirmed working)
+- T2-07 — GUI dependency + scaffold: DONE / PASS
+- T2-08 — GUI 7 pages: NOT STARTED / requires user approval
+- T2-09 — GUI Clone placeholder: NOT STARTED / requires user approval
+
+Language compliance:
+- Product runtime language is English-only (T2-LANG-01 enforced).
+- Chinese is allowed only in documentation.
+- Language compliance check is required before PASS for coding tasks.
+- All src/, tests/, and Cargo.toml files are English-only as of T2-LANG-01.
+
+Phase 2 implementation has started.
+Coding approval is task-specific.
+T2-01 through T2-04 have been completed and passed.
+No further Phase 2 coding task, starting from T2-05, is approved until the user explicitly approves it.
+
+Phase 2 must NOT implement:
+- `.nwb` image format
+- VSS snapshot integration
+- Volume-level backup
+- Disk-level backup
+- System restore
+- WinPE recovery media
+- Real disk cloning functionality (Clone UI placeholder is allowed and required, but must be disabled and clearly marked as Phase 5)
+- Differential backup
+- Incremental backup
+- Encryption
+- Daemon / system service
+- Web GUI / browser-based admin console
+- FastAPI / Python backend
+- Vanilla JS / Tailwind / React / Vue / jQuery
+
+No clone engine, clone CLI command, disk access, partition access, PhysicalDrive access, VSS, or .nwb code may be introduced in Phase 2.
 
 ---
 
@@ -109,5 +148,3 @@ encryption.
 3. Authoritative documents take precedence over Reference documents.
 4. If documents conflict, higher-priority documents (lower number) win.
 5. AGENTS.md at project root is the highest-priority operational document.
-
-

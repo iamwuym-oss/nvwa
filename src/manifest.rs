@@ -1,5 +1,5 @@
-// ============================================================================
-// manifest.rs — JSON Manifest 数据模型
+﻿// ============================================================================
+// manifest.rs -- JSON Manifest data model
 // ============================================================================
 
 use crate::errors::NuwaError;
@@ -69,15 +69,15 @@ impl Manifest {
 
     pub fn to_json_pretty(&self) -> Result<String, NuwaError> {
         serde_json::to_string_pretty(self).map_err(|e| NuwaError::General {
-            detail: format!("JSON 序列化失败：{}", e),
-            suggestion: "内部错误".to_string(),
+            detail: format!("JSON serialization failed: {}", e),
+            suggestion: "Internal error".to_string(),
         })
     }
 
     pub fn from_file(path: &Path) -> Result<Self, NuwaError> {
         let content = std::fs::read_to_string(path).map_err(|e| NuwaError::ManifestError {
-            detail: format!("无法读取备份清单文件 '{}'：{}", path.display(), e),
-            suggestion: "文件可能已损坏或权限不足".to_string(),
+            detail: format!("Cannot read manifest file '{}': {}", path.display(), e),
+            suggestion: "File may be corrupted or permissions insufficient".to_string(),
         })?;
 
         let manifest: Manifest = serde_json::from_str(&content)
