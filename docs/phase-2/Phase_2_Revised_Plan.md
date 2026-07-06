@@ -246,3 +246,53 @@ SQLite 历史库  ← 历史索引，可通过扫描 manifest 重建（可删除
 |---------|------|-------------------|
 | v1.0 | 2026-07-05 | Initial revision based on Phase 2 Planning Source Audit (Task 2.0A/B) and user convergence decisions |
 | v2.0 | 2026-07-05 | User confirmed: Phase 2 includes local desktop GUI coding. Clone page allowed as disabled placeholder only. 7 confirmed items. 21-item forbidden list. |
+
+## 11. Phase 2 GUI Coding Status — T2-08 Dashboard Done
+
+**Updated:** 2026-07-06
+
+| Task | Status | Files |
+|------|--------|-------|
+| T2-08 Dashboard | ✅ COMPLETE | `src/gui/pages/dashboard.rs` (new), `app.rs`, `theme.rs` |
+| Backup page | ⏳ Not started | `src/gui/pages/backup.rs` (stub) |
+| Restore page | ⏳ Not started | `src/gui/pages/restore.rs` (stub) |
+| History page | ⏳ Not started | `src/gui/pages/history.rs` (stub) |
+| Schedule page | ⏳ Not started | `src/gui/pages/schedule.rs` (stub) |
+| Settings page | ⏳ Not started | `src/gui/pages/settings.rs` (stub) |
+| Clone page | ✅ Done (Phase 5 placeholder) | `src/gui/pages/clone.rs` |
+
+### Dashboard Design Decisions Log
+
+See `PROJECT_ENGINEERING_MEMORY.md` §12 for full details.
+
+---
+
+## Revision History
+
+| Version | Date | Reason for change |
+|---------|------|-------------------|
+| v1.0 | 2026-07-05 | Initial revision |
+| v2.0 | 2026-07-05 | User confirmed Phase 2 GUI coding. Clone placeholder. |
+| v2.1 | 2026-07-06 | Added T2-08 Dashboard completion record |
+
+## 12. Phase 3 Reference
+
+Phase 2 is closed. Phase 3 scope has been reset.
+
+For Phase 3 details, see:
+
+- `docs/phase-3/Phase_3_Plan.md` — Phase 3 scope, task chain, safety boundary
+- `docs/phase-3/Phase_3_Plan.md` § Phase Boundaries — Phase 3.5/4 status
+- `docs/phase-0/08_Design_Decision_Log.md` § ADR-P3-001~003 — Design decisions
+- `docs/project/PROJECT_ENGINEERING_MEMORY.md` §14 — Engineering memory entry
+
+---
+
+## Revision History
+
+| Version | Date | Reason for change |
+|---------|------|-------------------|
+| v1.0 | 2026-07-05 | Initial revision |
+| v2.0 | 2026-07-05 | User confirmed Phase 2 GUI coding |
+| v2.1 | 2026-07-06 | Added T2-08 Dashboard completion record |
+| v2.2 | 2026-07-06 | Added Phase 3 reference |

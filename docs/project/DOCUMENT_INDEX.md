@@ -1,6 +1,6 @@
 ﻿# Nüwa Backup — Document Index
 
-**Last Updated:** 2026-07-05
+**Last Updated:** 2026-07-06
 
 ---
 
@@ -63,7 +63,7 @@ authority level, and applicability.
 
 ---
 
-## docs/phase-2/ — Phase 2 Implementation Phase (Task-Specific Coding Approval)
+## docs/phase-2/ — Phase 2: CLI Usability + GUI Dashboard (CLOSED)
 
 | Document | Authority | Purpose |
 |----------|-----------|---------|
@@ -117,6 +117,21 @@ No clone engine, clone CLI command, disk access, partition access, PhysicalDrive
 
 ---
 
+
+## docs/phase-2.5/ — Phase 2.5: GUI Technology Migration (egui → Tauri 2.0)
+
+| Document | Authority | Purpose |
+|----------|-----------|---------|
+| Phase_2_5_Tauri_Migration_Decision.md | AUTHORITATIVE | GUI technology migration from egui/eframe to Tauri 2.0 + React + TypeScript |
+
+### Phase 2.5 Task Status
+
+| Task | Status |
+|:----:|:------:|
+| T2.5-00 — Remove egui GUI & Cleanup | ✅ DONE / PASS |
+| T2.5-01 — Tauri 2.0 Scaffold + Command Bridge | ⏳ NOT STARTED |
+| T2.5-02..08 — GUI Pages | ⏳ NOT STARTED |
+
 ## docs/phase-3/ — Reserved: NTFS Volume Image, VSS, Block Backup
 
 *(reserved)*
@@ -148,3 +163,69 @@ No clone engine, clone CLI command, disk access, partition access, PhysicalDrive
 3. Authoritative documents take precedence over Reference documents.
 4. If documents conflict, higher-priority documents (lower number) win.
 5. AGENTS.md at project root is the highest-priority operational document.
+## docs/phase-2/ — Phase 2: CLI Usability + GUI Dashboard (CLOSED)
+
+| Document | Authority | Purpose |
+|----------|-----------|---------|
+| `Phase_2_PRD.md` | AUTHORITATIVE | Phase 2 product requirements and approved coding basis |
+| `Phase_2_Technical_Design.md` | AUTHORITATIVE | Phase 2 technical design |
+| `Phase_2_Revised_Plan.md` | AUTHORITATIVE | Phase 2 revised plan: 6 usability features + GUI Dashboard |
+| `Phase_2_Planning_Source_Baseline.md` | AUTHORITATIVE | Phase 2 planning baseline, confirmed/forbidden scope |
+| `Phase_2_UI_Direction_Decision.md` | AUTHORITATIVE | UI direction decisions |
+| `Phase_2_Closing_Report.md` | AUTHORITATIVE | Phase 2 closing report, final validation evidence |
+
+### Phase 2 Task Status (Final)
+
+| Task | Status |
+|:----:|:------:|
+| T2-01 — Config / Job | ✅ DONE / PASS |
+| T2-02 — Backup History / SQLite | ✅ DONE / PASS |
+| T2-03 — CLI Output Enhancement | ✅ DONE / PASS |
+| T2-04 — Retention / Prune | ✅ DONE / PASS |
+| T2-05 — Windows Task Scheduler | ✅ DONE / PASS |
+| T2-06 — SMB / UNC Path | ✅ DONE / PASS |
+| T2-07 — GUI Scaffold | ✅ DONE / PASS |
+| T2-08 — GUI Dashboard | ✅ DONE / PASS |
+| T2-09 — GUI Clone Placeholder | ✅ DONE / PASS |
+
+### Phase 2 Deferred Items
+
+| Item | Reason |
+|------|--------|
+| GUI Backup page (stub) | User decision — stop at Dashboard baseline |
+| GUI Restore page (stub) | User decision — stop at Dashboard baseline |
+| GUI History page (stub) | User decision — stop at Dashboard baseline |
+| GUI Schedule page (stub) | User decision — stop at Dashboard baseline |
+| GUI Settings page (stub) | User decision — stop at Dashboard baseline |
+
+**Phase 2: CLOSED / ACCEPTED WITH KNOWN LIMITATIONS**
+**Phase 3 coding is NOT authorized without explicit user approval.**
+
+## docs/phase-3/ — Phase 3: NTFS Non-System Volume Image MVP (PLANNING)
+
+| Document | Authority | Purpose |
+|----------|-----------|---------|
+| `Phase_3_Plan.md` | AUTHORITATIVE | Phase 3 scope, safety boundary, task chain, deferred items |
+
+### Phase 3 Task Status
+
+| Task | Status |
+|:----:|:------:|
+| T3-00 — Scope Reset & Documentation | ✅ DONE / PASS |
+| T3-01 — .nwb v0.2 Format + Block SHA-256 | ⏳ NOT STARTED |
+| T3-02 — VSS Snapshot Lifecycle Proof | ⏳ NOT STARTED |
+| T3-03 — Non-System NTFS Volume Backup CLI | ⏳ NOT STARTED |
+| T3-04 — Non-System NTFS Volume Restore CLI | ⏳ NOT STARTED |
+| T3-CLOSE — Phase 3 Final Validation | ⏳ NOT STARTED |
+
+### Phase 3.5/4 Status
+
+| Phase | Scope | Status |
+|-------|-------|:------:|
+| Phase 2.5 | GUI technology migration (egui -> Tauri 2.0) + full GUI implementation | ⏳ DEFERRED |
+| Phase 3.5 | GUI volume pages, GPT/MBR, boot partition, dynamic disk/RAID, BCD design | ❌ NOT AUTHORIZED |
+| Phase 4 | System recovery / WinPE / BMR | ❌ NOT AUTHORIZED |
+| Phase 5 | Disk clone | ❌ NOT AUTHORIZED |
+| Phase 6+ | Differential, encryption, cross-platform | ❌ NOT AUTHORIZED |
+
+**Phase 3 is in PLANNING. T3-00 complete. Coding not started.**

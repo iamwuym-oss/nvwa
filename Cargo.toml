@@ -1,4 +1,4 @@
-﻿[package]
+[package]
 name = "nuwa-backup"
 version = "0.1.0"
 edition = "2021"
@@ -8,7 +8,6 @@ description = "Nuwa Backup - Phase 2: Usable file-level backup tool"
 default = ["history"]
 history = ["rusqlite"]
 compress = ["zstd"]
-gui = ["egui", "eframe"]
 
 [dependencies]
 serde = { version = "1", features = ["derive"] }
@@ -19,10 +18,4 @@ uuid = { version = "1", features = ["v4"] }
 chrono = { version = "0.4", features = ["serde"] }
 rusqlite = { version = "0.31", features = ["bundled"], optional = true }
 zstd = { version = "0.13", optional = true }
-egui = { version = "0.27", optional = true, default-features = false, features = ["default_fonts"] }
-eframe = { version = "0.27", optional = true, default-features = false, features = ["default_fonts", "glow"] }
 
-[[bin]]
-name = "nuwa-gui"
-path = "src/gui_main.rs"
-required-features = ["gui"]

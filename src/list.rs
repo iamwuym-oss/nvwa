@@ -16,6 +16,7 @@ use crate::manifest::Manifest;
 use std::path::Path;
 
 /// Summary information for a single backup point
+#[derive(Clone)]
 pub struct BackupPointSummary {
     /// Backup directory name
     pub dir_name: String,

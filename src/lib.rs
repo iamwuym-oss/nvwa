@@ -18,6 +18,3 @@ pub mod restore;
 pub mod scheduler;
 pub mod storage;
 pub mod verify;
-
-#[cfg(feature = "gui")]
-pub mod gui;

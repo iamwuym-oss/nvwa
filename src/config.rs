@@ -153,7 +153,7 @@ impl Config {
     }
 
     /// Get candidate config file paths
-    fn config_paths() -> Vec<PathBuf> {
+    pub fn config_paths() -> Vec<PathBuf> {
         let mut paths = Vec::new();
 
         // 1. Current directory
@@ -168,6 +168,28 @@ impl Config {
         }
 
         paths
+    }
+
+    /// Save the config to the first existing config path, or the first candidate path.
+    pub fn save(&self) -> Result<PathBuf, NuwaError> {
+        let paths = Self::config_paths();
+        let target = paths.iter().find(|p| p.exists()).unwrap_or(&paths[0]);
+        self.save_to(target)
+    }
+
+    /// Save the config to a specific path.
+    pub fn save_to(&self, path: &Path) -> Result<PathBuf, NuwaError> {
+        let toml_str = toml::to_string_pretty(self).map_err(|e| NuwaError::ManifestError {
+            detail: format!("Failed to serialize config: {}", e),
+            suggestion: "Internal error during config serialization".to_string(),
+        })?;
+        std::fs::write(path, &toml_str).map_err(|e| NuwaError::Io {
+            source: Some(e),
+            path: Some(path.to_path_buf()),
+            detail: format!("Cannot write config file '{}'", path.display()),
+            suggestion: "Check file permissions and disk space".to_string(),
+        })?;
+        Ok(path.to_path_buf())
     }
 }
 

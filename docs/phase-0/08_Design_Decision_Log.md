@@ -570,3 +570,108 @@
 | v1.0 | 2026-07-04 | 初始版本 |
 | v2.0 | 2026-07-05 | 产品名统一为 Nüwa Backup |
 | v2.1 | 2026-07-05 | 灾备专家审查后：新增 10 条 ADL（New-001~New-010），标记冲突 ADL 为 SUPERSEDED，更新 Phase 划分 |
+
+---
+
+## 十七、T2-08 Dashboard 设计决策
+
+| # | 决策 | 值 | 说明 |
+|---|------|-----|------|
+| ADL-GUI-001 | 多 Job 显示策略 | **聚合显示** | Protected Jobs 显示总数，Storage Usage 用默认 job 的目标存储，Last Backup 取全局最新 |
+| ADL-GUI-002 | Backup Jobs 行 | **仅最近一次任务** | 第三行第二列只显示最近一条备份任务的完整详情 |
+| ADL-GUI-003 | 跨页面跳转机制 | **egui Id 信号** | Quick Actions 通过设置 `ctx.memory_mut().data.insert_temp` 触发页面切换，`app.rs` 在 CentralPanel 渲染后检测并跳转 |
+| ADL-GUI-004 | Dashboard 主题 | **侧栏深色 + 内容区白底黑字** | 用户要求中央内容区白底黑字，导航栏保持深色科技风 |
+| ADL-GUI-005 | 语言 | **运行时全英文** | 遵循 T2-LANG-01 政策，所有 UI 字符串为英文 |
+
+---
+
+## Revision History
+
+| 版本 | 日期 | 变更原因 |
+|------|------|---------|
+| v1.0 | 2026-07-04 | 初始版本 |
+| v2.0 | 2026-07-05 | 产品名统一为 Nüwa Backup |
+| v2.1 | 2026-07-05 | 灾备专家审查后：新增 10 条 ADL |
+| v2.2 | 2026-07-06 | T2-08 Dashboard 完成，新增 5 条 ADL-GUI 决策 |
+
+---
+
+## 十八、Phase 3 Scope Reset — T3-00
+
+### ADR-P3-001 — Phase 3 Scope Reduced to NTFS Non-System Volume Image MVP
+
+| 决策 | 值 |
+|------|-----|
+| Phase 3 范围 | 仅限 .nwb v0.2、块级 SHA-256、VSS 快照生命周期、非系统 NTFS 卷备份 CLI、非系统 NTFS 卷恢复 CLI、Phase 3 关闭验证 |
+| 排除范围 | GPT/MBR 分区解析、启动分区识别、BCD 修复、WinPE、裸机恢复、daemon、GUI 卷操作页面、动态磁盘、RAID、增量/差异备份、加密、压缩、去重 |
+| 理由 | 保持 Phase 3 聚焦可测试的核心链，避免将系统恢复、BCD、WinPE、克隆、daemon、GUI 混入卷镜像 MVP；降低对系统卷的破坏操作风险；先奠定 .nwb 和 VSS 基础 |
+
+### ADR-P3-002 — Phase 3 Safety Boundary
+
+| 决策 | 值 |
+|------|-----|
+| 支持环境 | Windows 仅、管理员模式、本地固定磁盘、NTFS 仅、非系统/非启动卷 |
+| CLI 优先 | Phase 3 不做 GUI 卷操作页面 |
+| 拒绝列表 | C:、系统卷、ESP、MSR、恢复分区、FAT32/exFAT、动态磁盘、RAID、网络路径、可移动介质 |
+| 恢复确认 | 卷恢复是破坏性操作，必须显式 Y/N 确认 |
+
+### ADR-P3-003 — GPT/MBR Not Required for Phase 3
+
+| 决策 | 值 |
+|------|-----|
+| Phase 3 是否需要 GPT/MBR | 不需要 |
+| 理由 | 非系统卷可通过 Windows 卷 API 直接枚举和访问，不需要底层分区表解析。GPT/MBR 是系统恢复和磁盘克隆的前置依赖。 |
+| 延后 | GPT/MBR 解析归入 Phase 3.5 |
+
+---
+
+## Revision History
+
+| 版本 | 日期 | 变更原因 |
+|------|------|---------|
+| v1.0 | 2026-07-04 | 初始版本 |
+| v2.0 | 2026-07-05 | 产品名统一为 Nüwa Backup |
+| v2.1 | 2026-07-05 | 灾备专家审查后：新增 10 条 ADL |
+| v2.2 | 2026-07-06 | T2-08 Dashboard 完成，新增 5 条 ADL-GUI 决策 |
+| v2.3 | 2026-07-06 | T3-00 Phase 3 范围重置，新增 3 条 ADR-P3 决策 |
+
+---
+
+## ADR-T2.5-001 — Replace egui Desktop GUI with Tauri 2.0
+
+**Date:** 2026-07-06
+**Status:** APPROVED
+**Supersedes:** ADL-034, ADL-026, ADL-039, ADR-GUI-003 (egui-related decisions)
+
+### Decision
+
+Replace egui + eframe (Rust immediate-mode GUI) with Tauri 2.0 + React + TypeScript + Vite for the desktop GUI layer.
+
+### Rationale
+
+| Concern | egui | Tauri 2.0 |
+|---------|------|-----------|
+| Visual quality ceiling | Low — limited by immediate-mode architecture | Unlimited — full CSS/HTML control |
+| Commercial-grade UI | Not achievable | Same capability as modern desktop apps |
+| Component reusability | Poor — no component model | High — React component architecture |
+| Type safety across IPC | One side (Rust) | Both sides (Rust + TypeScript) |
+| Ecosystem | Small, niche | Large, mainstream |
+| Long-term maintenance | Poor as UI grows | Structured and scalable |
+
+### Consequences
+
+Positive:
+- Professional-quality UI is now achievable
+- Better development experience with React + TypeScript
+- Tauri ecosystem has rich community support
+
+Negative:
+- ~200MB Node.js toolchain required for development
+- Frontend development now requires frontend tooling (npm, Vite)
+- GUI rewrite required — egui code cannot be reused
+
+Migration actions:
+- src/gui/ and src/gui_main.rs deleted
+- Cargo.toml egui/eframe references removed
+- All core library code preserved unchanged
+- Tauri scaffolding to be implemented in T2.5-01+
