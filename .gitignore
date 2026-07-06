@@ -9,3 +9,15 @@
 
 # Local test config (machine-specific paths)
 /nuwa.toml
+
+# Node.js
+ui/node_modules/
+ui/dist/
+ui/package-lock.json
+
+# Tauri build artifacts
+src-tauri/target/
+src-tauri/gen/
+
+# Python temp
+*.py
