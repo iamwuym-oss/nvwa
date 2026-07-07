@@ -796,6 +796,7 @@ Rules:
 - UI component creation/modification in `ui/src/components/`
 - All page implementations in `ui/src/pages/`
 - Read-only query interfaces in core modules (new pub fn, no logic changes)
+- **Adding new Application Services, API models, and Tauri commands** for new pages or features is **allowed and expected**. The architecture rule (UI -> Command -> Service -> Core) is frozen; the service catalog is extensible.
 
 **Forbidden:**
 - Modifying frozen core modules: backup.rs, restore.rs, verify.rs, manifest.rs, checksum.rs, storage.rs, prune.rs
@@ -856,5 +857,7 @@ Compliance:
 - No coding task may be marked PASS if Chinese characters remain in src/, tests/, Cargo.toml, or runtime-generated product text.
 - Use ASCII-safe English in runtime output to avoid Windows PowerShell/console encoding issues.
 - Use \"Nuwa Backup\" (without umlaut) in code and runtime output; \"Nüwa Backup / 女娲备份\" may be used in documentation.
+
+
 
 
