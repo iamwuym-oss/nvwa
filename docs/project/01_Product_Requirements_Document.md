@@ -5,7 +5,7 @@
 | Field | Value |
 |---|---|
 | **Document Title** | Personal Windows Backup & Recovery Product Requirements Document |
-| **Version** | v2.1（经专家审查修正） |
+| **Version** | v2.2（Phase mapping aligned） |
 | **Status** | Revised — 阶段边界已收敛 |
 | **Product Name** | Nüwa Backup (女娲备份) |
 | **Target Platform** | Windows Workstation (Windows 7 SP1 ~ Windows 11) + Windows Server (2008 R2 ~ 2025) |
@@ -177,6 +177,20 @@ The following features are **explicitly out of scope** for this product (all pha
 ---
 
 ## 7. Product Scope Overview
+
+> **Note — Historical Phase Mapping (Updated 2026-07-07)**
+> The phase numbering below reflects the original product roadmap (Phase 1A/1B → Phase 2 → Phase 3 → Phase 4).
+> **Current development phase is Phase 2.5 — Tauri Desktop GUI + Application Layer.**
+> See docs/phase-2.5/Phase_2_5_Closing_Report.md for the current phase status.
+>
+> | Original Roadmap | Current Status |
+> |---|---|
+> | Phase 1A — Minimal Backup CLI | ✅ **CLOSED** — Implemented as Phase 1 |
+> | Phase 1B — Usable File Backup | ✅ **CLOSED** — Implemented as Phase 2 |
+> | Phase 2 — Partition/System Image | 🔄 **Rescheduled** — Now Phase 3 |
+> | **Phase 2.5 — Desktop GUI + App Layer** | 🟢 **ACTIVE** — Tauri 2.0 + React (replaced egui) |
+> | Phase 3 — Bootable Recovery Media | 📅 **Future** — Phase 4 in new numbering |
+> | Phase 4 — Disk Cloning | 📅 **Future** — Phase 5 in new numbering |
 
 ### 7.1 Phase 1A — Minimal Viable Backup Loop
 
@@ -1005,7 +1019,7 @@ This section defines hard engineering rules that must not be violated throughout
 | Item | Detail |
 |---|---|
 | **File updated** | docs/01_Product_Requirements_Document.md |
-| **Version** | v2.1（经专家审查修正） (previously v1.0) |
+| **Version** | v2.2（Phase mapping aligned） (previously v1.0) |
 | **Phase 1A/1B split** | Phase 1A = minimal backup/restore loop (manual only, alternate location restore, folder selection). Phase 1B = scheduling, common folders, SMB, original-location restore, retention, history UI. SMB / NAS explicitly excluded from Phase 1A. |
 | **Incremental semantics added** | New subsection "File-Level Incremental Backup Semantics" in section 8.1. Defines: version-per-run, complete restorable tree, change detection (size + mtime + optional checksum), deleted file handling, rename = delete+add, chain integrity validation. |
 | **Verification strengthened** | Sections 8.1.4 rewritten: per-file content checksum (SHA-256), catalog checksum, verification status (unverified/passed/failed/suspect), restore-time checksum validation, explicit user-initiated verification, warning on suspect versions. |
@@ -1025,3 +1039,5 @@ This section defines hard engineering rules that must not be violated throughout
 | v1.1 | 2026-07-04 | 补充功能讨论细节 |
 | v2.0 | 2026-07-05 | 产品名统一为 Nüwa Backup |
 | v2.1 | 2026-07-05 | 灾备专家审查后修订：明确阶段边界，收敛 MVP 范围 |
+| v2.2 | 2026-07-07 | Phase mapping update: added Phase 2.5 (Tauri GUI + Application Layer). Original Phase 2→3→4 renumbered. Historical roadmap preserved for traceability. |
+

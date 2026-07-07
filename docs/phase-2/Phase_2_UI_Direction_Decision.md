@@ -1,8 +1,8 @@
-﻿# Phase 2 — UI Direction Decision
+﻿# Phase 2 — UI Direction Decision (HISTORICAL)
 
-**Product:** Nüwa Backup (女娲备份)
-**Date:** 2026-07-05
-**Status:** AUTHORITATIVE — User confirmed UI direction for Phase 2. Supersedes any conflicting prior UI assumptions.
+> **This document is HISTORICAL. It records the Phase 2 UI direction that was superseded by Phase 2.5.**
+> **Current UI technology: Tauri 2.0 + React + TypeScript + Vite — see Phase_2_5_Tauri_Migration_Decision.md.**
+**Status:** HISTORICAL — Superseded by Phase 2.5 GUI Technology Migration Decision (Phase_2_5_Tauri_Migration_Decision.md). The egui/eframe direction was replaced by Tauri 2.0 + React + TypeScript + Vite. This document is kept for traceability only.
 
 ---
 
@@ -82,3 +82,4 @@ User (explicit approval during Phase 2 planning convergence, 2026-07-05).
 | Version | Date | Reason for change |
 |---------|------|-------------------|
 | v1.0 | 2026-07-05 | User confirmed: Phase 2 includes local desktop GUI coding. UI direction: Acronis True Image-like. Clone page as disabled placeholder. |
+

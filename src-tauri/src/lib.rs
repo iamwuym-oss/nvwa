@@ -1,9 +1,11 @@
-// ============================================================================
+﻿// ============================================================================
 // src-tauri/src/lib.rs -- Tauri 2.0 backend entry: registers commands,
 // builds the desktop window, and bridges frontend to the nuwa-backup core.
 // ============================================================================
 
 use std::sync::Mutex;
+
+mod commands;
 
 // ---------------------------------------------------------------------------
 // App state that holds the shared nuwa-backup configuration path
@@ -22,6 +24,11 @@ impl Default for AppState {
 
 // ---------------------------------------------------------------------------
 // Tauri commands -- each wraps a call into the nuwa-backup core library.
+//
+// Command layer rules (see AGENTS.md / T2.5-03A spec):
+//   1. Only receive params, call a service, return result
+//   2. No business logic in commands
+//   3. Errors must be AppError (not raw NuwaError)
 // ---------------------------------------------------------------------------
 
 /// Return the application and core library version strings.
@@ -46,7 +53,11 @@ fn list_backup_jobs() -> Result<Vec<(String, nuwa_backup::config::JobConfig)>, S
 pub fn run() {
     tauri::Builder::default()
         .manage(AppState::default())
-        .invoke_handler(tauri::generate_handler![get_version, list_backup_jobs])
+        .invoke_handler(tauri::generate_handler![
+            get_version,
+            list_backup_jobs,
+            commands::dashboard::get_dashboard_overview,
+        ])
         .run(tauri::generate_context!())
         .expect("error while running Nuwa Backup GUI");
 }

@@ -4,6 +4,11 @@
 **Date:** 2026-07-05
 **Status:** v2 — User confirmed: Phase 2 includes local desktop GUI coding (approval scope: PRD + Technical Design first)
 
+> **HISTORICAL NOTE: The GUI technology decision in this document (egui + eframe) was SUPERSEDED by Phase 2.5.**
+> **Current GUI technology: Tauri 2.0 + React + TypeScript + Vite. See docs/phase-2.5/Phase_2_5_Tauri_Migration_Decision.md.**
+> **The non-GUI Phase 2 deliverables (config, history, scheduler, SMB, CLI enhancements) are unaffected by this change.**
+
+
 ---
 
 ## 1. Phase 2 Core Principle

@@ -1,8 +1,8 @@
 ﻿# Nüwa Backup — Project Engineering Memory
 
-**Version:** 0.1.0
-**Last Updated:** 2026-07-05 (Updated Task 2.0B)
-**Current Phase:** Phase 1 — Minimal File Backup/Restore CLI (CLOSED)
+**Version:** 0.2.0
+**Last Updated:** 2026-07-07 (Updated T2.5-DOC-01)
+**Current Phase:** Phase 2.5 — Tauri Desktop GUI + Application Layer (T2.5-03A.1 DONE)
 **Phase 1 Status:** CLOSED (PARTIAL — non-Windows space check limitation accepted)
 
 ---
@@ -72,11 +72,12 @@ Before any coding task begins, Codex MUST read these documents in order:
 | Phase 1 Code Map | `docs/phase-1/Phase_1_Code_Map.md` | REFERENCE |
 | Phase 1 → Phase 2 Handoff | `docs/phase-1/Phase_1_to_Phase_2_Handoff.md` | AUTHORITATIVE |
 
-### Phase 2 Status
+### Phase 2.5 Status
 
-- **Phase 2 planning is allowed.**
-- **Phase 2 coding requires explicit user approval after Phase 1 final acceptance.**
-- Phase 2 must NOT implement Phase 3/4/5/6+ features.
+- **Phase 2 (egui) CLOSED. Phase 2.5 (Tauri) is the current active phase.**
+- **Phase 2.5 coding is approved and in progress.**
+- Phase 2.5 must NOT implement Phase 3/4/5/6+ features.
+- See docs/phase-2.5/Phase_2_5_Tauri_Migration_Decision.md for migration details.
 
 ### Phase 1 Core Freeze
 
@@ -91,8 +92,9 @@ approves a task that modifies it.
 | Phase | Scope | Status |
 |-------|-------|--------|
 | Phase 0 | Project setup, MVP boundary, guardrails | COMPLETE |
-| Phase 1 | File-level backup/restore CLI | PARTIAL (current) |
-| Phase 2 | Scheduler, retention, history, SMB, GUI | NOT STARTED |
+| Phase 1 | File-level backup/restore CLI | CLOSED |
+| Phase 2 | CLI usability: config, history, scheduler, SMB, GUI (egui) | CLOSED |
+| Phase 2.5 | Tauri 2.0 desktop GUI + Application Layer | ACTIVE |
 | Phase 3 | NTFS non-system volume image, VSS, block backup | NOT STARTED |
 | Phase 4 | WinPE recovery media, system restore, BCD repair | NOT STARTED |
 | Phase 5 | Disk cloning | NOT STARTED |
@@ -161,6 +163,9 @@ Before any coding task begins, Codex MUST now also read:
 
 
 ## 10. Phase 2 UI Decision (Task 2.0B Updated)
+
+> **NOTE: This section is HISTORICAL. The Phase 2 egui GUI direction was superseded by Phase 2.5 (Tauri 2.0 + React). See Section 15 and docs/phase-2.5/Phase_2_5_Tauri_Migration_Decision.md.**
+
 
 **Date:** 2026-07-05
 **Status:** User confirmed — Phase 2 includes local desktop GUI coding.
@@ -233,6 +238,9 @@ Chinese characters in src/, tests/, or Cargo.toml are a blocking defect.
 | Row 3 (3 cols) | Recent Activity | Up to 10 records (success/fail/start time) |
 | | Backup Jobs | Only the single most recent job's full details (type, source, dest, schedule, last/next run, last status) |
 | | Quick Actions | Backup Now, Restore, Verify Backup, View Reports |
+
+
+> **NOTE: The following design decisions are from the Phase 2 egui implementation which was REMOVED in T2.5-00. They are kept for traceability only.**
 
 ### Key Design Decisions
 
@@ -383,23 +391,43 @@ GPT/MBR parser, boot partition detection, BCD repair, WinPE, bare metal recovery
 | Document | Location |
 |----------|----------|
 | Phase 3 Plan | `docs/phase-3/Phase_3_Plan.md` |
-- - -  
-  
- # #   1 5 .   P h a s e   2 . 5   -   G U I   T e c h n o l o g y   M i g r a t i o n   ( T 2 . 5 - 0 0 )  
-  
- * * D a t e : * *   2 0 2 6 - 0 7 - 0 6  
- * * S t a t u s : * *   D O N E   -   e g u i   G U I   r e m o v e d ,   T a u r i   2 . 0   d i r e c t i o n   c o n f i r m e d ,   s c a f f o l d i n g   p e n d i n g  
-  
- # # #   D e c i s i o n  
-  
- T h e   d e s k t o p   G U I   t e c h n o l o g y   r o u t e   h a s   c h a n g e d   f r o m   * * e g u i   +   e f r a m e * *   t o   * * T a u r i   2 . 0   +   R e a c t   +   T y p e S c r i p t   +   V i t e * * .  
+- - - 
  
-## 15. Phase 2.5 — GUI Technology Migration (T2.5-00)
+ 
+ 
+ # #   1 5 .   P h a s e   2 . 5   -   G U I   T e c h n o l o g y   M i g r a t i o n   ( T 2 . 5 - 0 0 ) 
+ 
+ 
+ 
+ * * D a t e : * *   2 0 2 6 - 0 7 - 0 6 
+ 
+ * * S t a t u s : * *   D O N E   -   e g u i   G U I   r e m o v e d ,   T a u r i   2 . 0   d i r e c t i o n   c o n f i r m e d ,   s c a f f o l d i n g   p e n d i n g 
+ 
+ 
+ 
+ # # #   D e c i s i o n 
+ 
+ 
+ 
+ T h e   d e s k t o p   G U I   t e c h n o l o g y   r o u t e   h a s   c h a n g e d   f r o m   * * e g u i   +   e f r a m e * *   t o   * * T a u r i   2 . 0   +   R e a c t   +   T y p e S c r i p t   +   V i t e * * . 
+ 
+ 
+## 15. Phase 2.5 — Tauri Desktop GUI & Application Layer
+
+### Phase 2.5 Status
+
+| Task | Status |
+|:----:|:------:|
+| T2.5-00 — Remove egui GUI & Cleanup | ✅ DONE / PASS |
+| T2.5-01 — Tauri 2.0 Scaffold + Command Bridge | ✅ DONE / PASS |
+| T2.5-02..08 — GUI Pages (pending Phase 2.5 planning) | ⏳ NOT STARTED |
+
+### T2.5-00 — Remove egui GUI, Clean Up, Document Migration
 
 **Date:** 2026-07-06
 **Status:** DONE — egui GUI removed, Tauri 2.0 direction confirmed
 
-### Decision
+#### Decision
 
 The desktop GUI technology route has changed from **egui + eframe** to **Tauri 2.0 + React + TypeScript + Vite**.
 
@@ -407,35 +435,136 @@ The desktop GUI technology route has changed from **egui + eframe** to **Tauri 2
 |----------|---------|----------|
 | egui + eframe (Rust immediate-mode) | Tauri 2.0 + React + TypeScript + Vite | egui visual quality ceiling too low for professional Acronis-like backup product |
 
-### What Was Done (T2.5-00)
+#### What Was Done (T2.5-00)
 
 | Action | Detail |
 |--------|--------|
 | Removed src/gui/ directory | All egui page files deleted |
 | Removed src/gui_main.rs | egui binary entry deleted |
 | Cleaned Cargo.toml | Removed egui/eframe/gui feature/nuwa-gui binary target |
-| Cleaned src/lib.rs | Removed #[cfg(feature = gui)] pub mod gui |
+| Cleaned src/lib.rs | Removed #[cfg(feature = "gui")] pub mod gui |
 | Core library protection | Verified all Phase 1 + T2-07 core files unchanged |
 | Quality gates | fmt/clippy/build/test all PASS (94 tests) |
 | Documentation | Created Phase 2.5 migration decision doc |
 
-### Architecture (Future)
+### T2.5-01 — Tauri 2.0 Scaffold + Command Bridge
 
-`
-Tauri Frontend (React + TypeScript)
-  -> invoke() IPC -> Tauri Rust Commands -> nuwa-backup core library (lib.rs)
-`
+**Date:** 2026-07-07
+**Status:** DONE / PASS — full Tauri 2.0 scaffold with React + TypeScript frontend and Rust command bridge
 
-### Phase 2.5 Scope
+#### What Was Done (T2.5-01)
 
-| Task | Scope | Status |
-|:----:|-------|:------:|
-| T2.5-00 | Remove egui GUI, clean up, document migration | ✅ DONE |
-| T2.5-01 | Tauri 2.0 scaffold + command bridge | ⏳ NOT STARTED |
-| T2.5-02..08 | GUI pages (Dashboard, Backup, Restore, History, Schedule, Settings, Clone placeholder) | ⏳ NOT STARTED |
+| Action | Detail |
+|--------|--------|
+| Created src-tauri/ | Tauri 2.0 project scaffold with tauri.conf.json, build.rs, Cargo.toml |
+| Created src-tauri/src/main.rs | Tauri binary entry point (calls nuwa_tauri_lib::run()) |
+| Created src-tauri/src/lib.rs | Tauri commands (get_version, list_backup_jobs), AppState (Mutex config_path) |
+| Created src-tauri/capabilities/ | Default capability manifest for WebView permissions |
+| Created src-tauri/icons/ | App icons (32x32, 128x128, 128x128@2x, .icns, .ico) |
+| Created ui/ | React 19 + TypeScript + Vite 6 frontend scaffold |
+| Created ui/src/App.tsx | Page router with 7 pages + Sidebar/TopBar layout |
+| Created ui/src/components/ | Sidebar.tsx (nav), TopBar.tsx (page title + version) |
+| Created ui/src/pages/ | All 7 page stubs (Dashboard, Backup, Restore, History, Schedule, Settings, Clone placeholder) |
+| Created ui/src/styles.css | Base app styles (dark tech theme, flex layout) |
+| Connected nuwa-backup core | src-tauri Cargo.toml depends on nuwa-backup = { path = ".." } |
 
-### Key Documents
+#### Tauri Commands Registered
+
+| Command | Signature | Purpose |
+|---------|-----------|---------|
+| get_version | fn get_version() -> String | Returns "Nuwa Backup vX.Y.Z (GUI)" from CARGO_PKG_VERSION |
+| list_backup_jobs | fn list_backup_jobs() -> Result<Vec<(String, JobConfig)>, String> | Reads nuwa.toml and returns all configured backup jobs |
+
+#### Architecture
+
+Tauri Frontend (React + TypeScript) -> invoke() IPC -> Tauri Rust Commands (src-tauri/src/lib.rs) -> nuwa-backup core library (src/lib.rs)
+
+#### Quality Gates
+
+| Gate | Result |
+|------|:------:|
+| cargo fmt --check | ✅ PASS |
+| cargo clippy --all-targets -- -D warnings | ✅ PASS |
+| cargo build | ✅ PASS |
+| cargo test | ✅ PASS (94 tests) |
+| Forbidden scope audit | ✅ No forbidden features introduced |
+| Phase 1 core protection | ✅ Intact |
+| English-only / mojibake | ✅ Clean |
+
+#### Key Documents
 
 | Document | Location |
 |----------|----------|
 | Tauri Migration Decision | docs/phase-2.5/Phase_2_5_Tauri_Migration_Decision.md |
+| T2.5-01 Completion Report | docs/phase-2.5/Phase_2_5_T2_5_01_Tauri_Scaffold_Report.md |
+
+### Phase 2.5 Remaining Scope
+
+### Desktop Application Architecture
+
+The current architecture for the Tauri desktop GUI follows a strict layering:
+
+`
+React UI
+    |
+    | Tauri invoke() IPC
+    v
+Tauri Command Layer (src-tauri/src/commands/)
+    | - Parameter validation only
+    | - No business logic
+    v
+Application Service Layer (src/app/services/)
+    | - Data aggregation and orchestration
+    | - Product-level model mapping
+    v
+Core Engine (src/backup.rs, restore.rs, verify.rs, etc.)
+    | - Backup/restore engine, storage, history, scheduler
+    v
+Storage / SQLite / File System
+`
+
+### Layer Rules
+
+| Layer | Responsibility | Forbidden |
+|-------|---------------|-----------|
+| React UI | Display, interaction, state rendering | Direct core access, SQLite queries |
+| Tauri Command | Parameter validation, invoke handling, error conversion | Business logic |
+| Application Service | Business orchestration, data aggregation, model mapping | Core module modification |
+| Core Engine | Backup/restore, verification, storage | UI coupling, web access |
+
+### Core Protection Rule
+
+The following core engine modules are **frozen stable modules**. They must NOT be modified,
+restructured, or bypassed by any UI or Application Layer code:
+
+| Module | File | Status |
+|--------|------|--------|
+| Backup engine | src/backup.rs | FROZEN |
+| Restore engine | src/restore.rs | FROZEN |
+| Verification engine | src/verify.rs | FROZEN |
+| Manifest | src/manifest.rs | FROZEN |
+| Checksum | src/checksum.rs | FROZEN |
+| Storage | src/storage.rs | FROZEN |
+| Prune | src/prune.rs | FROZEN |
+
+**Violation example (FORBIDDEN):**
+
+```
+React UI -> invoke() -> Tauri command -> backup.rs  (WRONG)
+```
+
+**Correct pattern:**
+
+```
+React UI -> invoke() -> Tauri command -> app::services::backup_service -> backup.rs
+```
+
+
+
+| Task | Scope | Status |
+|:----:|-------|:------:|
+| T2.5-02 | Dashboard UI Architecture (React pages, mock data, layout components) | ✅ DONE / PASS |
+| T2.5-03A | Application API Layer Foundation (models, services, error, Tauri bridge) | ✅ DONE / PASS |
+| T2.5-03A.1 | Dashboard Product Polish (skeleton, empty/error states, micro-interactions) | ✅ DONE / PASS |
+| T2.5-03B | Backup Application Service (pending) | ⏳ NOT STARTED |
+| T2.5-03C | Restore/History/Schedule/Settings Service (pending) | ⏳ NOT STARTED |

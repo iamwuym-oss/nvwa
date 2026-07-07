@@ -1,12 +1,45 @@
-﻿# Nüwa Backup (女娲备份) — Phase 1
+﻿# Nüwa Backup (女娲备份)
 
-**Version:** 0.1.0
-**Phase:** 1 — Minimal File Backup/Restore CLI
-**Status:** PARTIAL (see Known Limitations)
+**Version:** 0.2.0
+**Phase:** 2.5 — Tauri Desktop GUI + Application Layer
+**Status:** ACTIVE
+Nüwa Backup is a **local-first desktop backup and recovery application** for Windows.
+It combines a high-performance Rust backup engine with a modern Tauri 2.0 desktop GUI
+built with React + TypeScript.
 
-Nüwa Backup is a local-first, single-machine file backup and disaster recovery
-tool for Windows. Phase 1 provides a minimal file-level CLI: backup, restore,
-verify, and list operations with SHA-256 integrity verification.
+### Current Architecture
+
+```
+React UI (TypeScript)
+    |
+    | Tauri invoke() IPC
+    v
+Tauri Command Layer (Rust, thin wrapper)
+    |
+    v
+Application Service Layer (Rust, src/app/)
+    |
+    v
+Core Engine (Rust, src/) — backup, restore, verify, storage
+    |
+    v
+File System / SQLite
+```
+
+### Phase 1 & 2 (CLOSED)
+- File-level backup/restore CLI with SHA-256 verification
+- Configuration system with multi-job TOML support
+- Backup history with SQLite database
+- Windows Task Scheduler integration
+- SMB/UNC path support
+- Retention policy with count/dry-run/prune
+
+### Phase 2.5 (ACTIVE)
+- Tauri 2.0 desktop GUI (replaces egui)
+- React + TypeScript + Vite frontend
+- Application Service Layer (src/app/)
+- Dashboard with real data integration
+- Commercial-grade UI with skeleton, empty, error states
 
 ---
 
@@ -263,3 +296,4 @@ src/
 tests/
   backup_restore_tests.rs   # 19 integration tests (3 unit tests in src/)
 ```
+

@@ -1,6 +1,6 @@
 ﻿# Nüwa Backup — Document Index
 
-**Last Updated:** 2026-07-06
+**Last Updated:** 2026-07-07
 
 ---
 
@@ -71,7 +71,7 @@ authority level, and applicability.
 | `Phase_2_Technical_Design.md` | AUTHORITATIVE | Phase 2 technical design and approved engineering basis for task-specific implementation |
 | `Phase_2_Revised_Plan.md` | AUTHORITATIVE | Phase 2 revised plan: 6 usability features + local desktop GUI implementation + Clone disabled placeholder. .nwb moved to Phase 3. |
 | `Phase_2_Planning_Source_Baseline.md` | AUTHORITATIVE | Phase 2 planning source baseline: confirmed/optional/forbidden scope, contamination cleanup record, required user decisions |
-| `Phase_2_UI_Direction_Decision.md` | AUTHORITATIVE | Phase 2 UI direction: local desktop GUI, Acronis True Image-like, egui+eframe. Clone page as disabled placeholder. Not Web GUI. Not FastAPI. |
+| `Phase_2_UI_Direction_Decision.md` | HISTORICAL | Phase 2 UI direction (superseded). egui/eframe replaced by Tauri 2.0+React. See Phase_2_5_Tauri_Migration_Decision.md. |
 
 Phase 2 implementation has started under task-specific approval.
 
@@ -118,19 +118,28 @@ No clone engine, clone CLI command, disk access, partition access, PhysicalDrive
 ---
 
 
-## docs/phase-2.5/ — Phase 2.5: GUI Technology Migration (egui → Tauri 2.0)
+## docs/phase-2.5/ — Phase 2.5: Tauri Desktop GUI + Application Layer
 
 | Document | Authority | Purpose |
 |----------|-----------|---------|
 | Phase_2_5_Tauri_Migration_Decision.md | AUTHORITATIVE | GUI technology migration from egui/eframe to Tauri 2.0 + React + TypeScript |
+| Phase_2_5_T2_5_01_Tauri_Scaffold_Report.md | AUTHORITATIVE | T2.5-01 Tauri 2.0 scaffold + command bridge completion report |
+| Phase_2_5_T2_5_02_Dashboard_UI_Architecture_Report.md | AUTHORITATIVE | T2.5-02 Dashboard UI architecture, mock data, and page structure |
+| Phase_2_5_T2_5_03A_Application_Layer_Report.md | AUTHORITATIVE | T2.5-03A Application API Layer foundation |
+| Phase_2_5_T2_5_03A_1_Dashboard_Polish_Report.md | AUTHORITATIVE | T2.5-03A.1 Dashboard product polish |
+| Phase_2_5_Closing_Report.md | AUTHORITATIVE | Phase 2.5 closing report: completed tasks, architecture summary, frozen modules, next phase
 
 ### Phase 2.5 Task Status
 
 | Task | Status |
 |:----:|:------:|
 | T2.5-00 — Remove egui GUI & Cleanup | ✅ DONE / PASS |
-| T2.5-01 — Tauri 2.0 Scaffold + Command Bridge | ⏳ NOT STARTED |
-| T2.5-02..08 — GUI Pages | ⏳ NOT STARTED |
+| T2.5-01 — Tauri 2.0 Scaffold + Command Bridge | ✅ DONE / PASS |
+| T2.5-02 — Dashboard UI Architecture | ✅ DONE / PASS |
+| T2.5-03A — Application API Layer Foundation | ✅ DONE / PASS |
+| T2.5-03A.1 — Dashboard Product Polish | ✅ DONE / PASS |
+| T2.5-03B — Backup Application Service | ⏳ NOT STARTED |
+| T2.5-03C — Restore/History/Schedule/Settings | ⏳ NOT STARTED |
 
 ## docs/phase-3/ — Reserved: NTFS Volume Image, VSS, Block Backup
 
@@ -171,7 +180,7 @@ No clone engine, clone CLI command, disk access, partition access, PhysicalDrive
 | `Phase_2_Technical_Design.md` | AUTHORITATIVE | Phase 2 technical design |
 | `Phase_2_Revised_Plan.md` | AUTHORITATIVE | Phase 2 revised plan: 6 usability features + GUI Dashboard |
 | `Phase_2_Planning_Source_Baseline.md` | AUTHORITATIVE | Phase 2 planning baseline, confirmed/forbidden scope |
-| `Phase_2_UI_Direction_Decision.md` | AUTHORITATIVE | UI direction decisions |
+| `Phase_2_UI_Direction_Decision.md` | HISTORICAL | Phase 2 UI direction (superseded). egui/eframe replaced by Tauri 2.0+React. See Phase_2_5_Tauri_Migration_Decision.md. |
 | `Phase_2_Closing_Report.md` | AUTHORITATIVE | Phase 2 closing report, final validation evidence |
 
 ### Phase 2 Task Status (Final)
@@ -222,7 +231,7 @@ No clone engine, clone CLI command, disk access, partition access, PhysicalDrive
 
 | Phase | Scope | Status |
 |-------|-------|:------:|
-| Phase 2.5 | GUI technology migration (egui -> Tauri 2.0) + full GUI implementation | ⏳ DEFERRED |
+| Phase 2.5 | Tauri desktop GUI + Application Layer | ✅ IN PROGRESS (T2.5-03A.1 complete) |
 | Phase 3.5 | GUI volume pages, GPT/MBR, boot partition, dynamic disk/RAID, BCD design | ❌ NOT AUTHORIZED |
 | Phase 4 | System recovery / WinPE / BMR | ❌ NOT AUTHORIZED |
 | Phase 5 | Disk clone | ❌ NOT AUTHORIZED |

@@ -563,6 +563,87 @@
 
 ---
 
+
+
+## ADL-T25-002 — Application Layer Introduction
+
+**Date:** 2026-07-07
+**Status:** APPROVED
+**Supersedes:** N/A
+
+### Decision
+
+Introduce src/app/ layer between the Tauri commands and the Core Engine. The Application Layer contains:
+- Models (product-level data contracts)
+- Services (business orchestration, data aggregation)
+- Error types (AppError with category tagging)
+
+### Rationale
+
+| Concern | Without Application Layer | With Application Layer |
+|---------|-------------------------|----------------------|
+| UI-Core coupling | React/Tauri directly calls backup.rs | All calls go through app/services/ |
+| API contract stability | UI tightly coupled to core types | UI depends on stable app models |
+| Enterprise migration | Cannot share between desktop/server | Models can be reused across Desktop CLI, Enterprise Agent, and Server |
+| Error handling | Raw NuwaError reaches UI | AppError with category enables React conditional rendering |
+
+### Consequences
+
+Positive:
+- Clean separation of concerns
+- Product-level API contracts independent of internal core implementation
+- Enterprise version can reuse app layer models
+
+Negative:
+- Additional indirection for simple operations
+- More files to maintain
+
+
+
+## ADL-T25-003 — Dashboard Data Contract
+
+**Date:** 2026-07-07
+**Status:** APPROVED
+**Supersedes:** N/A
+
+### Decision
+
+The Dashboard API contract returns structured data models, not UI-formatted strings.
+
+Correct:
+```rust
+DashboardOverview {
+    protection_status: ProtectionStatus::Healthy,
+    job_count: 5,
+    last_backup_time: "2026-07-07T10:00:00Z",
+    storage_usage: StorageStatus { ... }
+}
+```
+
+Incorrect:
+```json
+{
+    "status": "Your data is protected",
+    "lastBackup": "Today at 10:00 AM"
+}
+```
+
+### Rationale
+
+- UI text changes frequently (language, tone, A/B testing)
+- Structured data is reusable across Desktop, CLI, and future Server
+- React localizes formatting, not the backend
+- Enterprise version can return same models via REST API
+
+### Consequences
+
+Positive:
+- One model serves Desktop GUI, CLI output, and future Server API
+- UI team can change copy without backend changes
+- TypeScript interfaces directly mirror Rust structs
+
+Negative:
+- Additional transformation step required in the UI layer (dashboardApi.ts)
 ## Revision History
 
 | 版本 | 日期 | 变更原因 |
@@ -633,7 +714,8 @@
 | v2.0 | 2026-07-05 | 产品名统一为 Nüwa Backup |
 | v2.1 | 2026-07-05 | 灾备专家审查后：新增 10 条 ADL |
 | v2.2 | 2026-07-06 | T2-08 Dashboard 完成，新增 5 条 ADL-GUI 决策 |
-| v2.3 | 2026-07-06 | T3-00 Phase 3 范围重置，新增 3 条 ADR-P3 决策 |
+| v2.3 | 2026-07-06 |
+| v2.4 | 2026-07-07 | T2.5-03A: Added ADL-T25-002 (Application Layer), ADL-T25-003 (Dashboard Data Contract) | T3-00 Phase 3 范围重置，新增 3 条 ADR-P3 决策 |
 
 ---
 

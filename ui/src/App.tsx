@@ -1,7 +1,6 @@
-﻿import { useState } from "react";
-import Sidebar from "./components/Sidebar";
-import TopBar from "./components/TopBar";
-import Dashboard from "./pages/Dashboard";
+import { useState } from "react";
+import MainLayout from "./components/layout/MainLayout";
+import Dashboard from "./pages/Dashboard/Dashboard";
 import Backup from "./pages/Backup";
 import Restore from "./pages/Restore";
 import History from "./pages/History";
@@ -34,15 +33,9 @@ function App() {
   };
 
   return (
-    <div className="app-container">
-      <Sidebar currentPage={currentPage} onNavigate={setCurrentPage} />
-      <div className="main-area">
-        <TopBar currentPage={currentPage} />
-        <div className="content-area">
-          {renderPage()}
-        </div>
-      </div>
-    </div>
+    <MainLayout currentPage={currentPage} onNavigate={setCurrentPage}>
+      {renderPage()}
+    </MainLayout>
   );
 }
 

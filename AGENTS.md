@@ -91,7 +91,7 @@ The product must prioritize:
 
 ## 6. Authority Documents
 
-The following documents have higher priority than AGENTS.md. If AGENTS.md conflicts with any of them, those documents take precedence:
+Product scope and boundary decisions are governed by the following authoritative Phase-0 documents. If AGENTS.md conflicts with them on scope or boundary matters, those documents take precedence:
 
 | Priority | Document | Purpose |
 |----------|----------|---------|
@@ -103,10 +103,18 @@ The following documents have higher priority than AGENTS.md. If AGENTS.md confli
 
 ## 7. Current Phase
 
-**Current Phase: Phase 1 — Minimal File Backup/Restore CLI (CLOSED)**
+**Current Phase: Phase 2.5 — Tauri Desktop GUI + Application Layer (IN PROGRESS)**
 
-Phase 1 is now a **frozen baseline**. Phase 2 planning is allowed.
-Phase 2 coding is NOT allowed until explicit user approval.
+Phase 1 (file-level backup CLI) and Phase 2 (CLI usability, egui GUI) are **CLOSED frozen baselines**.
+Phase 2.5 (Tauri 2.0 Desktop GUI + React Frontend + Application Layer) is the current active development phase.
+
+### Completed Baselines
+
+| Phase | Scope | Status |
+|-------|-------|--------|
+| Phase 1 | File-level backup/restore CLI (Rust) | CLOSED |
+| Phase 2 | CLI usability: config, history, scheduler, SMB, UNC, egui GUI | CLOSED |
+| Phase 2.5 | Tauri 2.0 desktop GUI, React frontend, Application Layer | ACTIVE |
 
 ### Phase 1 Implemented Scope (Frozen Baseline)
 
@@ -667,9 +675,8 @@ Specifically forbidden during Phase 2 unless formally approved:
 - REFERENCE documents provide context but do not authorize implementation.
 - HISTORICAL documents are superseded and must never be used as current
   authority.
-- AGENTS.md at project root is the highest-priority operational document.
-- Phase 0 guardrails (00_Codex_Working_Guardrails.md, 09_MVP_Boundary_Risk.md)
-  take precedence over AGENTS.md if they conflict.
+- AGENTS.md is the highest-priority operational execution document. It governs how Codex performs work — phase rules, code organization, testing, reporting, and task lifecycle.
+- Phase 0 guardrails (00_Codex_Working_Guardrails.md, 09_MVP_Boundary_Risk.md) govern product scope and boundaries. If AGENTS.md conflicts with Phase 0 documents on scope or boundary matters, Phase 0 documents take precedence.
 
 ## 33. Phase Closing Rule
 
@@ -696,6 +703,7 @@ A Phase Closing task must:
 | v4.0 | 2026-07-05 | Phase 1 CLOSED and frozen as baseline. Added: Phase 1 Baseline Freeze Rule (§29), Phase 2 Planning Rule (§30), Future Phase Boundary Rule (§31), Document Authority Levels (§32), Phase Closing Rule (§33). Updated required reading list. |
 | v5.0 | 2026-07-05 | Added Technology Stack Clarification. Confirmed Rust CLI as the only authorized tech stack. FastAPI/Vanilla JS explicitly excluded. Superseded template text rule added. |
 | v5.1 | 2026-07-05 | Added Phase 2 GUI Direction. Confirmed Phase 2 includes local desktop GUI coding (egui+eframe). Acronis True Image-like UI. Clone page as disabled placeholder only. |
+| v5.2 | 2026-07-07 | Phase 2.5 GUI migration: replaced egui+eframe with Tauri 2.0 + React + TypeScript + Vite. Added Application Service Layer (src/app/). Updated Tech Stack to include Tauri/React. |
 
 
 ---
@@ -704,7 +712,7 @@ A Phase Closing task must:
 
 ### Confirmed Technology Stack
 
-This project (Nüwa Backup) is a **Rust CLI application**. The confirmed technology stack is:
+This project (Nüwa Backup) is a **Rust CLI + Desktop GUI application**. The confirmed technology stack is:
 
 | Layer | Technology | Status |
 |-------|-----------|--------|
@@ -715,11 +723,15 @@ This project (Nüwa Backup) is a **Rust CLI application**. The confirmed technol
 | Compression | zstd crate (optional, feature-gated) | **CONFIRMED** |
 | Storage | Flat-file directory + JSON manifest (Phase 1); .nwb experimental (Phase 3+) | **CONFIRMED** |
 | Python / FastAPI / SQLAlchemy | **NOT PART OF NÜWA BACKUP** | **EXCLUDED** |
-| Vanilla JS / Tailwind CSS / React / Vue / jQuery | **NOT PART OF NÜWA BACKUP** | **EXCLUDED** |
+| Desktop GUI framework | **Tauri 2.0** | **CONFIRMED** |
+| Frontend UI | **React 19 + TypeScript + Vite 6** | **CONFIRMED** |
+| Application Layer | **src/app/ (Rust models + services)** | **CONFIRMED** |
+| IPC | **Tauri invoke()** | **CONFIRMED** |
+| Python / FastAPI / SQLAlchemy | **NOT PART OF NÜWA BACKUP** | **EXCLUDED** |
 
 ### Superseded Template Text
 
-Any text in system-level instructions or templates that references FastAPI, SQLAlchemy, Vanilla JS, Tailwind CSS, React, Vue, or jQuery is **superseded and not applicable to Nüwa Backup**. These references must not be used for planning, design, or implementation of Nüwa Backup. The authoritative tech stack for Nüwa Backup is defined above.
+Any text in system-level instructions or templates that references FastAPI, SQLAlchemy, Vanilla JS, Tailwind CSS, Vue, or jQuery is **superseded and not applicable to Nüwa Backup**. The authoritative tech stack for Nüwa Backup is defined above.
 
 ### Authority Rule
 
@@ -730,27 +742,91 @@ Any text in system-level instructions or templates that references FastAPI, SQLA
 ---
 
 
-### Phase 2 GUI Direction (Updated 2026-07-05)
 
-The following UI decisions are confirmed by the user and are AUTHORITATIVE:
+
+### Phase 2.5 GUI Direction (Updated 2026-07-07)
+
+The desktop GUI technology has migrated from **egui + eframe** to **Tauri 2.0 + React + TypeScript + Vite**.
+The Phase 2 egui implementation was removed and replaced. The following decisions are AUTHORITATIVE:
 
 | Decision | Value |
 |----------|-------|
-| Phase 2 GUI coding | **Approved** (after PRD + Technical Design review) |
+| GUI coding status | **Phase 2 (egui) CLOSED. Phase 2.5 (Tauri) IN PROGRESS** |
 | UI direction | **Acronis True Image-like local desktop GUI** |
-| Candidate technology | **egui + eframe** (pure Rust, zero runtime dependencies) |
-| Not Web GUI | Confirmed excluded |
+| Desktop framework | **Tauri 2.0** |
+| Frontend | **React 19 + TypeScript + Vite 6** |
+| Rust backend | **Tauri Commands -> Application Layer -> Core Engine** |
+| Not Web GUI | Confirmed excluded (desktop native window, not browser-based) |
 | Not FastAPI / Python backend | Confirmed excluded |
-| Not Vanilla JS / Tailwind / React / Vue | Confirmed excluded |
 | Clone page in UI | **Allowed as disabled placeholder only** (Coming Soon / Phase 5) |
-| Clone functionality | **Not approved** — remains Phase 5 |
+| Clone functionality | **Not approved** - remains Phase 5 |
+
+Architecture:
+```
+React UI
+    |
+Tauri invoke() IPC
+    |
+Tauri Command Layer (thin wrapper, no business logic)
+    |
+Application Service Layer (src/app/) -- data aggregation, orchestration
+    |
+Core Engine (backup.rs, restore.rs, etc.)
+```
 
 Rules:
-- Phase 2 must produce a runnable local desktop GUI.
-- GUI may reuse existing Rust CLI core via lib.rs API calls.
+- GUI runs as a local desktop application via Tauri 2.0 (WebView2 on Windows).
 - GUI must NOT call Phase 3/4/5/6+ capabilities.
-- Clone page must show: "Disk Clone is planned for Phase 5 and is not available in Phase 2."
-- GUI coding starts only after Phase 2 PRD and Technical Design are approved.
+- UI code is in `ui/` (React + TypeScript), NOT in `src/gui/` (removed).
+- Rust backend code is in `src-tauri/` (Tauri commands) and `src/app/` (Application Layer).
+- All UI operations must go through Application Layer; never access Core directly.
+- Clone page must show "Disk Clone is planned for Phase 5 and is not available in Phase 2."
+
+
+
+### Phase 2.5 Development Rules
+
+**Allowed:**
+- React UI (TypeScript) in `ui/src/`
+- Tauri commands in `src-tauri/src/commands/`
+- Application Service Layer in `src/app/services/`
+- API models in `src/app/models/`
+- Error types in `src/app/error.rs`
+- CSS styles and theme updates in `ui/src/`
+- UI component creation/modification in `ui/src/components/`
+- All page implementations in `ui/src/pages/`
+- Read-only query interfaces in core modules (new pub fn, no logic changes)
+
+**Forbidden:**
+- Modifying frozen core modules: backup.rs, restore.rs, verify.rs, manifest.rs, checksum.rs, storage.rs, prune.rs
+- Bypassing Application Layer: UI must never call core modules directly
+- VSS snapshot integration (Phase 3)
+- .nwb image format implementation (Phase 3)
+- Volume-level backup (Phase 3)
+- System restore / WinPE recovery media (Phase 4)
+- Disk cloning implementation (Phase 5)
+- Differential/incremental backup (Phase 6+)
+- Encryption (Phase 6+)
+- Daemon/system service/IPC (future)
+- Cloud backup, enterprise management, multi-device (permanent excluded)
+
+**Architecture Rule:**
+```
+React UI -> Tauri invoke() -> Tauri Command -> Application Service -> Core Engine
+```
+UI must never directly call Core Engine modules or access SQLite.
+
+**Core Frozen Modules (do not modify):**
+| Module | File |
+|--------|------|
+| Backup engine | src/backup.rs |
+| Restore engine | src/restore.rs |
+| Verification | src/verify.rs |
+| Manifest | src/manifest.rs |
+| Checksum | src/checksum.rs |
+| Storage | src/storage.rs |
+| Prune | src/prune.rs |
+
 
 
 ### Product Runtime Language Policy
@@ -780,3 +856,5 @@ Compliance:
 - No coding task may be marked PASS if Chinese characters remain in src/, tests/, Cargo.toml, or runtime-generated product text.
 - Use ASCII-safe English in runtime output to avoid Windows PowerShell/console encoding issues.
 - Use \"Nuwa Backup\" (without umlaut) in code and runtime output; \"Nüwa Backup / 女娲备份\" may be used in documentation.
+
+

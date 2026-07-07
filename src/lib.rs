@@ -2,6 +2,7 @@
 // lib.rs -- Nuwa Backup library entry point
 // ============================================================================
 
+pub mod app;
 pub mod backup;
 pub mod checksum;
 pub mod cli;

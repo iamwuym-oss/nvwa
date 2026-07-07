@@ -85,6 +85,27 @@ mod platform {
     }
 }
 
+/// Get free and total disk space for the drive containing the specified path
+///
+/// This is a READ-ONLY query interface used by the Application Layer
+/// (dashboard_service) to display storage usage. It does not check against
+/// any required backup size; callers use check_disk_space for that.
+///
+/// Returns (free_bytes, total_bytes) where:
+/// - free_bytes: free space available to the caller
+/// - total_bytes: total capacity of the underlying volume
+pub fn free_space(path: &Path) -> Result<(u64, u64), NuwaError> {
+    // Ensure the path exists so we can query its drive
+    if !path.exists() {
+        std::fs::create_dir_all(path).map_err(|e| NuwaError::Io {
+            source: Some(e),
+            path: Some(path.to_path_buf()),
+            detail: "Cannot create directory for space query".to_string(),
+            suggestion: "Check that the path is valid and permissions are sufficient".to_string(),
+        })?;
+    }
+    platform::free_space(path)
+}
 /// Check if the target path has sufficient space for the backup data
 ///
 /// ## Parameters

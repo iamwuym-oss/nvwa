@@ -1,8 +1,8 @@
 ﻿# Nüwa Backup 功能规范文档
 
-**版本：** v2.1（经专家审查修正）
-**日期：** 2026-07-05
-**状态：** 范围已收敛 — 本文档记录产品终局功能规范，当前开发阶段仅实现标记为 Phase 1 的内容
+**版本：** v2.2（Phase mapping aligned with Phase 2.5 Tauri migration）
+**日期：** 2026-07-07
+**状态：** Phase-aligned — 本文档记录产品终局功能规范，当前开发阶段为 Phase 2.5
 
 ---
 
@@ -10,7 +10,7 @@
 
 本文档描述 Nüwa Backup 产品的**完整终局功能规范**。所有功能已与产品需求方逐项确认。
 
-**重要：** 本文档中的功能分为多个开发阶段实现。当前开发阶段（Phase 1）仅包含文件级完整备份/恢复的最小闭环。
+**重要：** 本文档中的功能分为多个开发阶段实现。当前开发阶段（Phase 2.5）为 Tauri Desktop GUI + Application Layer。
 
 | 标记 | 含义 |
 |------|------|
@@ -249,7 +249,7 @@ Phase 1 的具体范围和任务详见 `02_Development_Plan.md` 和 `09_MVP_Boun
 | 恢复内容浏览 | 树形文件浏览，支持文件和文件夹粒度 | 🔵 Phase 2+ |
 | 磁盘拓扑可视化 | 以图形方式展示磁盘和分区布局 | 🔵 Phase 3+ |
 | 操作流程 | 向导式界面，每一步清晰说明 | 🔵 Phase 2+ |
-| 界面技术 | **egui + eframe**（纯 Rust，零运行时依赖，Win7~Win11 全覆盖） | 🔵 Phase 2+ |
+| 界面技术 | **Tauri 2.0 + React 19 + TypeScript + Vite 6**（替换 egui — 详见 Phase 2.5 迁移报告） | 🟢 Phase 2.5 |
 
 ---
 
@@ -271,3 +271,5 @@ Phase 1 的具体范围和任务详见 `02_Development_Plan.md` 和 `09_MVP_Boun
 | v1.0 | 2026-07-04 | 初始版本 |
 | v2.0 | 2026-07-05 | 产品名统一为 Nüwa Backup |
 | v2.1 | 2026-07-05 | 灾备专家审查后修订：每项功能标注实现阶段，增加范围声明，收敛 Phase 1 范围 |
+| v2.2 | 2026-07-07 | Phase alignment: added Phase 2.5 (Tauri GUI). Updated GUI technology from egui to Tauri 2.0 + React. Phase table synchronized with actual development. |
+
