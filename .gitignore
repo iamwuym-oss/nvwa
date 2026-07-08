@@ -21,3 +21,18 @@ src-tauri/gen/
 
 # Python temp
 *.py
+
+# Local dev environment
+ui/.env
+
+# Temporary files from research / experiments
+acronis_*
+*snippet.txt
+dummy
+
+# Editor backup files
+*.bak
+*.rs.bak
+
+# Baidu Cloud sync
+*.baiduyun.uploading.cfg
