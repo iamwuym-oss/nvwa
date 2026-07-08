@@ -135,6 +135,7 @@ function formatPoint(point: RestorePointView): RestorePointViewFormatted {
 // ---------------------------------------------------------------------------
 
 const MOCK_RESTORE_POINTS: RestorePointView[] = [
+  // Documents - has 3 backup versions
   {
     backup_id: "bp-20260707-220000",
     job_name: "Documents",
@@ -146,6 +147,27 @@ const MOCK_RESTORE_POINTS: RestorePointView[] = [
     status: "success",
   },
   {
+    backup_id: "bp-20260706-220000",
+    job_name: "Documents",
+    timestamp: "2026-07-06T22:00:00Z",
+    source_root: "C:\\Users\\Tony\\Documents",
+    dest_path: "D:\\Backups\\Documents",
+    file_count: 14890,
+    total_bytes: 25894125568,
+    status: "success",
+  },
+  {
+    backup_id: "bp-20260705-220000",
+    job_name: "Documents",
+    timestamp: "2026-07-05T22:00:00Z",
+    source_root: "C:\\Users\\Tony\\Documents",
+    dest_path: "D:\\Backups\\Documents",
+    file_count: 14750,
+    total_bytes: 25673856000,
+    status: "success",
+  },
+  // Projects - has 2 backup versions
+  {
     backup_id: "bp-20260707-210000",
     job_name: "Projects",
     timestamp: "2026-07-07T21:00:00Z",
@@ -155,6 +177,17 @@ const MOCK_RESTORE_POINTS: RestorePointView[] = [
     total_bytes: 167675453440,
     status: "success",
   },
+  {
+    backup_id: "bp-20260706-210000",
+    job_name: "Projects",
+    timestamp: "2026-07-06T21:00:00Z",
+    source_root: "C:\\Users\\Tony\\Projects",
+    dest_path: "D:\\Backups\\Projects",
+    file_count: 88720,
+    total_bytes: 166994360320,
+    status: "success",
+  },
+  // Server Configs - single backup
   {
     backup_id: "bp-20260706-080000",
     job_name: "Server Configs",
@@ -168,11 +201,27 @@ const MOCK_RESTORE_POINTS: RestorePointView[] = [
 ];
 
 const MOCK_PREVIEW_FILES: RestoreFileEntry[] = [
+  // Documents - top level
   { relative_path: "Documents\\Report.docx", size_bytes: 245760, modified_time: "2026-07-07T21:30:00Z" },
   { relative_path: "Documents\\Budget.xlsx", size_bytes: 102400, modified_time: "2026-07-07T21:25:00Z" },
   { relative_path: "Documents\\Presentation.pptx", size_bytes: 5242880, modified_time: "2026-07-07T21:20:00Z" },
   { relative_path: "Documents\\Notes.txt", size_bytes: 4096, modified_time: "2026-07-07T21:15:00Z" },
-  { relative_path: "Documents\\Photo.jpg", size_bytes: 4194304, modified_time: "2026-07-07T20:00:00Z" },
+  // Projects - includes nested directories
+  { relative_path: "Projects\\Source Code\\main.rs", size_bytes: 15360, modified_time: "2026-07-07T18:00:00Z" },
+  { relative_path: "Projects\\Source Code\\types.rs", size_bytes: 8192, modified_time: "2026-07-07T17:55:00Z" },
+  { relative_path: "Projects\\Source Code\\utils.rs", size_bytes: 12288, modified_time: "2026-07-07T17:50:00Z" },
+  { relative_path: "Projects\\Config\\settings.toml", size_bytes: 2048, modified_time: "2026-07-07T16:30:00Z" },
+  { relative_path: "Projects\\Config\\database.yml", size_bytes: 1024, modified_time: "2026-07-07T16:25:00Z" },
+  { relative_path: "Projects\\README.md", size_bytes: 4096, modified_time: "2026-07-07T16:00:00Z" },
+  // Photos - deep nesting
+  { relative_path: "Photos\\Vacation\\beach.jpg", size_bytes: 4194304, modified_time: "2026-07-06T12:00:00Z" },
+  { relative_path: "Photos\\Vacation\\sunset.png", size_bytes: 8388608, modified_time: "2026-07-06T18:30:00Z" },
+  { relative_path: "Photos\\Vacation\\family\\group.jpg", size_bytes: 3145728, modified_time: "2026-07-06T14:00:00Z" },
+  { relative_path: "Photos\\Vacation\\family\\selfie.jpg", size_bytes: 2097152, modified_time: "2026-07-06T15:00:00Z" },
+  { relative_path: "Photos\\Screenshots\\error.png", size_bytes: 524288, modified_time: "2026-07-05T10:00:00Z" },
+  // Root level files
+  { relative_path: "config.json", size_bytes: 512, modified_time: "2026-07-01T08:00:00Z" },
+  { relative_path: "backup.log", size_bytes: 10240, modified_time: "2026-07-07T22:00:00Z" },
 ];
 
 const MOCK_RESTORE_RESULT: RestoreOperationResult = {

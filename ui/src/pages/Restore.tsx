@@ -16,9 +16,10 @@
 //   - Result:  restore completed with success/failure summary
 // ============================================================================
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import Badge from "../components/common/Badge";
 import Button from "../components/common/Button";import PathInput from "../components/common/PathInput";
+import BackupTreeView from "../components/common/BackupTreeView";
 import EmptyState from "../components/feedback/EmptyState";
 import ErrorState from "../components/feedback/ErrorState";
 import { theme } from "../theme";
@@ -118,141 +119,6 @@ function SkeletonRestoreCard() {
   );
 }
 
-// ---------------------------------------------------------------------------
-// Restore Point Card
-// ---------------------------------------------------------------------------
-
-interface RestorePointCardProps {
-  point: RestorePointViewFormatted;
-  onSelect: () => void;
-}
-
-function RestorePointCard({ point, onSelect }: RestorePointCardProps) {
-  return (
-    <div
-      onClick={onSelect}
-      role="button"
-      tabIndex={0}
-      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onSelect(); } }}
-      style={{
-        background: theme.colors.panel,
-        border: "1px solid " + theme.colors.panelBorder,
-        borderRadius: theme.radius.lg,
-        padding: theme.spacing.lg,
-        cursor: "pointer",
-        transition: theme.transition.fast,
-      }}
-      onMouseEnter={(e) => { e.currentTarget.style.borderColor = theme.colors.primary + "40"; e.currentTarget.style.background = theme.colors.panelHover; }}
-      onMouseLeave={(e) => { e.currentTarget.style.borderColor = theme.colors.panelBorder; e.currentTarget.style.background = theme.colors.panel; }}
-    >
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "12px" }}>
-        <div>
-          <div style={{ fontSize: theme.font.sizeMd, fontWeight: 700, color: theme.colors.textPrimary, marginBottom: "2px" }}>
-            {point.jobName ?? "Unknown Job"}
-          </div>
-          <div style={{ fontSize: theme.font.sizeXs, color: theme.colors.textMuted }}>
-            Backup ID: {point.backupId}
-          </div>
-        </div>
-        <Badge variant={point.statusColor}>{point.statusLabel}</Badge>
-      </div>
-      <div style={{ display: "flex", gap: "16px", flexWrap: "wrap", marginBottom: "8px" }}>
-        <div style={{ fontSize: theme.font.sizeSm, color: theme.colors.textSecondary }}>
-          <span style={{ color: theme.colors.textMuted }}>Files:</span> {point.fileCount.toLocaleString()}
-        </div>
-        <div style={{ fontSize: theme.font.sizeSm, color: theme.colors.textSecondary }}>
-          <span style={{ color: theme.colors.textMuted }}>Size:</span> {point.totalBytes}
-        </div>
-        <div style={{ fontSize: theme.font.sizeSm, color: theme.colors.textSecondary }}>
-          <span style={{ color: theme.colors.textMuted }}>Source:</span> {point.sourceRoot}
-        </div>
-      </div>
-      <div style={{ fontSize: theme.font.sizeXs, color: theme.colors.textMuted }}>
-        {point.timestampLabel} &middot; {point.timestamp}
-      </div>
-    </div>
-  );
-}
-
-// ---------------------------------------------------------------------------
-// Preview View
-// ---------------------------------------------------------------------------
-
-interface PreviewViewProps {
-  preview: RestorePreview;
-  onBack: () => void;
-}
-
-function PreviewView({ preview, onBack }: PreviewViewProps) {
-  return (
-    <div>
-      <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "20px" }}>
-        <Button variant="ghost" size="sm" onClick={onBack} icon={<ArrowLeftIcon />}>Back to restore points</Button>
-      </div>
-
-      {/* Point summary */}
-      <div style={{ background: theme.colors.panel, border: "1px solid " + theme.colors.panelBorder, borderRadius: theme.radius.lg, padding: theme.spacing.lg, marginBottom: "20px" }}>
-        <div style={{ fontSize: theme.font.sizeLg, fontWeight: 700, color: theme.colors.textPrimary, marginBottom: "8px" }}>
-          {preview.point.source_root}
-        </div>
-        <div style={{ display: "flex", gap: "24px", flexWrap: "wrap", marginBottom: "4px" }}>
-          <div style={{ fontSize: theme.font.sizeSm, color: theme.colors.textSecondary }}>
-            <span style={{ color: theme.colors.textMuted }}>Files:</span> {preview.total_files.toLocaleString()}
-          </div>
-          <div style={{ fontSize: theme.font.sizeSm, color: theme.colors.textSecondary }}>
-            <span style={{ color: theme.colors.textMuted }}>Total size:</span> {
-              preview.total_bytes > 0
-                ? (() => {
-                    const units = ["B", "KB", "MB", "GB", "TB"];
-                    const i = Math.floor(Math.log(preview.total_bytes) / Math.log(1024));
-                    const val = preview.total_bytes / Math.pow(1024, i);
-                    return `${val.toFixed(1)} ${units[i]}`;
-                  })()
-                : "0 B"
-            }
-          </div>
-          <div style={{ fontSize: theme.font.sizeSm, color: theme.colors.textSecondary }}>
-            <span style={{ color: theme.colors.textMuted }}>Backup:</span> {preview.point.timestamp}
-          </div>
-        </div>
-      </div>
-
-      {/* File list */}
-      <div style={{ background: theme.colors.panel, border: "1px solid " + theme.colors.panelBorder, borderRadius: theme.radius.lg, padding: theme.spacing.lg }}>
-        <div style={{ fontSize: theme.font.sizeSm, fontWeight: 600, color: theme.colors.textSecondary, textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: "12px" }}>
-          Files to restore ({preview.files.length.toLocaleString()} files)
-        </div>
-        {preview.files.length === 0 ? (
-          <div style={{ fontSize: theme.font.sizeSm, color: theme.colors.textMuted, padding: "20px 0", textAlign: "center" }}>
-            No files to restore in this backup point.
-          </div>
-        ) : preview.files.length <= 50 ? (
-          <div style={{ maxHeight: "320px", overflowY: "auto" }}>
-            {preview.files.map((file, idx) => (
-              <div key={idx} style={{ display: "flex", justifyContent: "space-between", padding: "4px 0", borderBottom: idx < preview.files.length - 1 ? "1px solid " + theme.colors.divider : "none" }}>
-                <div style={{ fontSize: theme.font.sizeSm, color: theme.colors.textPrimary, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", flex: 1, marginRight: "12px" }}>
-                  {file.relative_path}
-                </div>
-                <div style={{ fontSize: theme.font.sizeXs, color: theme.colors.textMuted, whiteSpace: "nowrap" }}>
-                  {(() => {
-                    const units = ["B", "KB", "MB", "GB", "TB"];
-                    const i = Math.floor(Math.log(file.size_bytes) / Math.log(1024));
-                    const val = file.size_bytes / Math.pow(1024, i);
-                    return `${val.toFixed(1)} ${units[i]}`;
-                  })()}
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div style={{ fontSize: theme.font.sizeSm, color: theme.colors.textMuted, padding: "12px 0" }}>
-            Showing first 50 of {preview.files.length.toLocaleString()} files. Full restore will include all files.
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
 
 // ---------------------------------------------------------------------------
 // Restore Form
@@ -301,7 +167,7 @@ function RestoreForm({ backupId, sourceRoot, onRestore, running }: RestoreFormPr
               disabled={running}
             />
           </div>
-          <Button variant="ghost" size="sm" onClick={() => setDest(suggestedDest)} disabled={running}>
+          <Button variant="ghost" onClick={() => setDest(suggestedDest)} disabled={running}>
             Use Default
           </Button>
         </div>
@@ -401,6 +267,24 @@ function RestoreResultView({ result, onDone }: RestoreResultViewProps) {
 // Main Restore Page
 // ---------------------------------------------------------------------------
 
+
+
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+
+function formatBytes(bytes: number): string {
+  if (bytes === 0) return "0 B";
+  const units = ["B", "KB", "MB", "GB", "TB"];
+  const i = Math.floor(Math.log(bytes) / Math.log(1024));
+  const val = bytes / Math.pow(1024, i);
+  return val.toFixed(1) + " " + units[i];
+}
+
+// ---------------------------------------------------------------------------
+// Main Restore Page
+// ---------------------------------------------------------------------------
+
 export default function Restore() {
   const [points, setPoints] = useState<RestorePointViewFormatted[]>([]);
   const [loading, setLoading] = useState(true);
@@ -416,38 +300,62 @@ export default function Restore() {
   const [restoreRunning, setRestoreRunning] = useState(false);
   const [restoreResult, setRestoreResult] = useState<RestoreOperationResult | null>(null);
 
-  // Fetch restore points
-  const fetchPoints = useCallback(() => {
+  // Two-column layout state
+  const [expandedPlans, setExpandedPlans] = useState<Set<string>>(new Set());
+  const [selectedTreePath, setSelectedTreePath] = useState<string | null>(null);
+
+  // Group points by jobName
+  const groupedPoints = useMemo(() => {
+    const groups = new Map<string, RestorePointViewFormatted[]>();
+    for (const p of points) {
+      const key = p.jobName || "Unnamed Plan";
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key)!.push(p);
+    }
+    for (const [, pts] of groups) {
+      pts.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+    }
+    return groups;
+  }, [points]);
+
+  const totalPointCount = points.length;
+  const totalPlanCount = groupedPoints.size;
+
+  const togglePlan = (name: string) => {
+    setExpandedPlans((prev) => {
+      const next = new Set(prev);
+      if (next.has(name)) next.delete(name);
+      else next.add(name);
+      return next;
+    });
+  };
+
+  const fetchPoints = useCallback(async () => {
     setLoading(true);
     setError(null);
-
-    listRestorePoints()
-      .then((pts) => {
-        setPoints(pts);
-        setLoading(false);
-      })
-      .catch((err: unknown) => {
-        const msg = err instanceof Error ? err.message : "Failed to load restore points";
-        setError(msg);
-        setLoading(false);
-      });
+    try {
+      const data = await listRestorePoints();
+      setPoints(data);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Failed to load restore points";
+      setError(msg);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  useEffect(() => {
-    fetchPoints();
-  }, [fetchPoints]);
+  useEffect(() => { fetchPoints(); }, [fetchPoints]);
 
-  // Select a restore point and load preview
   const handleSelectPoint = useCallback(async (point: RestorePointViewFormatted) => {
     setSelectedPoint(point);
+    setPreview(null);
     setPreviewLoading(true);
     setPreviewError(null);
-    setPreview(null);
     setRestoreResult(null);
-
+    setSelectedTreePath(null);
     try {
-      const p = await getRestorePreview(point.backupId);
-      setPreview(p);
+      const data = await getRestorePreview(point.backupId);
+      setPreview(data);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Failed to load preview";
       setPreviewError(msg);
@@ -456,19 +364,17 @@ export default function Restore() {
     }
   }, []);
 
-  // Go back to restore point list
   const handleBackToList = useCallback(() => {
     setSelectedPoint(null);
     setPreview(null);
     setPreviewError(null);
     setRestoreResult(null);
+    setSelectedTreePath(null);
   }, []);
 
-  // Execute restore
   const handleRestore = useCallback(async (request: { backupId: string; dest: string; overwrite: boolean }) => {
     setRestoreRunning(true);
     setRestoreResult(null);
-
     try {
       const res = await executeRestore({
         backup_id: request.backupId,
@@ -493,12 +399,12 @@ export default function Restore() {
     }
   }, []);
 
-  // ---- Loading ----
+  // --- Loading ---
   if (loading) {
     return (
-      <div style={{ padding: theme.spacing.lg, maxWidth: "900px" }}>
+      <div style={{ padding: theme.spacing.lg }}>
         <div style={{ marginBottom: "24px" }}>
-          <div style={{ width: "200px", height: "28px", borderRadius: theme.radius.sm, ...{ background: "linear-gradient(90deg, #1e2a45 25%, #253050 50%, #1e2a45 75%)", backgroundSize: "200% 100%", animation: "skeletonPulse 1.5s infinite" } }} />
+          <div style={{ width: "200px", height: "28px", borderRadius: theme.radius.sm, background: "linear-gradient(90deg, #1e2a45 25%, #253050 50%, #1e2a45 75%)", backgroundSize: "200% 100%", animation: "skeletonPulse 1.5s infinite" }} />
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
           <SkeletonRestoreCard /><SkeletonRestoreCard /><SkeletonRestoreCard />
@@ -507,7 +413,7 @@ export default function Restore() {
     );
   }
 
-  // ---- Error ----
+  // --- Error ---
   if (error) {
     return (
       <div style={{ padding: theme.spacing.lg }}>
@@ -525,7 +431,7 @@ export default function Restore() {
     );
   }
 
-  // ---- Empty ----
+  // --- Empty ---
   if (points.length === 0) {
     return (
       <div style={{ padding: theme.spacing.lg }}>
@@ -538,73 +444,183 @@ export default function Restore() {
     );
   }
 
-  // ---- Preview / Restore flow ----
-  if (selectedPoint) {
-    return (
-      <div style={{ padding: theme.spacing.lg, maxWidth: "900px" }}>
-        {/* Restore result */}
-        {restoreResult && (
-          <div style={{ marginBottom: "20px" }}>
-            <RestoreResultView result={restoreResult} onDone={handleBackToList} />
-          </div>
-        )}
-
-        {/* Preview section */}
-        {!restoreResult && (
-          <>
-            {previewLoading ? (
-              <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-                <div style={{ width: "200px", height: "20px", borderRadius: theme.radius.sm, ...{ background: "linear-gradient(90deg, #1e2a45 25%, #253050 50%, #1e2a45 75%)", backgroundSize: "200% 100%", animation: "skeletonPulse 1.5s infinite" } }} />
-                <SkeletonRestoreCard />
-              </div>
-            ) : previewError ? (
-              <ErrorState
-                title="Failed to load restore preview"
-                message={previewError}
-                onRetry={() => handleSelectPoint(selectedPoint)}
-              />
-            ) : preview ? (
-              <PreviewView preview={preview} onBack={handleBackToList} />
-            ) : null}
-          </>
-        )}
-
-        {/* Restore form (shown after preview loads, or after result dismissed) */}
-        {preview && !restoreResult && (
-          <div style={{ marginTop: "20px" }}>
-            <RestoreForm
-              backupId={selectedPoint.backupId}
-              sourceRoot={selectedPoint.sourceRoot}
-              onRestore={handleRestore}
-              running={restoreRunning}
-            />
-          </div>
-        )}
-      </div>
-    );
-  }
-
-  // ---- List View ----
+  // --- Two-column layout ---
   return (
-    <div style={{ padding: theme.spacing.lg, maxWidth: "900px" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px" }}>
-        <div>
-          <h2 style={{ fontSize: theme.font.sizeXxl, fontWeight: 700, color: theme.colors.textPrimary, margin: 0 }}>Restore</h2>
-          <p style={{ fontSize: theme.font.sizeSm, color: theme.colors.textMuted, marginTop: "2px" }}>
-            {points.length} restore point{points.length > 1 ? "s" : ""} available
+    <div style={{ display: "flex", gap: "16px", padding: theme.spacing.lg, height: "calc(100vh - 100px)" }}>
+
+      {/* Left Column: Restore Points by Plan */}
+      <div style={{
+        width: "320px",
+        minWidth: "320px",
+        background: theme.colors.panel,
+        border: "1px solid " + theme.colors.panelBorder,
+        borderRadius: theme.radius.lg,
+        display: "flex",
+        flexDirection: "column",
+        overflow: "hidden",
+      }}>
+        {/* Header */}
+        <div style={{ padding: "16px", borderBottom: "1px solid " + theme.colors.panelBorder }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <h3 style={{ margin: 0, fontSize: theme.font.sizeLg, fontWeight: 600, color: theme.colors.textPrimary }}>
+              Restore Points
+            </h3>
+            <Button variant="secondary" onClick={fetchPoints} icon={<RefreshIcon />}>Refresh</Button>
+          </div>
+          <p style={{ margin: "4px 0 0", fontSize: theme.font.sizeSm, color: theme.colors.textMuted }}>
+            {totalPointCount} point{totalPointCount !== 1 ? "s" : ""} in {totalPlanCount} plan{totalPlanCount !== 1 ? "s" : ""}
           </p>
         </div>
-        <Button variant="secondary" size="sm" onClick={fetchPoints} icon={<RefreshIcon />}>Refresh</Button>
+
+        {/* Scrollable plan list */}
+        <div style={{ flex: 1, overflowY: "auto", padding: "8px" }}>
+          {Array.from(groupedPoints.entries()).map(([planName, pts]) => {
+            const isExpanded = expandedPlans.has(planName);
+            return (
+              <div key={planName} style={{ marginBottom: "4px" }}>
+                {/* Plan header */}
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    padding: "8px 10px",
+                    borderRadius: theme.radius.sm,
+                    cursor: "pointer",
+                    background: isExpanded ? theme.colors.primaryDim : "transparent",
+                    fontWeight: 500,
+                    fontSize: theme.font.sizeSm,
+                    color: theme.colors.textPrimary,
+                  }}
+                  onClick={() => togglePlan(planName)}
+                >
+                  <span style={{ fontSize: "10px", width: "14px", textAlign: "center", color: theme.colors.textMuted }}>
+                    {isExpanded ? String.fromCharCode(9660) : String.fromCharCode(9654)}
+                  </span>
+                  <span>{String.fromCharCode(128193)}</span>
+                  <span style={{ flex: 1 }}>{planName}</span>
+                  <Badge variant="info">{pts.length}</Badge>
+                </div>
+
+                {/* Backup points (when expanded) */}
+                {isExpanded && (
+                  <div style={{ marginLeft: "8px", borderLeft: "2px solid " + theme.colors.panelBorder }}>
+                    {pts.map((pt) => (
+                      <div
+                        key={pt.backupId}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "8px",
+                          padding: "6px 10px 6px 16px",
+                          cursor: "pointer",
+                          borderRadius: theme.radius.sm,
+                          margin: "2px 4px",
+                          background: selectedPoint?.backupId === pt.backupId ? theme.colors.primaryDim : "transparent",
+                          fontSize: theme.font.sizeXs,
+                          color: theme.colors.textSecondary,
+                        }}
+                        onClick={() => handleSelectPoint(pt)}
+                      >
+                        <span>{String.fromCharCode(128197)}</span>
+                        <span style={{ flex: 1 }}>{pt.timestampLabel}</span>
+                        <Badge variant="info">Full Backup</Badge>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
       </div>
 
-      <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-        {points.map((point) => (
-          <RestorePointCard
-            key={point.backupId}
-            point={point}
-            onSelect={() => handleSelectPoint(point)}
-          />
-        ))}
+      {/* Right Column: Selected point detail */}
+      <div style={{
+        flex: 1,
+        background: theme.colors.panel,
+        border: "1px solid " + theme.colors.panelBorder,
+        borderRadius: theme.radius.lg,
+        display: "flex",
+        flexDirection: "column",
+        overflow: "hidden",
+      }}>
+        {selectedPoint ? (
+          <>
+            {/* Point summary header */}
+            <div style={{ padding: "16px", borderBottom: "1px solid " + theme.colors.panelBorder }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+                <div>
+                  <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                    <Button variant="secondary" onClick={handleBackToList} icon={<ArrowLeftIcon />}>Back</Button>
+                    <h3 style={{ margin: 0, fontSize: theme.font.sizeLg, fontWeight: 600, color: theme.colors.textPrimary }}>
+                      {selectedPoint.jobName || "Restore Point"}
+                    </h3>
+                    <Badge variant={selectedPoint.statusColor}>{selectedPoint.statusLabel}</Badge>
+                  </div>
+                  <p style={{ margin: "6px 0 0", fontSize: theme.font.sizeSm, color: theme.colors.textMuted }}>
+                    {selectedPoint.sourceRoot}
+                  </p>
+                  <p style={{ margin: "2px 0 0", fontSize: theme.font.sizeXs, color: theme.colors.textMuted }}>
+                    {String.fromCharCode(128197)} {selectedPoint.timestampLabel}  {String.fromCharCode(128196)} {selectedPoint.fileCount.toLocaleString()} files  {String.fromCharCode(128190)} {selectedPoint.totalBytes}  Full Backup
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Content area: tree + restore */}
+            <div style={{ flex: 1, overflowY: "auto", padding: "16px" }}>
+              {restoreResult ? (
+                <RestoreResultView result={restoreResult} onDone={handleBackToList} />
+              ) : previewLoading ? (
+                <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                  <div style={{ width: "200px", height: "20px", borderRadius: theme.radius.sm, background: "linear-gradient(90deg, #1e2a45 25%, #253050 50%, #1e2a45 75%)", backgroundSize: "200% 100%", animation: "skeletonPulse 1.5s infinite" }} />
+                  <SkeletonRestoreCard />
+                </div>
+              ) : previewError ? (
+                <ErrorState
+                  title="Failed to load restore preview"
+                  message={previewError}
+                  onRetry={() => handleSelectPoint(selectedPoint)}
+                />
+              ) : preview ? (
+                <>
+                  {/* File tree */}
+                  <div style={{ marginBottom: "12px" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
+                      <span style={{ fontSize: theme.font.sizeSm, color: theme.colors.textSecondary }}>
+                        {"Files to restore (" + preview.total_files + " files, " + formatBytes(preview.total_bytes) + ")"}
+                      </span>
+                    </div>
+                    <BackupTreeView
+                      files={preview.files}
+                      selectedPath={selectedTreePath}
+                      onSelect={setSelectedTreePath}
+                    />
+                  </div>
+                  {/* Restore form */}
+                  <RestoreForm
+                    backupId={selectedPoint.backupId}
+                    sourceRoot={selectedPoint.sourceRoot}
+                    onRestore={handleRestore}
+                    running={restoreRunning}
+                  />
+                </>
+              ) : null}
+            </div>
+          </>
+        ) : (
+          /* Empty detail state */
+          <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: "12px", color: theme.colors.textMuted }}>
+            <ShieldIcon />
+            <span style={{ fontSize: theme.font.sizeLg, fontWeight: 500, color: theme.colors.textSecondary }}>
+              Select a backup point
+            </span>
+            <span style={{ fontSize: theme.font.sizeSm }}>
+              Choose a restore point from the left panel to browse its contents and start a restore.
+            </span>
+          </div>
+        )}
       </div>
     </div>
   );
