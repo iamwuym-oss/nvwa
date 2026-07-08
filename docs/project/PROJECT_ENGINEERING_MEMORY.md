@@ -2,7 +2,7 @@
 
 **Version:** 0.2.0
 **Last Updated:** 2026-07-08 (Updated T2.5-03D + T2.5-04B)
-**Current Phase:** Phase 2.5 — Tauri Desktop GUI + Application Layer (T2.5-03D.1 DONE)
+**Current Phase:** Phase 2.5 — Tauri Desktop GUI + Application Layer (152 tests, 14 commands, 5 services, 4 active pages) — IN PROGRESS
 **Phase 1 Status:** CLOSED (PARTIAL — non-Windows space check limitation accepted)
 
 ---
@@ -572,3 +572,8 @@ React UI -> invoke() -> Tauri command -> app::services::backup_service -> backup
 | T2.5-03D.1 | Restore Safety Hardening (path validation, rename reject) | ✅ DONE / PASS |
 | T2.5-04A | Config Job CRUD Service (plan CRUD) | ✅ DONE / PASS |
 | T2.5-04B | Settings Backup Plan UI | ✅ DONE / PASS |
+| T2.5-04C | Native Path Picker (tauri-plugin-dialog) | ✅ DONE / PASS (superseded by 04C.1) |
+| T2.5-04C.1 | In-App File Browser (FileBrowserModal) | ✅ DONE / PASS |
+| T2.5-04D | Backup Content Browser (Restore 3-column + BackupTreeView) | 🔄 UNCOMMITTED |
+| T2.5-DOC-01A | Documentation synchronization | ✅ DONE / PASS |
+| T2.5-DOC-02 | AGENTS + README alignment | ✅ DONE / PASS |

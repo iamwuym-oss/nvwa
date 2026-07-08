@@ -35,11 +35,29 @@ File System / SQLite
 - Retention policy with count/dry-run/prune
 
 ### Phase 2.5 (ACTIVE)
+
+**Completed UI Pages:**
+
+| Page | Status |
+|------|--------|
+| Dashboard | ✅ Real data, health status, activity list, storage chart |
+| Settings | ✅ Backup Plan CRUD (list/create/edit/delete) |
+| Backup | ✅ Job list, run backup, empty state |
+| Restore | ✅ 3-column layout with plan grouping, file tree, restore form |
+
+**Completed Infrastructure:**
 - Tauri 2.0 desktop GUI (replaces egui)
 - React + TypeScript + Vite frontend
-- Application Service Layer (src/app/)
-- Dashboard with real data integration
-- Commercial-grade UI with skeleton, empty, error states
+- Application Service Layer (src/app/) — 5 services, 6 models
+- In-App File Browser (FileBrowserModal) — replaces OS native dialog
+- 14 Tauri commands across 6 modules
+- 152 Rust tests, all passing
+
+**Not Yet Implemented:**
+- History page — placeholder only
+- Schedule page — placeholder only
+- Disk Clone — disabled placeholder
+- Enterprise Backup Catalog Browser — mock data only
 
 ---
 

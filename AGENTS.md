@@ -744,7 +744,7 @@ Any text in system-level instructions or templates that references FastAPI, SQLA
 
 
 
-### Phase 2.5 GUI Direction (Updated 2026-07-07)
+### Phase 2.5 GUI Direction (Updated 2026-07-09)
 
 The desktop GUI technology has migrated from **egui + eframe** to **Tauri 2.0 + React + TypeScript + Vite**.
 The Phase 2 egui implementation was removed and replaced. The following decisions are AUTHORITATIVE:
@@ -810,6 +810,65 @@ Rules:
 - Encryption (Phase 6+)
 - Daemon/system service/IPC (future)
 - Cloud backup, enterprise management, multi-device (permanent excluded)
+
+### Phase 2.5 Current State
+
+**Latest Commit:** `4962910` — fix: replace native dialog with in-app file browser
+
+**Current Uncommitted Work (T2.5-04D):**
+- ui/src/pages/Restore.tsx — 3-column layout rewrite
+- ui/src/api/restoreApi.ts — enhanced mock data with multi-plan backups
+- ui/src/components/common/BackupTreeView.tsx — new file tree component
+
+#### Application Services (src/app/services/)
+
+| Service | File | API |
+|---------|------|-----|
+| backup_service | src/app/services/backup_service.rs (271 lines) | list_jobs, get_job_detail, run_backup |
+| config_service | src/app/services/config_service.rs (219 lines) | list/create/update/delete job config |
+| dashboard_service | src/app/services/dashboard_service.rs (199 lines) | get_overview |
+| file_browser_service | src/app/services/file_browser_service.rs (191 lines) | list_roots, list_directory |
+| restore_service | src/app/services/restore_service.rs (264 lines) | list_restore_points, get_preview, execute_restore |
+
+#### UI Page State
+
+| Page | Status | Notes |
+|------|--------|-------|
+| Dashboard | ✅ Complete | Real data flow from Core through Application Layer |
+| Settings | ✅ Complete | Backup Job CRUD via config_service |
+| Backup | ✅ Complete | Reads jobs from Settings; run/empty states |
+| Restore | ✅ 3-column layout | Plan grouping + BackupTreeView (T2.5-04D uncommitted) |
+| History | ❌ Placeholder | 4-line stub, no backend service |
+| Schedule | ❌ Placeholder | 4-line stub, no backend service |
+| Clone | ❌ Disabled | Future phase notice only |
+
+#### Configuration Model
+
+- **JobConfig** (in src/app/models/config_job.rs) is the factual backup job configuration model
+- **Do NOT create a BackupPlan or BackupPlanService abstraction** — Settings already provides full CRUD via config_service
+- UI components (Backup page, Settings page) read from the same config_service
+
+#### File Browser Policy
+
+- **Do NOT use OS native dialog** (tauri-plugin-dialog was removed in 04C.1)
+- Browse button must open **Nüwa In-App FileBrowserModal** (ui/src/components/common/FileBrowserModal.tsx)
+- FileBrowserService provides list_roots() and list_directory() for navigation
+- Users may also type paths manually
+- Restore destination is NOT restricted by a system directory blacklist
+- Restore path traversal protection is handled in the Core restore.rs layer
+
+#### Guardrails for Future Codex
+
+The following are common mistakes that must be avoided:
+
+1. Phase 2.5 is **IN PROGRESS**, not CLOSED. History/Schedule remain placeholders.
+2. **Do NOT restore egui** direction — it was superseded by Tauri 2.0 + React
+3. **Do NOT re-introduce OS native dialog** — FileBrowserModal is the current solution
+4. **Do NOT create a BackupPlan abstraction** — JobConfig is the factual model
+5. **Do NOT claim mock restore data represents real backend catalog** capability
+6. **Do NOT claim History/Schedule are implemented**
+7. **Do NOT bypass the Application Layer** — UI must never call Core Engine modules or SQLite directly
+8. **Do NOT modify frozen core modules**: backup.rs, restore.rs, verify.rs, manifest.rs, checksum.rs, storage.rs, prune.rs
 
 **Architecture Rule:**
 ```

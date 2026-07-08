@@ -1,6 +1,6 @@
 ﻿# Nüwa Backup — Document Index
 
-**Last Updated:** 2026-07-08
+**Last Updated:** 2026-07-09
 
 ---
 
@@ -129,6 +129,18 @@ No clone engine, clone CLI command, disk access, partition access, PhysicalDrive
 | Phase_2_5_T2_5_03A_1_Dashboard_Polish_Report.md | AUTHORITATIVE | T2.5-03A.1 Dashboard product polish |
 | Phase_2_5_Closing_Report.md | AUTHORITATIVE | Phase 2.5 closing report: completed tasks, architecture summary, frozen modules, next phase
 
+
+### Missing Report Documents
+
+The following tasks were completed but do not have individual report files. Their key details are captured in Phase_2_5_Current_Status.md and Phase_2_5_Codex_Handoff.md:
+
+- T2.5-03D (Restore Service + UI)
+- T2.5-03D.1 (Restore Safety Hardening)
+- T2.5-04A (Config Job CRUD Service)
+- T2.5-04B (Settings Backup Plan UI)
+- T2.5-04C (Native Path Picker — superseded)
+- T2.5-04C.1 (In-App File Browser)
+
 ### Phase 2.5 Task Status
 
 | Task | Status |
@@ -140,6 +152,15 @@ No clone engine, clone CLI command, disk access, partition access, PhysicalDrive
 | T2.5-03A.1 — Dashboard Product Polish | ✅ DONE / PASS |
 | T2.5-03B — Backup Application Service Foundation | ✅ DONE / PASS |
 | T2.5-03C — Backup UI Integration | ✅ DONE / PASS |
+| T2.5-03D — Restore Service + UI | ✅ DONE / PASS |
+| T2.5-03D.1 — Restore Safety Hardening | ✅ DONE / PASS |
+| T2.5-04A — Config Job CRUD Service | ✅ DONE / PASS |
+| T2.5-04B — Settings Backup Plan UI | ✅ DONE / PASS |
+| T2.5-04C — Native Path Picker | ✅ DONE / PASS (superseded by 04C.1) |
+| T2.5-04C.1 — In-App File Browser | ✅ DONE / PASS |
+| T2.5-04D — Backup Content Browser | 🔄 UNCOMMITTED — 3 frontend files in working tree |
+| T2.5-DOC-01A — Documentation sync | ✅ DONE / PASS |
+| T2.5-DOC-02 — AGENTS + README alignment | ✅ DONE / PASS |
 
 ## docs/phase-3/ — Reserved: NTFS Volume Image, VSS, Block Backup
 
@@ -231,7 +252,7 @@ No clone engine, clone CLI command, disk access, partition access, PhysicalDrive
 
 | Phase | Scope | Status |
 |-------|-------|:------:|
-| Phase 2.5 | Tauri desktop GUI + Application Layer | ✅ IN PROGRESS (T2.5-03C DONE) |
+| Phase 2.5 | Tauri desktop GUI + Application Layer | ✅ IN PROGRESS (152 tests, 14 Tauri commands, 5 services, 4 active pages) |
 | Phase 3.5 | GUI volume pages, GPT/MBR, boot partition, dynamic disk/RAID, BCD design | ❌ NOT AUTHORIZED |
 | Phase 4 | System recovery / WinPE / BMR | ❌ NOT AUTHORIZED |
 | Phase 5 | Disk clone | ❌ NOT AUTHORIZED |
