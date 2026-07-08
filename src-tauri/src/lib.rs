@@ -52,6 +52,14 @@ pub fn run() {
             commands::backup::list_backup_jobs,
             commands::backup::get_backup_job_detail,
             commands::backup::run_backup,
+            commands::config::list_job_configs,
+            commands::config::get_job_config,
+            commands::config::create_job_config,
+            commands::config::update_job_config,
+            commands::config::delete_job_config,
+            commands::restore::list_restore_points,
+            commands::restore::get_restore_preview,
+            commands::restore::execute_restore,
         ])
         .run(tauri::generate_context!())
         .expect("error while running Nuwa Backup GUI");

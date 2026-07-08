@@ -1,4 +1,4 @@
-﻿// ============================================================================
+// ============================================================================
 // backup_service_tests.rs -- Test the backup service layer
 //
 // Test scenarios:
@@ -51,7 +51,10 @@ compress = false
 
 fn create_misconfigured_config_in(dir: &Path) {
     // Source path does not exist
-    let src = dir.join("nonexistent_source").to_string_lossy().replace("\\", "\\\\");
+    let src = dir
+        .join("nonexistent_source")
+        .to_string_lossy()
+        .replace("\\", "\\\\");
     let dst = dir.join("dest").to_string_lossy().replace("\\", "\\\\");
 
     let toml = format!(
@@ -96,7 +99,10 @@ fn test_list_jobs_with_valid_config() {
         assert_eq!(jobs.len(), 2, "Config has 2 jobs");
 
         let test_job = jobs.iter().find(|j| j.name == "TestJob").unwrap();
-        assert_eq!(test_job.source, dir.join("source").to_string_lossy().to_string());
+        assert_eq!(
+            test_job.source,
+            dir.join("source").to_string_lossy().to_string()
+        );
         assert!(test_job.compress, "TestJob should have compression enabled");
         assert_eq!(test_job.status, BackupJobStatus::NeverRun, "No history yet");
 
@@ -118,8 +124,7 @@ fn test_get_job_detail_valid() {
     with_clean_dir("get_job_detail", |dir| {
         create_valid_config_in(dir);
 
-        let job = backup_service::get_job_detail("TestJob")
-            .expect("Should find TestJob");
+        let job = backup_service::get_job_detail("TestJob").expect("Should find TestJob");
         assert_eq!(job.name, "TestJob");
         assert!(job.compress);
         assert_eq!(job.status, BackupJobStatus::NeverRun);
@@ -141,8 +146,7 @@ fn test_run_backup_dry_success() {
     with_clean_dir("run_dry", |dir| {
         create_valid_config_in(dir);
 
-        let result = backup_service::run_backup_dry("TestJob")
-            .expect("Dry run should succeed");
+        let result = backup_service::run_backup_dry("TestJob").expect("Dry run should succeed");
         assert_eq!(result.status, "dry_run");
         assert!(result.error.is_none());
     });

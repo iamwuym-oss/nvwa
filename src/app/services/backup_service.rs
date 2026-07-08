@@ -1,4 +1,4 @@
-﻿// ============================================================================
+// ============================================================================
 // backup_service.rs -- Backup domain service
 //
 // Responsibilities:
@@ -77,8 +77,7 @@ pub fn run_backup(job_name: &str) -> Result<BackupResult, AppError> {
     // Execute the backup via core engine
     let backup_id = crate::backup::execute_backup(&job_cfg.source, &job_cfg.dest, job_cfg.compress)
         .map_err(|e| {
-            AppError::internal(format!("Backup failed: {}", e))
-                .with_detail(e.to_string())
+            AppError::internal(format!("Backup failed: {}", e)).with_detail(e.to_string())
         })?;
 
     let duration_ms = start.elapsed().as_millis() as u64;
@@ -89,8 +88,8 @@ pub fn run_backup(job_name: &str) -> Result<BackupResult, AppError> {
         job_name,
         &job_cfg.source,
         &job_cfg.dest,
-        0,    // file_count — unknown from execute_backup return
-        0,    // total_bytes — unknown from execute_backup return
+        0, // file_count — unknown from execute_backup return
+        0, // total_bytes — unknown from execute_backup return
         duration_ms,
         "success",
     );
@@ -99,7 +98,9 @@ pub fn run_backup(job_name: &str) -> Result<BackupResult, AppError> {
         eprintln!("Warning: failed to record backup history: {}", e);
     }
 
-    let timestamp = chrono::Local::now().format("%Y-%m-%dT%H:%M:%S%.3fZ").to_string();
+    let timestamp = chrono::Local::now()
+        .format("%Y-%m-%dT%H:%M:%S%.3fZ")
+        .to_string();
 
     Ok(BackupResult {
         backup_id,
@@ -129,7 +130,9 @@ pub fn run_backup_dry(job_name: &str) -> Result<BackupResult, AppError> {
 
     Ok(BackupResult {
         backup_id: "dry-run".into(),
-        timestamp: chrono::Local::now().format("%Y-%m-%dT%H:%M:%S%.3fZ").to_string(),
+        timestamp: chrono::Local::now()
+            .format("%Y-%m-%dT%H:%M:%S%.3fZ")
+            .to_string(),
         file_count: 0,
         total_bytes: 0,
         duration_ms: 0,
@@ -245,7 +248,9 @@ fn record_backup_in_history(
     let db = HistoryDb::open_or_create(&db_path)
         .map_err(|e| AppError::history(format!("Cannot open history DB: {}", e)))?;
 
-    let timestamp = chrono::Local::now().format("%Y-%m-%dT%H:%M:%S%.3fZ").to_string();
+    let timestamp = chrono::Local::now()
+        .format("%Y-%m-%dT%H:%M:%S%.3fZ")
+        .to_string();
 
     db.record_operation(&OperationRecord {
         backup_id: backup_id.into(),
