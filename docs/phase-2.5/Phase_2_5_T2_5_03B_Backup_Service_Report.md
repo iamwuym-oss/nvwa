@@ -1,4 +1,4 @@
-﻿# Nüwa Backup — T2.5-03B: Backup Application Service Foundation
+# Nüwa Backup — T2.5-03B: Backup Application Service Foundation
 
 **Version:** 1.0
 **Date:** 2026-07-08
@@ -105,7 +105,7 @@ pub enum BackupJobStatus {
 }
 
 pub struct BackupJobView {
-    pub job_id: String,
+    pub name: String,
     pub job_name: String,
     pub source: String,
     pub dest: String,
@@ -117,7 +117,7 @@ pub struct BackupJobView {
 }
 
 pub struct BackupRequest {
-    pub job_id: String,
+    pub name: String,
     pub source: String,
     pub dest: String,
     pub compress: bool,
@@ -140,7 +140,7 @@ pub struct BackupResult {
 ```rust
 impl BackupService {
     pub fn list_jobs(config_path: &Path) -> Result<Vec<BackupJobView>, AppError>
-    pub fn get_job_detail(config_path: &Path, job_id: &str) -> Result<BackupJobView, AppError>
+    pub fn get_job_detail(config_path: &Path, name: &str) -> Result<BackupJobView, AppError>
     pub fn run_backup(config_path: &Path, request: &BackupRequest) -> Result<BackupResult, AppError>
     pub fn run_backup_dry(config_path: &Path, request: &BackupRequest) -> Result<BackupResult, AppError>
 }
@@ -176,7 +176,7 @@ fn list_backup_jobs(app_state: State<AppState>) -> Result<Vec<BackupJobView>, St
 fn run_backup(app_state: State<AppState>, request: BackupRequest) -> Result<BackupResult, String>
 
 #[tauri::command]
-fn get_backup_job_detail(app_state: State<AppState>, job_id: String) -> Result<BackupJobView, String>
+fn get_backup_job_detail(app_state: State<AppState>, name: String) -> Result<BackupJobView, String>
 ```
 
 Each command is a thin wrapper — parameter validation + error conversion only.

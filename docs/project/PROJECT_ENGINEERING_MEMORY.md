@@ -1,8 +1,8 @@
-﻿# Nüwa Backup — Project Engineering Memory
+# Nüwa Backup — Project Engineering Memory
 
 **Version:** 0.2.0
-**Last Updated:** 2026-07-08 (Updated T2.5-03B + T2.5-03C)
-**Current Phase:** Phase 2.5 — Tauri Desktop GUI + Application Layer (T2.5-03C DONE)
+**Last Updated:** 2026-07-08 (Updated T2.5-03D + T2.5-04B)
+**Current Phase:** Phase 2.5 — Tauri Desktop GUI + Application Layer (T2.5-03D.1 DONE)
 **Phase 1 Status:** CLOSED (PARTIAL — non-Windows space check limitation accepted)
 
 ---
@@ -568,3 +568,7 @@ React UI -> invoke() -> Tauri command -> app::services::backup_service -> backup
 | T2.5-03A.1 | Dashboard Product Polish (skeleton, empty/error states, micro-interactions) | ✅ DONE / PASS |
 | T2.5-03B | Backup Application Service | ✅ DONE / PASS |
 | T2.5-03C | Backup UI Integration | ✅ DONE / PASS |
+| T2.5-03D | Restore Application Service + UI | ✅ DONE / PASS |
+| T2.5-03D.1 | Restore Safety Hardening (path validation, rename reject) | ✅ DONE / PASS |
+| T2.5-04A | Config Job CRUD Service (plan CRUD) | ✅ DONE / PASS |
+| T2.5-04B | Settings Backup Plan UI | ✅ DONE / PASS |

@@ -119,21 +119,53 @@ The following modules are frozen and must NOT be modified:
 
 ---
 
-## 8. Next Phase
+## 8. Current Test State
 
-### T2.5-03D — Restore Application Service Layer + UI
+| Suite | Count | Result |
+|-------|:-----:|:------:|
+| Unit tests (src/lib.rs) | 92 | ALL PASS |
+| Backup/restore integration | 19 | ALL PASS |
+| Backup service tests | 7 | ALL PASS |
+| Config service tests | 15 | ALL PASS |
+| Dashboard service tests | 4 | ALL PASS |
+| Restore service tests | 6 | ALL PASS |
+| **Total** | **143** | **ALL PASS** |
 
-Goal: Build Restore page with models, service, Tauri command, and full UI integration.
+## 9. Tauri Commands Registered
 
-### T2.5-03E — History / Schedule / Settings Service
+12 commands across 4 modules:
+- dashboard: get_dashboard_overview (read)
+- backup: list_backup_jobs, get_backup_job_detail, run_backup, run_backup_dry (read+execute)
+- config: list_backup_plans, get_backup_plan_detail, create_backup_plan, delete_backup_plan (CRUD)
+- restore: get_restore_preview, execute_restore, list_restorable_jobs (read+execute)
 
-Goal: Complete remaining pages with real Application Layer integration.
+## 10. Completed Beyond v1.1
 
+| Task | Scope | Status |
+|:----:|-------|:------:|
+| T2.5-03B | Backup Application Service (models, service, Tauri cmd, tests) | COMMITTED |
+| T2.5-03C | Backup UI Integration (Backup page, job list, run, empty state) | COMMITTED |
+| T2.5-04A | Config Job CRUD Service (plan list, create, update, delete) | PENDING COMMIT |
+| T2.5-04B | Settings Backup Plan UI (plan list, create form in Settings) | PENDING COMMIT |
+| T2.5-03D | Restore Service + UI (preview, execute, restore page) | PENDING COMMIT |
+| T2.5-03D.1 | Restore Safety Hardening (path traversal, rename reject, .gitignore) | PENDING COMMIT |
 
-### T2.5-03B — Backup Application Service Layer
+## 11. Frozen Core Modules
 
-Goal: Build the Backup page with real data, reusing the component library from T2.5-03A.1.
+The following modules are frozen baselines. restore.rs is FROZEN except for approved safety hardening (path traversal protection):
 
-### T2.5-03C — Restore/History/Schedule/Settings Service
+| Module | File | Status |
+|--------|------|--------|
+| Backup engine | src/backup.rs | FROZEN |
+| Restore engine | src/restore.rs | FROZEN (approved safety hardening: path validation) |
+| Verification | src/verify.rs | FROZEN |
+| Manifest | src/manifest.rs | FROZEN |
+| Checksum | src/checksum.rs | FROZEN |
+| Storage | src/storage.rs | FROZEN |
+| Prune | src/prune.rs | FROZEN |
 
-Goal: Complete remaining pages with real Application Layer integration.
+## 12. Next Phase
+
+### T2.5-03E -- History / Schedule / Remaining Pages
+
+Complete the remaining product pages with real Application Layer integration.
