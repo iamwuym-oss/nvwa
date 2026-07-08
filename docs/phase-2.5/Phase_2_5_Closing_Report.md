@@ -1,4 +1,4 @@
-﻿# Nüwa Backup — Phase 2.5 Closing Report
+# Nüwa Backup — Phase 2.5 Closing Report
 
 **Version:** 1.1
 **Date:** 2026-07-08
@@ -133,11 +133,11 @@ The following modules are frozen and must NOT be modified:
 
 ## 9. Tauri Commands Registered
 
-12 commands across 4 modules:
-- dashboard: get_dashboard_overview (read)
-- backup: list_backup_jobs, get_backup_job_detail, run_backup, run_backup_dry (read+execute)
-- config: list_backup_plans, get_backup_plan_detail, create_backup_plan, delete_backup_plan (CRUD)
-- restore: get_restore_preview, execute_restore, list_restorable_jobs (read+execute)
+13 commands across 4 modules:
+- dashboard: get_dashboard_overview
+- backup: list_backup_jobs, get_backup_job_detail, run_backup  (3 commands)
+- config: list_job_configs, get_job_config, create_job_config, update_job_config, delete_job_config  (5 commands)
+- restore: list_restore_points, get_restore_preview, execute_restore  (3 commands)
 
 ## 10. Completed Beyond v1.1
 
