@@ -1,4 +1,4 @@
-﻿// ============================================================================
+// ============================================================================
 // Settings.tsx -- Settings page with Backup Plan configuration
 //
 // Data flow:
@@ -16,7 +16,7 @@
 // ============================================================================
 
 import { useEffect, useState, useCallback } from "react";
-import Button from "../components/common/Button";
+import Button from "../components/common/Button";import PathInput from "../components/common/PathInput";
 import Badge from "../components/common/Badge";
 import EmptyState from "../components/feedback/EmptyState";
 import ErrorState from "../components/feedback/ErrorState";
@@ -247,10 +247,9 @@ function PlanForm({ initial, onSave, onCancel, saving, error }: PlanFormProps) {
         {/* Source Path */}
         <div>
           <label style={labelStyle}>Source Path</label>
-          <input
-            style={inputStyle}
+          <PathInput
             value={source}
-            onChange={(e) => setSource(e.target.value)}
+            onChange={setSource}
             placeholder="C:\Users\YourName\Documents"
             disabled={saving}
           />
@@ -259,10 +258,9 @@ function PlanForm({ initial, onSave, onCancel, saving, error }: PlanFormProps) {
         {/* Destination Path */}
         <div>
           <label style={labelStyle}>Destination Path</label>
-          <input
-            style={inputStyle}
+          <PathInput
             value={dest}
-            onChange={(e) => setDest(e.target.value)}
+            onChange={setDest}
             placeholder="D:\Backups"
             disabled={saving}
           />

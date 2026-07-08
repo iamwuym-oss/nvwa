@@ -1,4 +1,4 @@
-﻿// ============================================================================
+// ============================================================================
 // Restore.tsx -- Restore management page
 //
 // Data flow:
@@ -18,7 +18,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import Badge from "../components/common/Badge";
-import Button from "../components/common/Button";
+import Button from "../components/common/Button";import PathInput from "../components/common/PathInput";
 import EmptyState from "../components/feedback/EmptyState";
 import ErrorState from "../components/feedback/ErrorState";
 import { theme } from "../theme";
@@ -280,18 +280,6 @@ function RestoreForm({ backupId, sourceRoot, onRestore, running }: RestoreFormPr
   };
 
   const suggestedDest = sourceRoot.replace(/^[A-Z]:/, "D:\\Restore") || "D:\\Restore";
-  const inputStyle: React.CSSProperties = {
-    width: "100%",
-    padding: "8px 12px",
-    background: "rgba(0,0,0,0.3)",
-    border: "1px solid " + theme.colors.panelBorder,
-    borderRadius: theme.radius.md,
-    color: theme.colors.textPrimary,
-    fontSize: theme.font.sizeSm,
-    fontFamily: theme.font.family,
-    outline: "none",
-    boxSizing: "border-box",
-  };
 
   return (
     <div style={{ background: theme.colors.panel, border: "1px solid " + theme.colors.panelBorder, borderRadius: theme.radius.lg, padding: theme.spacing.lg }}>
@@ -305,14 +293,14 @@ function RestoreForm({ backupId, sourceRoot, onRestore, running }: RestoreFormPr
           Destination Path
         </label>
         <div style={{ display: "flex", gap: "8px" }}>
-          <input
-            type="text"
-            value={dest}
-            onChange={(e) => { setDest(e.target.value); setError(null); }}
-            placeholder={suggestedDest}
-            disabled={running}
-            style={inputStyle}
-          />
+          <div style={{ flex: 1 }}>
+            <PathInput
+              value={dest}
+              onChange={(v) => { setDest(v); setError(null); }}
+              placeholder={suggestedDest}
+              disabled={running}
+            />
+          </div>
           <Button variant="ghost" size="sm" onClick={() => setDest(suggestedDest)} disabled={running}>
             Use Default
           </Button>
