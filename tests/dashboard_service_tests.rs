@@ -10,9 +10,15 @@
 
 use std::fs;
 use std::path::Path;
+use std::sync::Mutex;
 
 use nuwa_backup::app::models::common::ProtectionStatus;
 use nuwa_backup::app::services::dashboard_service;
+
+// Tests that call with_clean_dir() must be serialized because they
+// change the global process CWD (Config::load() uses relative path).
+// Parallel CWD changes cause tests to read the wrong nuwa.toml.
+static CWD_LOCK: Mutex<()> = Mutex::new(());
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -82,6 +88,10 @@ fn create_history_with_success(db_path: &Path) {
 }
 
 fn with_clean_dir<F: FnOnce(&Path) -> T, T>(name: &str, f: F) -> T {
+    // Serialize CWD-dependent tests (Config::load() uses relative path)
+    // so parallel test threads don't trample each other's working directory.
+    let _lock = CWD_LOCK.lock().unwrap();
+
     let dir = std::env::temp_dir().join("nuwa_test").join(name);
     let _ = fs::remove_dir_all(&dir);
     fs::create_dir_all(&dir).unwrap();
