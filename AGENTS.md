@@ -813,12 +813,11 @@ Rules:
 
 ### Phase 2.5 Current State
 
-**Latest Commit:** `4962910` — fix: replace native dialog with in-app file browser
+**Latest Commit:** `8ea7355` — feat: add backup content browser with three-column restore layout
 
-**Current Uncommitted Work (T2.5-04D):**
-- ui/src/pages/Restore.tsx — 3-column layout rewrite
-- ui/src/api/restoreApi.ts — enhanced mock data with multi-plan backups
-- ui/src/components/common/BackupTreeView.tsx — new file tree component
+**T2.5-04D — Backup Content Browser (COMMITTED)**
+
+This task was committed on 2026-07-09. See commit `8ea7355`. The working tree has no further uncommitted changes.
 
 #### Application Services (src/app/services/)
 
@@ -837,7 +836,7 @@ Rules:
 | Dashboard | ✅ Complete | Real data flow from Core through Application Layer |
 | Settings | ✅ Complete | Backup Job CRUD via config_service |
 | Backup | ✅ Complete | Reads jobs from Settings; run/empty states |
-| Restore | ✅ 3-column layout | Plan grouping + BackupTreeView (T2.5-04D uncommitted) |
+| Restore | ✅ 3-column layout | Plan grouping + BackupTreeView (committed in 8ea7355) |
 | History | ❌ Placeholder | 4-line stub, no backend service |
 | Schedule | ❌ Placeholder | 4-line stub, no backend service |
 | Clone | ❌ Disabled | Future phase notice only |

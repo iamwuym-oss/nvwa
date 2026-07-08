@@ -2,7 +2,7 @@
 
 **Last Updated:** 2026-07-09
 **Status:** IN PROGRESS
-**Latest Commit:** 4962910 — fix: replace native dialog with in-app file browser
+**Latest Commit:** 8ea7355 — feat: add backup content browser with three-column restore layout
 
 ---
 
@@ -85,7 +85,7 @@ Core Engine (src/ — backup/restore/verify/manifest/checksum/storage/prune)
 |------|:-----:|:------:|-------|
 | Dashboard | 465 | ✅ Complete | Real data flow: Core → Service → Command → React |
 | Settings | 764 | ✅ Complete | Backup Plan CRUD (list/create/edit/delete via config_service) |
-| Restore | 628 | ✅ 3-column | Plan grouping + BackupTreeView + restore form (04D uncommitted) |
+| Restore | 628 | ✅ 3-column | Plan grouping + BackupTreeView + restore form (committed 8ea7355) |
 | Backup | 421 | ✅ Complete | Job list, run backup, empty state. Reads from Settings-created plans |
 | History | 4 | ❌ Placeholder | "Backup history coming soon." — no backend service |
 | Schedule | 4 | ❌ Placeholder | "Schedule management coming soon." — no backend service |

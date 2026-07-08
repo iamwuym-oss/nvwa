@@ -158,7 +158,7 @@ The following tasks were completed but do not have individual report files. Thei
 | T2.5-04B — Settings Backup Plan UI | ✅ DONE / PASS |
 | T2.5-04C — Native Path Picker | ✅ DONE / PASS (superseded by 04C.1) |
 | T2.5-04C.1 — In-App File Browser | ✅ DONE / PASS |
-| T2.5-04D — Backup Content Browser | 🔄 UNCOMMITTED — 3 frontend files in working tree |
+| T2.5-04D — Backup Content Browser | ✅ DONE / PASS (committed 8ea7355) |
 | T2.5-DOC-01A — Documentation sync | ✅ DONE / PASS |
 | T2.5-DOC-02 — AGENTS + README alignment | ✅ DONE / PASS |
 

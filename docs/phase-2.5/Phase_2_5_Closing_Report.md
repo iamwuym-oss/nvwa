@@ -4,7 +4,7 @@
 **Version:** 2.0
 **Date:** 2026-07-09
 
-> ⚠️ This document tracks Phase 2.5 progress. Phase 2.5 is **not closed** because History and Schedule pages remain placeholders (4 lines each), and T2.5-04D Backup Content Browser is uncommitted. See [Phase_2_5_Current_Status.md](./Phase_2_5_Current_Status.md) for the latest state.
+> ⚠️ This document tracks Phase 2.5 progress. Phase 2.5 is **not closed** because History and Schedule pages remain placeholders (4 lines each), and T2.5-04D Backup Content Browser was recently committed. See [Phase_2_5_Current_Status.md](./Phase_2_5_Current_Status.md) for the latest state.
 
 ## 1. Phase Summary
 

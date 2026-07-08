@@ -43,7 +43,7 @@ File System / SQLite
 | Dashboard | ✅ Real data, health status, activity list, storage chart |
 | Settings | ✅ Backup Plan CRUD (list/create/edit/delete) |
 | Backup | ✅ Job list, run backup, empty state |
-| Restore | ✅ 3-column layout with plan grouping, file tree, restore form |
+| Restore | ✅ 3-column layout with plan grouping, file tree, restore form (committed) |
 
 **Completed Infrastructure:**
 - Tauri 2.0 desktop GUI (replaces egui)

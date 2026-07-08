@@ -14,7 +14,7 @@ Phase 2.5 is **NOT closed**. History and Schedule pages remain placeholders.
 
 ## Latest Commit
 
-`4962910 — fix: replace native dialog with in-app file browser`
+`8ea7355 — feat: add backup content browser with three-column restore layout`
 
 ---
 
@@ -48,7 +48,7 @@ React UI → API bridge → Tauri Command (thin) → Application Service → Cor
 | Backup plan model | **JobConfig / config_job.rs** — NOT BackupPlan (no such abstraction exists) |
 | Settings | Creates/edits/deletes JobConfigs via config_service |
 | Backup page | Reads and runs existing jobs. Depends on Settings-created plans |
-| Restore page | 3-column layout with BackupTreeView. 04D is uncommitted |
+| Restore page | 3-column layout with BackupTreeView. Committed in 8ea7355 |
 | History page | **Placeholder only** — 4 lines |
 | Schedule page | **Placeholder only** — 4 lines |
 | Clone page | **Disabled** — "future phase" notice only |
@@ -73,4 +73,4 @@ React UI → API bridge → Tauri Command (thin) → Application Service → Cor
 2. Schedule page — no backend service
 3. Backup Content Browser — mock data only, not real catalog
 4. No Tauri command integration tests
-5. 04D uncommitted
+5. (None currently — working tree is clean)
