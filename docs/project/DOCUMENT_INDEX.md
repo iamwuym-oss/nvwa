@@ -1,6 +1,6 @@
 ﻿# Nüwa Backup — Document Index
 
-**Last Updated:** 2026-07-07
+**Last Updated:** 2026-07-08
 
 ---
 
@@ -138,8 +138,8 @@ No clone engine, clone CLI command, disk access, partition access, PhysicalDrive
 | T2.5-02 — Dashboard UI Architecture | ✅ DONE / PASS |
 | T2.5-03A — Application API Layer Foundation | ✅ DONE / PASS |
 | T2.5-03A.1 — Dashboard Product Polish | ✅ DONE / PASS |
-| T2.5-03B — Backup Application Service | ⏳ NOT STARTED |
-| T2.5-03C — Restore/History/Schedule/Settings | ⏳ NOT STARTED |
+| T2.5-03B — Backup Application Service Foundation | ✅ DONE / PASS |
+| T2.5-03C — Backup UI Integration | ✅ DONE / PASS |
 
 ## docs/phase-3/ — Reserved: NTFS Volume Image, VSS, Block Backup
 
@@ -231,7 +231,7 @@ No clone engine, clone CLI command, disk access, partition access, PhysicalDrive
 
 | Phase | Scope | Status |
 |-------|-------|:------:|
-| Phase 2.5 | Tauri desktop GUI + Application Layer | ✅ IN PROGRESS (T2.5-03A.1 complete) |
+| Phase 2.5 | Tauri desktop GUI + Application Layer | ✅ IN PROGRESS (T2.5-03C DONE) |
 | Phase 3.5 | GUI volume pages, GPT/MBR, boot partition, dynamic disk/RAID, BCD design | ❌ NOT AUTHORIZED |
 | Phase 4 | System recovery / WinPE / BMR | ❌ NOT AUTHORIZED |
 | Phase 5 | Disk clone | ❌ NOT AUTHORIZED |

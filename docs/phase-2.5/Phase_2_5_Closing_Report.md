@@ -1,7 +1,7 @@
 ﻿# Nüwa Backup — Phase 2.5 Closing Report
 
-**Version:** 1.0
-**Date:** 2026-07-07
+**Version:** 1.1
+**Date:** 2026-07-08
 **Status:** CLOSED — Architecture Established
 
 ---
@@ -113,12 +113,22 @@ The following modules are frozen and must NOT be modified:
 |-------|:-----:|:------:|
 | Unit tests (src/lib.rs) | 75 | ✅ ALL PASS |
 | Backup/restore integration | 19 | ✅ ALL PASS |
+| Backup service tests | 7 | ✅ ALL PASS |
 | Dashboard service tests | 4 | ✅ ALL PASS |
-| **Total** | **98** | **✅ ALL PASS** |
+| **Total** | **105** | **✅ ALL PASS** |
 
 ---
 
 ## 8. Next Phase
+
+### T2.5-03D — Restore Application Service Layer + UI
+
+Goal: Build Restore page with models, service, Tauri command, and full UI integration.
+
+### T2.5-03E — History / Schedule / Settings Service
+
+Goal: Complete remaining pages with real Application Layer integration.
+
 
 ### T2.5-03B — Backup Application Service Layer
 

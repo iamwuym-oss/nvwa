@@ -1,8 +1,8 @@
 ﻿# Nüwa Backup — Project Engineering Memory
 
 **Version:** 0.2.0
-**Last Updated:** 2026-07-07 (Updated T2.5-DOC-01)
-**Current Phase:** Phase 2.5 — Tauri Desktop GUI + Application Layer (T2.5-03A.1 DONE)
+**Last Updated:** 2026-07-08 (Updated T2.5-03B + T2.5-03C)
+**Current Phase:** Phase 2.5 — Tauri Desktop GUI + Application Layer (T2.5-03C DONE)
 **Phase 1 Status:** CLOSED (PARTIAL — non-Windows space check limitation accepted)
 
 ---
@@ -316,7 +316,7 @@ Chinese characters in src/, tests/, or Cargo.toml are a blocking defect.
 | `cargo fmt --check` | ✅ PASS |
 | `cargo clippy --all-targets -- -D warnings` | ✅ PASS |
 | `cargo build` | ✅ PASS |
-| `cargo test` (94 tests) | ✅ ALL PASS |
+| `cargo test` (105 tests) | ✅ ALL PASS |
 | `cargo build --features gui` | ✅ PASS |
 | GUI launch | ✅ PASS |
 | Forbidden scope audit | ✅ No violations |
@@ -444,7 +444,7 @@ The desktop GUI technology route has changed from **egui + eframe** to **Tauri 2
 | Cleaned Cargo.toml | Removed egui/eframe/gui feature/nuwa-gui binary target |
 | Cleaned src/lib.rs | Removed #[cfg(feature = "gui")] pub mod gui |
 | Core library protection | Verified all Phase 1 + T2-07 core files unchanged |
-| Quality gates | fmt/clippy/build/test all PASS (94 tests) |
+| Quality gates | fmt/clippy/build/test all PASS (105 tests) |
 | Documentation | Created Phase 2.5 migration decision doc |
 
 ### T2.5-01 — Tauri 2.0 Scaffold + Command Bridge
@@ -486,7 +486,7 @@ Tauri Frontend (React + TypeScript) -> invoke() IPC -> Tauri Rust Commands (src-
 | cargo fmt --check | ✅ PASS |
 | cargo clippy --all-targets -- -D warnings | ✅ PASS |
 | cargo build | ✅ PASS |
-| cargo test | ✅ PASS (94 tests) |
+| cargo test | ✅ PASS (105 tests) |
 | Forbidden scope audit | ✅ No forbidden features introduced |
 | Phase 1 core protection | ✅ Intact |
 | English-only / mojibake | ✅ Clean |
@@ -566,5 +566,5 @@ React UI -> invoke() -> Tauri command -> app::services::backup_service -> backup
 | T2.5-02 | Dashboard UI Architecture (React pages, mock data, layout components) | ✅ DONE / PASS |
 | T2.5-03A | Application API Layer Foundation (models, services, error, Tauri bridge) | ✅ DONE / PASS |
 | T2.5-03A.1 | Dashboard Product Polish (skeleton, empty/error states, micro-interactions) | ✅ DONE / PASS |
-| T2.5-03B | Backup Application Service (pending) | ⏳ NOT STARTED |
-| T2.5-03C | Restore/History/Schedule/Settings Service (pending) | ⏳ NOT STARTED |
+| T2.5-03B | Backup Application Service | ✅ DONE / PASS |
+| T2.5-03C | Backup UI Integration | ✅ DONE / PASS |
