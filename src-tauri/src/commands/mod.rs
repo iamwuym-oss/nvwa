@@ -4,6 +4,6 @@
 
 pub mod backup;
 pub mod config;
-pub mod restore;
 pub mod dashboard;
-
+pub mod file_browser;
+pub mod restore;

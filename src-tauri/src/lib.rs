@@ -1,4 +1,4 @@
-// ============================================================================
+﻿// ============================================================================
 // src-tauri/src/lib.rs -- Tauri 2.0 backend entry: registers commands,
 // builds the desktop window, and bridges frontend to the nuwa-backup core.
 // ============================================================================
@@ -46,7 +46,6 @@ fn get_version() -> String {
 pub fn run() {
     tauri::Builder::default()
         .manage(AppState::default())
-        .plugin(tauri_plugin_dialog::init())
         .invoke_handler(tauri::generate_handler![
             get_version,
             commands::dashboard::get_dashboard_overview,
@@ -61,9 +60,13 @@ pub fn run() {
             commands::restore::list_restore_points,
             commands::restore::get_restore_preview,
             commands::restore::execute_restore,
+            commands::file_browser::list_roots,
+            commands::file_browser::list_directory,
         ])
         .run(tauri::generate_context!())
         .expect("error while running Nuwa Backup GUI");
 }
+
+
 
 

@@ -1,6 +1,13 @@
-﻿import { useState } from "react";
-import { open } from "@tauri-apps/plugin-dialog";
+﻿// ============================================================================
+// PathInput.tsx -- Text input with in-app Browse button
+//
+// Browse opens Nüwa's own FileBrowserModal (not OS directory dialog).
+// Users can still manually type paths.
+// ============================================================================
+
+import { useState } from "react";
 import Button from "./Button";
+import FileBrowserModal from "./FileBrowserModal";
 import { theme } from "../../theme";
 
 interface PathInputProps {
@@ -9,6 +16,7 @@ interface PathInputProps {
   placeholder?: string;
   label?: string;
   disabled?: boolean;
+  browseTitle?: string;
 }
 
 const inputBase: React.CSSProperties = {
@@ -35,35 +43,39 @@ const browseBtnStyle: React.CSSProperties = {
   whiteSpace: "nowrap",
 };
 
-export default function PathInput({ value, onChange, placeholder, disabled }: PathInputProps) {
-  const [browsing, setBrowsing] = useState(false);
-
-  const handleBrowse = async () => {
-    setBrowsing(true);
-    try {
-      const selected = await open({ directory: true, multiple: false, title: "Select Folder" });
-      if (selected !== null) {
-        onChange(selected);
-      }
-    } catch {
-      // User cancelled or backend error -- keep original value
-    } finally {
-      setBrowsing(false);
-    }
-  };
+export default function PathInput({ value, onChange, placeholder, disabled, browseTitle }: PathInputProps) {
+  const [browserOpen, setBrowserOpen] = useState(false);
 
   return (
-    <div style={rowStyle}>
-      <input
-        style={inputBase}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
-        disabled={disabled}
+    <>
+      <div style={rowStyle}>
+        <input
+          style={inputBase}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder={placeholder}
+          disabled={disabled}
+        />
+        <Button
+          variant="secondary"
+          size="md"
+          onClick={() => setBrowserOpen(true)}
+          disabled={disabled}
+          style={browseBtnStyle}
+        >
+          📁 Browse
+        </Button>
+      </div>
+
+      <FileBrowserModal
+        open={browserOpen}
+        title={browseTitle || "Select Folder"}
+        onSelect={(path) => {
+          onChange(path);
+          setBrowserOpen(false);
+        }}
+        onCancel={() => setBrowserOpen(false)}
       />
-      <Button variant="secondary" size="md" onClick={handleBrowse} disabled={disabled || browsing} style={browseBtnStyle}>
-        {browsing ? "..." : "Browse"}
-      </Button>
-    </div>
+    </>
   );
 }
