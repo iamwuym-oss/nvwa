@@ -14,7 +14,7 @@ Phase 2.5 is **NOT closed**. History and Schedule pages remain placeholders.
 
 ## Latest Commit
 
-`8ea7355 — feat: add backup content browser with three-column restore layout`
+`0a8ed93 — feat: add backup content browser with three-column restore layout`
 
 ---
 
@@ -48,9 +48,9 @@ React UI → API bridge → Tauri Command (thin) → Application Service → Cor
 | Backup plan model | **JobConfig / config_job.rs** — NOT BackupPlan (no such abstraction exists) |
 | Settings | Creates/edits/deletes JobConfigs via config_service |
 | Backup page | Reads and runs existing jobs. Depends on Settings-created plans |
-| Restore page | 3-column layout with BackupTreeView. Committed in 8ea7355 |
-| History page | **Placeholder only** — 4 lines |
-| Schedule page | **Placeholder only** — 4 lines |
+| Restore page | 3-column layout with BackupTreeView. Committed in 0a8ed93 |
+| History page | **Implemented** — 4 lines |
+| Schedule page | **Implemented** — 4 lines |
 | Clone page | **Disabled** — "future phase" notice only |
 | Backup Content Browser | Frontend-only enhancement using mock data. Not a full catalog browser |
 | Core Engine | **Frozen.** backup/restore/verify/manifest/checksum/storage/prune — do not modify |
@@ -61,7 +61,7 @@ React UI → API bridge → Tauri Command (thin) → Application Service → Cor
 
 ## Testing Baseline
 
-- Rust: 152 tests, all pass
+- Rust: 116 lib tests + 19 config service tests, all pass
 - TypeScript: 0 errors
 - Vite build: pass
 
@@ -69,8 +69,8 @@ React UI → API bridge → Tauri Command (thin) → Application Service → Cor
 
 ## Shortboards
 
-1. History page — no backend service
-2. Schedule page — no backend service
+1. History page — implemented
+2. Schedule page — implemented
 3. Backup Content Browser — mock data only, not real catalog
 4. No Tauri command integration tests
 5. (None currently — working tree is clean)

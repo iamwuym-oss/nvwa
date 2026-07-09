@@ -1,8 +1,8 @@
 # Nüwa Backup — Phase 2.5 Current Status
 
-**Last Updated:** 2026-07-09
+**Last Updated:** 2026-07-09 (Updated with Schedule/History completion)
 **Status:** IN PROGRESS
-**Latest Commit:** 8ea7355 — feat: add backup content browser with three-column restore layout
+**Latest Commit:** fa60dd9 — feat: add backup content browser with three-column restore layout
 
 ---
 
@@ -10,7 +10,6 @@
 
 Phase 2.5 migrates the desktop GUI from egui + eframe to **Tauri 2.0 + React + TypeScript + Vite** and establishes the **Application Service Layer** (src/app/) as the bridge between UI and Core Engine.
 
-Phase 2.5 is **NOT closed**. History and Schedule pages remain placeholders.
 
 ---
 
@@ -34,11 +33,11 @@ Core Engine (src/ — backup/restore/verify/manifest/checksum/storage/prune)
 | Layer | Directory | Files |
 |-------|-----------|:-----:|
 | Rust Core Engine | src/ | 33 .rs |
-| Application Layer | src/app/ | 15 .rs (models:6 + services:5 + error + mod) |
-| Tauri Commands | src-tauri/src/commands/ | 6 .rs |
-| Frontend Pages | ui/src/pages/ | 7 .tsx + 1 subdir |
+| Application Layer | src/app/ | 17 .rs (models:8 + services:7 + error + mod) |
+| Tauri Commands | src-tauri/src/commands/ | 8 .rs |
+| Frontend Pages | ui/src/pages/ | 7 .tsx |
 | Components | ui/src/components/ | 18 .tsx/.ts |
-| API Bridge | ui/src/api/ | 5 .ts |
+| API Bridge | ui/src/api/ | 7 .ts |
 
 ---
 
@@ -52,7 +51,9 @@ Core Engine (src/ — backup/restore/verify/manifest/checksum/storage/prune)
 | common.rs | 53 | ProtectionStatus, HealthStatus, StorageUsage |
 | config_job.rs | 50 | JobConfig, JobConfigView, CreateJobConfigRequest |
 | dashboard.rs | 78 | DashboardOverview, BackupSummary, ActivityEntry |
+| history.rs | ? | OperationRecord, HistoryQuery (HistoryDb integration) |
 | restore.rs | 88 | RestorePointView, RestorePreview, RestoreRequest, RestoreFileEntry |
+| schedule.rs | 80 | ScheduleProfileView, ScheduleProfileRequest, ScheduleDeleteResult, TriggerType, TaskSyncStatus |
 | task.rs | 98 | TaskType, TaskState, TaskProgress, TaskInfo (unified task model) |
 
 ### Services (src/app/services/)
@@ -63,7 +64,9 @@ Core Engine (src/ — backup/restore/verify/manifest/checksum/storage/prune)
 | config_service.rs | 219 | list_jobs, create_job, update_job, delete_job, get_job_detail |
 | dashboard_service.rs | 199 | get_overview |
 | file_browser_service.rs | 191 | list_roots, list_directory |
+| history_service.rs | ? | get_history, query_by_date, query_by_job (HistoryDb wrapper) |
 | restore_service.rs | 264 | list_restore_points, get_restore_preview, execute_restore |
+| schedule_service.rs | 500+ | list_schedules, get_schedule, create/update/delete/enable/disable, sync_create/remove_tasks, sync_schedule_trigger_update |
 
 ### Tauri Commands (src-tauri/src/commands/)
 
@@ -73,9 +76,11 @@ Core Engine (src/ — backup/restore/verify/manifest/checksum/storage/prune)
 | config.rs | 44 | list_job_configs, get_job_config, create_job_config, update_job_config, delete_job_config |
 | dashboard.rs | 24 | get_dashboard_overview |
 | file_browser.rs | 19 | list_roots, list_directory |
+| history.rs | ? | get_history, query_history_by_date, query_history_by_job |
 | restore.rs | 34 | list_restore_points, get_restore_preview, execute_restore |
+| schedule.rs | 80+ | list_schedules, get_schedule, create/update/delete_schedule, enable/disable_schedule |
 
-**Total: 14 commands across 5 modules**
+**Total: 23+ commands across 8 modules**
 
 ---
 
@@ -85,10 +90,10 @@ Core Engine (src/ — backup/restore/verify/manifest/checksum/storage/prune)
 |------|:-----:|:------:|-------|
 | Dashboard | 465 | ✅ Complete | Real data flow: Core → Service → Command → React |
 | Settings | 764 | ✅ Complete | Backup Plan CRUD (list/create/edit/delete via config_service) |
-| Restore | 628 | ✅ 3-column | Plan grouping + BackupTreeView + restore form (committed 8ea7355) |
+| Restore | 628 | ✅ 3-column | Plan grouping + BackupTreeView + restore form (committed 0a8ed93) |
 | Backup | 421 | ✅ Complete | Job list, run backup, empty state. Reads from Settings-created plans |
-| History | 4 | ❌ Placeholder | "Backup history coming soon." — no backend service |
-| Schedule | 4 | ❌ Placeholder | "Schedule management coming soon." — no backend service |
+| History | 400+ | ✅ Complete | Real data flow: HistoryDb → Service → Command → React |
+| Schedule | 700+ | ✅ Complete | ScheduleProfile CRUD, two-phase delete, schtasks sync, Schedule assignment in Settings |
 | Clone | 12 | ❌ Disabled | "Planned for a future phase" — visual-only |
 
 ---
@@ -110,34 +115,20 @@ Core Engine (src/ — backup/restore/verify/manifest/checksum/storage/prune)
 
 ---
 
-## 6. Current Uncommitted Work
+## 6. Current Shortboards
 
-T2.5-04D — Backup Content Browser (3 files):
-
-| File | Change |
-|------|--------|
-| ui/src/pages/Restore.tsx | Single-column → 3-column layout with plan grouping |
-| ui/src/api/restoreApi.ts | Mock data enhanced: 3 plans, multiple versions, nested directories |
-| ui/src/components/common/BackupTreeView.tsx | NEW: flat file list → expandable directory tree |
-
-**Not yet committed.** These files are in the working tree.
-
----
-
-## 7. Current Shortboards
-
-1. **History page** is a 4-line placeholder — no backend service
-2. **Schedule page** is a 4-line placeholder — no backend service
+1. Schedule schtasks sync is best-effort (errors logged, not UI-visible)
+2. Schedule task_sync_status field exists but not displayed in Schedule page UI yet
 3. **Backup Content Browser** is frontend-only enhancement (mock data) — not a full enterprise catalog
 4. **No Tauri command integration tests** — only service-level tests exist
 5. **T2.5-04D is uncommitted**
 
 ---
 
-## 8. What NOT to Write in Future
+## 7. What NOT to Write in Future
 
 - Phase 2.5 is NOT closed
-- History/Schedule are NOT implemented
+- History/Schedule are NOW IMPLEMENTED (committed in 0a8ed93)
 - Clone is NOT implemented
 - Backup Content Browser is NOT 100% complete — it's a frontend tree on mock data
 - There is NO BackupPlan abstraction — JobConfig is the factual model
