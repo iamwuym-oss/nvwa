@@ -1,6 +1,6 @@
 ﻿# Nüwa Backup — Document Index
 
-**Last Updated:** 2026-07-09
+**Last Updated:** 2026-07-09 (T2.5-04E/04F added)
 
 ---
 

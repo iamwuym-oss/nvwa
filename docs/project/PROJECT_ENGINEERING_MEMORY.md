@@ -575,5 +575,7 @@ React UI -> invoke() -> Tauri command -> app::services::backup_service -> backup
 | T2.5-04C | Native Path Picker (tauri-plugin-dialog) | ✅ DONE / PASS (superseded by 04C.1) |
 | T2.5-04C.1 | In-App File Browser (FileBrowserModal) | ✅ DONE / PASS |
 | T2.5-04D | Backup Content Browser (Restore 3-column + BackupTreeView) | ✅ DONE / PASS (8ea7355) |
+| T2.5-04E | Schedule Consistency Hardening (lifecycle sync, two-phase delete, tests) | ✅ DONE / PASS (0a8ed93) |
+| T2.5-04F | History Page + Service + Tauri Commands | ✅ DONE / PASS (0a8ed93) |
 | T2.5-DOC-01A | Documentation synchronization | ✅ DONE / PASS |
 | T2.5-DOC-02 | AGENTS + README alignment | ✅ DONE / PASS |
