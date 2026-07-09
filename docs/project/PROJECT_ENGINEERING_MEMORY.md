@@ -1,8 +1,8 @@
 # Nüwa Backup — Project Engineering Memory
 
-**Version:** 0.2.0
-**Last Updated:** 2026-07-08 (Updated T2.5-03D + T2.5-04B)
-**Current Phase:** Phase 2.5 — Tauri Desktop GUI + Application Layer (152 tests, 14 commands, 5 services, 4 active pages) — IN PROGRESS (last commit: 8ea7355)
+**Version:** 0.2.1
+**Last Updated:** 2026-07-09 (Schedule Consistency Hardening + History/Schedule pages)
+**Current Phase:** Phase 2.5 ? Tauri Desktop GUI + Application Layer (116 lib tests, 19 config service tests, 7 services, 6 active pages, 8 Tauri command modules) ? IN PROGRESS (last commit: 0a8ed93) — IN PROGRESS (last commit: 8ea7355)
 **Phase 1 Status:** CLOSED (PARTIAL — non-Windows space check limitation accepted)
 
 ---
