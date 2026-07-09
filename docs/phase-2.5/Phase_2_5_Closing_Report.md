@@ -89,8 +89,8 @@ File System / SQLite
 
 ## 5. Current Limitations
 
-1. **History page is a placeholder** 鈥?4-line stub, no backend service
-2. **Schedule page is a placeholder** 鈥?4-line stub, no backend service
+1. **History page was a placeholder at draft time** 鈥?now implemented in 0a8ed93
+2. **Schedule page was a placeholder at draft time** 鈥?now implemented in 0a8ed93
 3. **Clone page is disabled** 鈥?12-line "future phase" placeholder
 4. **T2.5-04D is uncommitted** 鈥?Restore 3-column layout and BackupTreeView pending commit
 5. **Backup Content Browser is UI-only enhancement** 鈥?uses mock data, not a full enterprise catalog browser

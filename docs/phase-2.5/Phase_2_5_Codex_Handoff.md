@@ -8,7 +8,7 @@
 
 **Phase 2.5 — Tauri Desktop GUI + Application Layer (IN PROGRESS)**
 
-Phase 2.5 is **NOT closed**. History and Schedule pages remain placeholders.
+Phase 2.5 is **NOT closed**. History and Schedule pages implemented (committed 0a8ed93).
 
 ---
 
