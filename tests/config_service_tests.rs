@@ -99,6 +99,7 @@ fn test_create_job_config() {
             compress: true,
             retention_keep_count: Some(10),
             retention_keep_days: None,
+            schedule_id: None,
         };
         let view = config_service::create_job_config(&request).unwrap();
         assert_eq!(view.name, "my-backup");
@@ -122,6 +123,7 @@ fn test_create_duplicate_job_name_fails() {
             compress: true,
             retention_keep_count: None,
             retention_keep_days: None,
+            schedule_id: None,
         };
         config_service::create_job_config(&request).unwrap();
         let err = config_service::create_job_config(&request).unwrap_err();
@@ -157,6 +159,7 @@ fn test_update_job_config() {
             compress: false,
             retention_keep_count: Some(14),
             retention_keep_days: Some(60),
+            schedule_id: None,
         };
         let view = config_service::update_job_config("documents", &request).unwrap();
         assert_eq!(view.source, "C:/Users/Test/Documents/Work");
@@ -180,6 +183,7 @@ fn test_update_missing_job_fails() {
             compress: false,
             retention_keep_count: None,
             retention_keep_days: None,
+            schedule_id: None,
         };
         let err = config_service::update_job_config("ghost", &request).unwrap_err();
         assert!(
@@ -201,6 +205,7 @@ fn test_update_job_config_rejects_rename() {
             compress: false,
             retention_keep_count: None,
             retention_keep_days: None,
+            schedule_id: None,
         };
         let err = config_service::update_job_config("documents", &request).unwrap_err();
         assert!(
@@ -246,6 +251,7 @@ fn test_create_job_empty_name_fails() {
             compress: false,
             retention_keep_count: None,
             retention_keep_days: None,
+            schedule_id: None,
         })
         .unwrap_err();
         assert!(
@@ -267,6 +273,7 @@ fn test_create_job_empty_source_fails() {
             compress: false,
             retention_keep_count: None,
             retention_keep_days: None,
+            schedule_id: None,
         })
         .unwrap_err();
         assert!(
@@ -288,6 +295,7 @@ fn test_create_job_empty_dest_fails() {
             compress: false,
             retention_keep_count: None,
             retention_keep_days: None,
+            schedule_id: None,
         })
         .unwrap_err();
         assert!(
@@ -298,6 +306,99 @@ fn test_create_job_empty_dest_fails() {
     });
 }
 
+// ---------------------------------------------------------------------------
+// Backward compatibility tests
+// ---------------------------------------------------------------------------
+
+#[test]
+fn test_old_config_without_schedules_field_loads_gracefully() {
+    // Simulate a config from Phase 1 / early Phase 2 that has no [schedules] section.
+    // The #[serde(default)] attribute on Config.schedules should default to empty map.
+    with_clean_dir("backward_no_schedules", |dir| {
+        let toml = r#"
+[job.documents]
+source = "C:/Users/Test/Documents"
+dest = "D:/Backup/Documents"
+compress = true
+"#;
+        fs::write(dir.join("nuwa.toml"), toml).unwrap();
+        let jobs = config_service::list_job_configs().unwrap();
+        assert_eq!(jobs.len(), 1, "Should parse config without schedules field");
+        assert_eq!(jobs[0].name, "documents");
+        assert_eq!(
+            jobs[0].schedule_id, None,
+            "Missing schedule_id should default to None"
+        );
+    });
+}
+
+#[test]
+fn test_old_config_without_schedule_id_loads_gracefully() {
+    // Simulate a job config from Phase 1 that omitted the schedule_id field entirely.
+    with_clean_dir("backward_no_schedule_id", |dir| {
+        let toml = r#"
+[job.work]
+source = "C:/Projects"
+dest = "E:/Backup/Projects"
+compress = true
+retention = { keep_count = 10, keep_days = 30 }
+"#;
+        fs::write(dir.join("nuwa.toml"), toml).unwrap();
+        let jobs = config_service::list_job_configs().unwrap();
+        assert_eq!(jobs.len(), 1);
+        assert_eq!(jobs[0].name, "work");
+        assert_eq!(
+            jobs[0].schedule_id, None,
+            "Missing schedule_id should default to None"
+        );
+    });
+}
+
+#[test]
+fn test_save_and_reload_preserves_defaults() {
+    // Create a job, save, reload, and verify defaults are preserved correctly.
+    with_clean_dir("save_reload_defaults", |_dir| {
+        let request = JobConfigRequest {
+            name: "defaults-test".into(),
+            source: "C:/Test".into(),
+            dest: "D:/Backup".into(),
+            compress: false,
+            retention_keep_count: None,
+            retention_keep_days: None,
+            schedule_id: None,
+        };
+        config_service::create_job_config(&request).unwrap();
+        let loaded = config_service::get_job_config("defaults-test").unwrap();
+        assert_eq!(
+            loaded.schedule_id, None,
+            "schedule_id should remain None after save-reload"
+        );
+    });
+}
+
+#[test]
+fn test_empty_schedules_list_does_not_break_services() {
+    // Verify that an empty schedules list (but valid jobs) doesn't break any service.
+    with_clean_dir("empty_schedules_ok", |dir| {
+        let toml = r#"
+[job.test1]
+source = "C:/Test1"
+dest = "D:/Backup1"
+compress = false
+
+[job.test2]
+source = "C:/Test2"
+dest = "D:/Backup2"
+compress = true
+"#;
+        fs::write(dir.join("nuwa.toml"), toml).unwrap();
+        let jobs = config_service::list_job_configs().unwrap();
+        assert_eq!(jobs.len(), 2);
+        // Both should have schedule_id = None since no schedules section exists
+        assert_eq!(jobs[0].schedule_id, None);
+        assert_eq!(jobs[1].schedule_id, None);
+    });
+}
 #[test]
 fn test_created_config_reflected_by_backup_service() {
     with_clean_dir("backup_reflect", |dir| {
@@ -309,6 +410,7 @@ fn test_created_config_reflected_by_backup_service() {
             compress: true,
             retention_keep_count: Some(5),
             retention_keep_days: None,
+            schedule_id: None,
         };
         config_service::create_job_config(&request).unwrap();
         let jobs = nuwa_backup::app::services::backup_service::list_jobs().unwrap();

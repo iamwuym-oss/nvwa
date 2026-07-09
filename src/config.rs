@@ -23,6 +23,9 @@ use std::path::{Path, PathBuf};
 pub struct Config {
     /// Multiple backup job definitions, keyed by job name
     pub job: HashMap<String, JobConfig>,
+    /// Schedule profiles, keyed by schedule ID
+    #[serde(default)]
+    pub schedules: HashMap<String, ScheduleProfileConfig>,
 }
 
 /// Single backup job configuration
@@ -38,6 +41,9 @@ pub struct JobConfig {
     /// Retention policy (optional)
     #[serde(default)]
     pub retention: Option<RetentionPolicy>,
+    /// Reference to a ScheduleProfileConfig id (None means manual only)
+    #[serde(default)]
+    pub schedule_id: Option<String>,
 }
 
 /// Retention policy
@@ -47,6 +53,98 @@ pub struct RetentionPolicy {
     pub keep_count: Option<u32>,
     /// Keep backup points from last N days
     pub keep_days: Option<u64>,
+}
+
+/// Schedule trigger type (serializable config model)
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[serde(tag = "trigger_type")]
+pub enum ScheduleTriggerConfig {
+    /// Run once at a specific date/time
+    Once {
+        /// Date and time in 'YYYY-MM-DD HH:MM' format
+        at: String,
+    },
+    /// Run daily at a specific time
+    Daily {
+        /// Time in 'HH:MM' format
+        at: String,
+    },
+    /// Run weekly on specific days
+    Weekly {
+        /// Days of the week (Mon, Tue, Wed, Thu, Fri, Sat, Sun)
+        days: Vec<String>,
+        /// Time in 'HH:MM' format
+        at: String,
+    },
+    /// Run monthly on a specific day
+    Monthly {
+        /// Day of the month (1-31)
+        day: u32,
+        /// Time in 'HH:MM' format
+        at: String,
+    },
+    /// Run on user logon
+    OnLogon {
+        /// Delay in seconds after logon
+        delay_seconds: u32,
+    },
+}
+
+/// A schedule profile that can be referenced by multiple backup jobs.
+///
+/// ScheduleProfile is the "what to run when" policy, separate from
+/// individual backup jobs. Multiple jobs can share the same schedule.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ScheduleProfileConfig {
+    /// Unique schedule identifier (e.g. "daily-evening", "weekly-sunday")
+    pub id: String,
+    /// Human-readable display name
+    pub name: String,
+    /// Optional description
+    #[serde(default)]
+    pub description: Option<String>,
+    /// Whether this schedule is enabled
+    #[serde(default = "default_enabled")]
+    pub enabled: bool,
+    /// Trigger configuration
+    pub trigger: ScheduleTriggerConfig,
+    /// Creation timestamp (ISO 8601)
+    #[serde(default)]
+    pub created_at: Option<String>,
+    /// Last update timestamp (ISO 8601)
+    #[serde(default)]
+    pub updated_at: Option<String>,
+}
+
+fn default_enabled() -> bool {
+    true
+}
+
+impl ScheduleTriggerConfig {
+    /// Convert to the scheduler module's ScheduleTrigger for schtasks.exe operations.
+    ///
+    /// This avoids duplicating the match logic across config_service and schedule_service.
+    /// The two types serve different purposes:
+    ///   - ScheduleTriggerConfig is the persistent TOML model (serde-tagged)
+    ///   - ScheduleTrigger is the runtime model for schtasks.exe CLI arguments
+    pub fn to_scheduler_trigger(&self) -> crate::scheduler::ScheduleTrigger {
+        use crate::scheduler::ScheduleTrigger;
+        match self {
+            ScheduleTriggerConfig::Once { at } => ScheduleTrigger::Once { at: at.clone() },
+            ScheduleTriggerConfig::Daily { at } => ScheduleTrigger::Daily { at: at.clone() },
+            ScheduleTriggerConfig::Weekly { days, at } => ScheduleTrigger::Weekly {
+                days: days.clone(),
+                at: at.clone(),
+            },
+            ScheduleTriggerConfig::Monthly { day, at } => ScheduleTrigger::Monthly {
+                day: *day,
+                at: at.clone(),
+            },
+            ScheduleTriggerConfig::OnLogon { delay_seconds } => ScheduleTrigger::OnLogon {
+                delay_seconds: *delay_seconds,
+            },
+        }
+    }
 }
 
 impl Config {

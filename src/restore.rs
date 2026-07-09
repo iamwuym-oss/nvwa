@@ -50,14 +50,10 @@ pub fn execute_restore(
 
     // Pre-validate all manifest entries for path traversal (safety hardening)
     for dir_entry in &manifest.directories {
-        if let Err(e) = validate_restore_path(dest, &dir_entry.relative_path) {
-            return Err(e);
-        }
+        validate_restore_path(dest, &dir_entry.relative_path)?;
     }
     for file_entry in &manifest.files {
-        if let Err(e) = validate_restore_path(dest, &file_entry.relative_path) {
-            return Err(e);
-        }
+        validate_restore_path(dest, &file_entry.relative_path)?;
     }
 
     let compression = manifest.compression.enabled;

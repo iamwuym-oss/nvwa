@@ -24,6 +24,7 @@ use std::collections::BTreeMap;
 use crate::app::error::AppError;
 use crate::app::models::config_job::{JobConfigRequest, JobConfigView};
 use crate::config::{Config, JobConfig, RetentionPolicy};
+use crate::scheduler;
 
 // ---------------------------------------------------------------------------
 // Public API
@@ -82,8 +83,13 @@ pub fn create_job_config(request: &JobConfigRequest) -> Result<JobConfigView, Ap
     }
 
     let job_cfg = request_to_job_config(request);
-    config.job.insert(request.name.clone(), job_cfg);
+    let schedule_id = job_cfg.schedule_id.clone();
+    let job_name = request.name.clone();
+    config.job.insert(job_name.clone(), job_cfg);
     save_config(&config)?;
+
+    // Sync schtasks: create if job has an enabled schedule.
+    sync_job_schedule_tasks(&None, &schedule_id, &job_name);
 
     get_job_config(&request.name)
 }
@@ -105,7 +111,7 @@ pub fn update_job_config(
         return Err(AppError::config(format!("Job '{}' not found", name)));
     }
 
-    // Rename is not supported — name must match the original
+    // Rename is not supported ? name must match the original
     if name != request.name {
         return Err(AppError::config(format!(
             "Cannot rename job '{}' to '{}'. Rename is not supported. Delete and recreate instead.",
@@ -113,9 +119,17 @@ pub fn update_job_config(
         )));
     }
 
+    // Capture old schedule_id BEFORE updating config, to detect changes for schtasks sync.
+    let old_schedule_id = config.job.get(name).and_then(|j| j.schedule_id.clone());
+
     let job_cfg = request_to_job_config(request);
+    let new_schedule_id = job_cfg.schedule_id.clone();
     config.job.insert(request.name.clone(), job_cfg);
     save_config(&config)?;
+
+    // Sync schtasks: if schedule_id changed (None<->Some or Some<->Some with different IDs),
+    // delete old tasks and/or create new ones accordingly.
+    sync_job_schedule_tasks(&old_schedule_id, &new_schedule_id, name);
 
     get_job_config(&request.name)
 }
@@ -130,11 +144,18 @@ pub fn delete_job_config(name: &str) -> Result<(), AppError> {
 
     let mut config = Config::load().map_err(AppError::from)?;
 
+    // Capture schedule_id before removing the job, so we can clean up schtasks.
+    let schedule_id = config.job.get(name).and_then(|j| j.schedule_id.clone());
+
     if config.job.remove(name).is_none() {
         return Err(AppError::config(format!("Job '{}' not found", name)));
     }
 
     save_config(&config)?;
+
+    // Remove associated Windows scheduled task if the job had a schedule.
+    remove_job_schedule_tasks(name, &schedule_id);
+
     Ok(())
 }
 
@@ -156,6 +177,7 @@ fn job_config_to_view(name: &str, cfg: &JobConfig) -> JobConfigView {
         compress: cfg.compress,
         retention_keep_count: keep_count,
         retention_keep_days: keep_days,
+        schedule_id: cfg.schedule_id.clone(),
     }
 }
 
@@ -176,6 +198,7 @@ fn request_to_job_config(request: &JobConfigRequest) -> JobConfig {
         dest: request.dest.clone().into(),
         compress: request.compress,
         retention,
+        schedule_id: request.schedule_id.clone(),
     }
 }
 
@@ -193,6 +216,56 @@ fn validate_request(request: &JobConfigRequest) -> Result<(), AppError> {
     Ok(())
 }
 
+/// Sync Windows scheduled tasks when a job's schedule_id changes.
+///
+/// This function creates or removes schtasks based on the difference between
+/// old and new schedule_id values. It is called after config is saved so that
+/// scheduler::create_task() can read the fresh config.
+///
+/// Lifecycle rules:
+///   - None ? Some(schedule): create task if schedule is enabled
+///   - Some(A) ? Some(B): delete old task A, create task B
+///   - Some(A) ? None: delete old task A
+///   - No change: do nothing
+fn sync_job_schedule_tasks(
+    old_schedule_id: &Option<String>,
+    new_schedule_id: &Option<String>,
+    job_name: &str,
+) {
+    // When both are the same (no change), exit early to avoid unnecessary schtasks calls.
+    if old_schedule_id == new_schedule_id {
+        return;
+    }
+
+    // Load config fresh to get schedule trigger details.
+    let config = match Config::load() {
+        Ok(c) => c,
+        Err(_) => return, // If config can't be loaded, we can't determine the trigger; skip silently.
+    };
+
+    // If there was an old schedule, remove its task first (delete old, then create new).
+    if let Some(_old_id) = old_schedule_id {
+        let _ = scheduler::delete_task(job_name);
+    }
+
+    // If there's a new schedule and it's enabled, create a task.
+    if let Some(new_id) = new_schedule_id {
+        if let Some(sched) = config.schedules.get(new_id) {
+            if sched.enabled {
+                let trigger = sched.trigger.to_scheduler_trigger();
+                let _ = scheduler::create_task(job_name, &trigger);
+            }
+        }
+    }
+}
+
+/// Remove Windows scheduled tasks for a job (used when job is deleted or disabled).
+fn remove_job_schedule_tasks(job_name: &str, schedule_id: &Option<String>) {
+    if schedule_id.is_some() {
+        let _ = scheduler::delete_task(job_name);
+    }
+}
+
 /// Load existing config or create an empty one.
 ///
 /// Unlike Config::load(), this returns an empty Config if no file exists,
@@ -202,6 +275,7 @@ fn load_or_create_config() -> Result<Config, AppError> {
         Ok(c) => Ok(c),
         Err(_) => Ok(Config {
             job: std::collections::HashMap::new(),
+            schedules: std::collections::HashMap::new(),
         }),
     }
 }

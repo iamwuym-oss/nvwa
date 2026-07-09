@@ -55,6 +55,9 @@ pub fn get_overview() -> Result<DashboardOverview, AppError> {
         .collect();
 
     // ---- Scheduler ----
+    // scheduled_count = number of active Windows Task Scheduler entries (schtasks),
+    // NOT the number of ScheduleProfile configs. One job with one schedule = one task.
+    // This is a real-time query, not a config-derived count.
     let scheduled_count = match scheduler::list_tasks() {
         Ok(tasks) => tasks.len() as u32,
         Err(_) => 0,

@@ -25,6 +25,7 @@ export interface JobConfigView {
   compress: boolean;
   retention_keep_count: number | null;
   retention_keep_days: number | null;
+  schedule_id: string | null;
 }
 
 export interface JobConfigRequest {
@@ -34,6 +35,7 @@ export interface JobConfigRequest {
   compress: boolean;
   retention_keep_count: number | null;
   retention_keep_days: number | null;
+  schedule_id: string | null;
 }
 
 // ---------------------------------------------------------------------------
@@ -48,6 +50,7 @@ const MOCK_CONFIGS: JobConfigView[] = [
     compress: true,
     retention_keep_count: 7,
     retention_keep_days: 30,
+    schedule_id: "daily-evening",
   },
   {
     name: "Projects",
@@ -56,6 +59,7 @@ const MOCK_CONFIGS: JobConfigView[] = [
     compress: true,
     retention_keep_count: 10,
     retention_keep_days: null,
+    schedule_id: null,
   },
 ];
 

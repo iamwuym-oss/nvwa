@@ -161,7 +161,7 @@ fn build_job_view(name: &str, cfg: &JobConfig) -> BackupJobView {
     let (last_time, last_status, last_files, last_bytes) =
         query_last_backup_for_job(name, &cfg.dest);
 
-    let status = derive_job_status(&cfg, &last_status);
+    let status = derive_job_status(cfg, &last_status);
 
     BackupJobView {
         name: name.into(),
@@ -230,6 +230,7 @@ fn derive_job_status(cfg: &JobConfig, last_status: &Option<String>) -> BackupJob
 }
 
 /// Record a backup operation in the history database.
+#[allow(clippy::too_many_arguments)]
 fn record_backup_in_history(
     backup_id: &str,
     job_name: &str,

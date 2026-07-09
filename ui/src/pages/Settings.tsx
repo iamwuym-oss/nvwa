@@ -16,7 +16,8 @@
 // ============================================================================
 
 import { useEffect, useState, useCallback } from "react";
-import Button from "../components/common/Button";import PathInput from "../components/common/PathInput";
+import Button from "../components/common/Button";
+import PathInput from "../components/common/PathInput";
 import Badge from "../components/common/Badge";
 import EmptyState from "../components/feedback/EmptyState";
 import ErrorState from "../components/feedback/ErrorState";
@@ -29,6 +30,10 @@ import {
   JobConfigView,
   JobConfigRequest,
 } from "../api/configApi";
+import {
+  listSchedules,
+  ScheduleProfileView,
+} from "../api/scheduleApi";
 
 // ---------------------------------------------------------------------------
 // Inline SVG icons
@@ -162,7 +167,13 @@ function PlanForm({ initial, onSave, onCancel, saving, error }: PlanFormProps) {
   const [compress, setCompress] = useState(initial?.compress ?? true);
   const [keepCount, setKeepCount] = useState(initial?.retention_keep_count?.toString() ?? "");
   const [keepDays, setKeepDays] = useState(initial?.retention_keep_days?.toString() ?? "");
+  const [scheduleId, setScheduleId] = useState<string | null>(initial?.schedule_id ?? null);
+  const [availableSchedules, setAvailableSchedules] = useState<ScheduleProfileView[]>([]);
   const [formError, setFormError] = useState<string | null>(null);
+
+  useEffect(() => {
+    listSchedules().then((s) => setAvailableSchedules(s)).catch(() => {});
+  }, []);
 
   const handleSubmit = async () => {
     setFormError(null);
@@ -176,6 +187,7 @@ function PlanForm({ initial, onSave, onCancel, saving, error }: PlanFormProps) {
       compress,
       retention_keep_count: keepCount ? parseInt(keepCount) || null : null,
       retention_keep_days: keepDays ? parseInt(keepDays) || null : null,
+      schedule_id: scheduleId,
     };
 
     await onSave(request);
@@ -308,6 +320,26 @@ function PlanForm({ initial, onSave, onCancel, saving, error }: PlanFormProps) {
             />
           </div>
         </div>
+
+        {/* Schedule */}
+        <div style={{ marginBottom: "20px" }}>
+          <label style={labelStyle}>Schedule</label>
+          <select
+            value={scheduleId ?? ""}
+            onChange={(e) => setScheduleId(e.target.value || null)}
+            style={inputStyle}
+          >
+            <option value="">Manual only (no automatic schedule)</option>
+            {availableSchedules.map((s) => (
+              <option key={s.id} value={s.id}>
+                {s.name} ({s.trigger_summary})
+              </option>
+            ))}
+          </select>
+          <p style={{ margin: "4px 0 0", fontSize: theme.font.sizeXs, color: theme.colors.textMuted }}>
+            {scheduleId ? "This backup job will follow the selected schedule." : "Run this backup manually only."}
+          </p>
+        </div>
       </div>
 
       <div style={{ display: "flex", gap: "12px", marginTop: "24px" }}>
@@ -426,6 +458,11 @@ function PlanCard({ plan, onEdit, onDelete }: PlanCardProps) {
       <div style={{ display: "flex", gap: "24px", flexWrap: "wrap" }}>
         <span style={{ fontSize: theme.font.sizeXs, color: theme.colors.textMuted }}>
           Retention: <span style={{ color: theme.colors.textSecondary }}>{retentionLabel(plan.retention_keep_count, plan.retention_keep_days)}</span>
+          <span style={{ marginLeft: "16px" }}>
+            Schedule: <span style={{ color: plan.schedule_id ? theme.colors.primary : theme.colors.textMuted }}>
+              {plan.schedule_id ? plan.schedule_id : "Manual"}
+            </span>
+          </span>
         </span>
       </div>
     </div>

@@ -80,7 +80,7 @@ pub fn get_restore_preview(backup_id: &str) -> Result<RestorePreview, AppError> 
     // Find the backup point by searching all job destinations
     let config = Config::load().map_err(AppError::from)?;
 
-    for (_job_name, job_cfg) in &config.job {
+    for job_cfg in config.job.values() {
         let backup_dir = job_cfg.dest.join(backup_id);
         let manifest_path = backup_dir.join("manifest.json");
 
@@ -169,8 +169,6 @@ pub fn execute_restore(request: &RestoreRequest) -> Result<RestoreOperationResul
     // Determine status
     let status = if core_result.checksum_failures > 0 {
         "partial"
-    } else if core_result.restored_count > 0 || core_result.skipped_count > 0 {
-        "success"
     } else {
         "success"
     };
@@ -236,7 +234,7 @@ pub fn execute_restore(request: &RestoreRequest) -> Result<RestoreOperationResul
 fn find_backup_dir(backup_id: &str) -> Result<std::path::PathBuf, AppError> {
     let config = Config::load().map_err(AppError::from)?;
 
-    for (_job_name, job_cfg) in &config.job {
+    for job_cfg in config.job.values() {
         let backup_dir = job_cfg.dest.join(backup_id);
         let manifest_path = backup_dir.join("manifest.json");
 
@@ -254,7 +252,7 @@ fn find_backup_dir(backup_id: &str) -> Result<std::path::PathBuf, AppError> {
 /// Find the job config that contains a specific backup directory.
 fn find_job_for_backup_dir(backup_dir: &Path) -> Option<crate::config::JobConfig> {
     let config = Config::load().ok()?;
-    for (_name, job_cfg) in &config.job {
+    for job_cfg in config.job.values() {
         let expected = job_cfg.dest.join(backup_dir.file_name()?);
         if expected == backup_dir {
             return Some(job_cfg.clone());

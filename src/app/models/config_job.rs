@@ -30,6 +30,8 @@ pub struct JobConfigView {
     pub retention_keep_count: Option<u32>,
     /// Keep backups from last N days (None = no day-based limit)
     pub retention_keep_days: Option<u64>,
+    /// Schedule profile ID (None = manual only)
+    pub schedule_id: Option<String>,
 }
 
 /// Request payload for creating or updating a backup job configuration.
@@ -47,4 +49,6 @@ pub struct JobConfigRequest {
     pub retention_keep_count: Option<u32>,
     /// Keep backups from last N days (None = no day-based limit)
     pub retention_keep_days: Option<u64>,
+    /// Schedule profile ID (None = manual only)
+    pub schedule_id: Option<String>,
 }

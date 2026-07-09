@@ -129,7 +129,7 @@ pub fn list_directory(path: &str) -> Result<Vec<FsEntry>, AppError> {
     }
 
     // Sort by name, case-insensitive
-    entries.sort_by(|a, b| a.name.to_lowercase().cmp(&b.name.to_lowercase()));
+    entries.sort_by_key(|a| a.name.to_lowercase());
 
     Ok(entries)
 }
@@ -143,7 +143,7 @@ pub fn list_directory(path: &str) -> Result<Vec<FsEntry>, AppError> {
 fn get_drive_label(root: &str) -> String {
     // Try to read the volume label; fall back to "Local Disk"
     match std::process::Command::new("cmd")
-        .args(&["/c", "vol", root])
+        .args(["/c", "vol", root])
         .output()
     {
         Ok(output) => {
