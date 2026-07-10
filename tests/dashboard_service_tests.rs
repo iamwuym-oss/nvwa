@@ -1,4 +1,4 @@
-// ============================================================================
+﻿// ============================================================================
 // dashboard_service_tests.rs -- Test the dashboard data aggregation service
 //
 // Test scenarios (T2.5-03A spec):
@@ -90,7 +90,7 @@ fn create_history_with_success(db_path: &Path) {
 fn with_clean_dir<F: FnOnce(&Path) -> T, T>(name: &str, f: F) -> T {
     // Serialize CWD-dependent tests (Config::load() uses relative path)
     // so parallel test threads don't trample each other's working directory.
-    let _lock = CWD_LOCK.lock().unwrap();
+    let _lock = CWD_LOCK.lock().unwrap_or_else(|e| e.into_inner());
 
     let dir = std::env::temp_dir().join("nuwa_test").join(name);
     let _ = fs::remove_dir_all(&dir);

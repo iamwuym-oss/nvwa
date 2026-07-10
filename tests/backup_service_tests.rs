@@ -1,4 +1,4 @@
-// ============================================================================
+﻿// ============================================================================
 // backup_service_tests.rs -- Test the backup service layer
 //
 // Test scenarios:
@@ -70,7 +70,7 @@ compress = false
 }
 
 fn with_clean_dir<F: FnOnce(&Path) -> T, T>(name: &str, f: F) -> T {
-    let _lock = CWD_LOCK.lock().unwrap();
+    let _lock = CWD_LOCK.lock().unwrap_or_else(|e| e.into_inner());
 
     let dir = std::env::temp_dir().join("nuwa_test").join(name);
     let _ = fs::remove_dir_all(&dir);
@@ -162,6 +162,33 @@ fn test_run_backup_dry_job_not_found() {
     });
 }
 
+
+#[test]
+fn test_run_backup_source_missing() {
+    with_clean_dir("run_source_missing", |dir| {
+        let toml = format!(
+            "\n[job.TestJob]\nsource = \"{}\"\ndest = \"{}\"\n",
+            dir.join("missing_source").to_string_lossy().replace("\\", "\\\\"),
+            dir.join("dest").to_string_lossy().replace("\\", "\\\\")
+        );
+        fs::write(dir.join("nuwa.toml"), &toml).unwrap();
+        let result = backup_service::run_backup("TestJob");
+        assert!(result.is_err(), "run_backup with missing source should error");
+    });
+}
+
+#[test]
+fn test_list_jobs_with_corrupt_config() {
+    with_clean_dir("corrupt_config_jobs", |dir| {
+        fs::write(dir.join("nuwa.toml"), "[[[ invalid toml [[[").unwrap();
+        let result = backup_service::list_jobs();
+        if let Ok(jobs) = result {
+            assert!(jobs.is_empty(), "Corrupt config should return empty list or error");
+        }
+    });
+}
+
+#[test]
 #[test]
 fn test_misconfigured_job_source_missing() {
     with_clean_dir("misconfigured", |dir| {
