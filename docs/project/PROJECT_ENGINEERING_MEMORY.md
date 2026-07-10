@@ -1,4 +1,4 @@
-# Nüwa Backup — Project Engineering Memory
+﻿# Nüwa Backup — Project Engineering Memory
 
 **Version:** 0.2.1
 **Last Updated:** 2026-07-10 (Phase 2.5 Final Acceptance Bugfixes)
@@ -79,7 +79,57 @@ Before any coding task begins, Codex MUST read these documents in order:
 - Phase 2.5 must NOT implement Phase 3/4/5/6+ features.
 - See docs/phase-2.5/Phase_2_5_Tauri_Migration_Decision.md for migration details.
 
-### Phase 1 Core Freeze
+#
+## Phase S — Repository Engine
+
+**Status:** WAVE 1 COMPLETE (S-01/S-02/S-03)
+**Started:** 2026-07-10
+**Wave 1 Commit:** e50fbb4 (plus uncommitted Wave 1 fixes)
+**Prerequisite:** None (independent from Phase 2.5)
+
+### Scope
+
+Phase S (Storage Foundation) establishes Nüwa's unified backup storage engine.
+It is independent from all feature phases. Phase 3 (Volume Backup) and Phase 3.1 (File Backup v2) depend on Phase S.
+
+### Architecture Documents
+
+- docs/phase-s/Nuwa_Repository_Engine_Architecture_v1.0.md — Architecture Frozen Baseline
+- docs/phase-s/Nuwa_Repository_Engine_Implementation_Plan_v1.1.md — Implementation Plan
+
+### Wave 1 Implementation Status (2026-07-10)
+
+| Module | S-ID | Status | Tests |
+|--------|------|--------|-------|
+| Repository Init (repo_manager.rs) | S-01 | Complete | 8 tests |
+| Block Store (block_store/) | S-02 | Complete | 7 tests |
+| Metadata Engine (metadata/) | S-03 | Complete | 7 tests |
+
+Remaining Waves (not started): Chunk Engine, Catalog, Block Map, Crash Consistency Manager, Verify Engine, Retention, Recovery, Legacy Adapter, Repository CLI
+
+### Core Design Decisions
+
+| Decision | Value |
+|----------|-------|
+| Block Size | 256KB (fixed, repository-level) |
+| Block Identity | SHA-256(raw data) |
+| Block Header | 64 bytes fixed |
+| Storage Layout | .nuwarepo/ + backup-instances/ + block-store/ |
+| Data Model | Backup Job → Restore Point → Backup Instance |
+| Catalog | Per-Backup-Instance SQLite (trait) |
+| Block Map | Per-Backup-Instance SQLite (trait) |
+| Transaction | Crash Consistency Manager (state machine + journal) |
+| Retention | Logical deletion only (orphan candidates, no GC) |
+| Content Addressing | NOT Deduplication (Phase 6+ reserves dedup) |
+
+### Key Boundaries
+
+- Repository Engine does NOT know data source types (File/Volume/Disk)
+- block-map.db is NOT rebuildable from block-store
+- catalog.db is NOT rebuildable (full-point restore only if lost)
+- Phase S Wave 1 implements: Repository Init, Block Store, Metadata Engine
+- Phase S does NOT implement block GC, encryption, CDC, or cloud tier
+## Phase 1 Core Freeze
 
 The Phase 1 file-level backup/restore CLI is frozen. Codex must not rewrite,
 restructure, or expand the Phase 1 file backup core unless the user explicitly
@@ -94,7 +144,8 @@ approves a task that modifies it.
 | Phase 0 | Project setup, MVP boundary, guardrails | COMPLETE |
 | Phase 1 | File-level backup/restore CLI | CLOSED |
 | Phase 2 | CLI usability: config, history, scheduler, SMB, GUI (egui) | CLOSED |
-| Phase 2.5 | Tauri 2.0 desktop GUI + Application Layer | ACTIVE |
+| Phase 2.5 | Tauri 2.0 desktop GUI + Application Layer | CLOSED |
+| Phase S | Repository Engine (unified storage foundation) | WAVE 1 DONE |
 | Phase 3 | NTFS non-system volume image, VSS, block backup | NOT STARTED |
 | Phase 4 | WinPE recovery media, system restore, BCD repair | NOT STARTED |
 | Phase 5 | Disk cloning | NOT STARTED |
@@ -579,3 +630,4 @@ React UI -> invoke() -> Tauri command -> app::services::backup_service -> backup
 | T2.5-04F | History Page + Service + Tauri Commands | ✅ DONE / PASS (0a8ed93) |
 | T2.5-DOC-01A | Documentation synchronization | ✅ DONE / PASS |
 | T2.5-DOC-02 | AGENTS + README alignment | ✅ DONE / PASS |
+

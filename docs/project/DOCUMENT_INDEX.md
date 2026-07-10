@@ -1,4 +1,4 @@
-# Nüwa Backup — Document Index
+﻿# Nüwa Backup — Document Index
 
 **Last Updated:** 2026-07-10 (T2.5-05A inter-page linkage fixes)
 
@@ -162,6 +162,13 @@ The following tasks were completed but do not have individual report files. Thei
 | T2.5-DOC-01A — Documentation sync | ✅ DONE / PASS |
 | T2.5-DOC-02 — AGENTS + README alignment | ✅ DONE / PASS |
 
+
+## docs/phase-s/ — Phase S: Repository Engine (NEW)
+
+| Document | Authority | Purpose |
+|----------|-----------|---------|
+| Nuwa_Repository_Engine_Architecture_v1.0.md | **AUTHORITATIVE** | Phase S architecture baseline. Frozen. Supersedes all earlier storage format designs. |
+| Nuwa_Repository_Engine_Implementation_Plan_v1.1.md | **AUTHORITATIVE** | Phase S implementation plan. Rust module structure, task breakdown, test strategy, error model. |
 ## docs/phase-3/ — Reserved: NTFS Volume Image, VSS, Block Backup
 
 *(reserved)*
@@ -259,3 +266,4 @@ The following tasks were completed but do not have individual report files. Thei
 | Phase 6+ | Differential, encryption, cross-platform | ❌ NOT AUTHORIZED |
 
 **Phase 3 is in PLANNING. T3-00 complete. Coding not started.**
+

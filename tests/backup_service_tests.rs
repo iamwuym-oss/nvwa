@@ -6,7 +6,7 @@
 //   2. list_jobs with missing config (error)
 //   3. get_job_detail with valid job name
 //   4. get_job_detail with invalid job name (error)
-//   5. run_backup_dry — validates job exists
+//   5. run_backup_dry 鈥?validates job exists
 //   6. Misconfigured job (source not found)
 // ============================================================================
 
@@ -195,7 +195,6 @@ fn test_list_jobs_with_corrupt_config() {
     });
 }
 
-#[test]
 #[test]
 fn test_misconfigured_job_source_missing() {
     with_clean_dir("misconfigured", |dir| {

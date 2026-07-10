@@ -1,6 +1,6 @@
 ﻿# Nüwa Backup (女娲备份)
 
-**Version:** 0.2.0
+**Version:** 0.3.0
 **Phase:** 2.5 — Tauri Desktop GUI + Application Layer
 **Status:** ACTIVE
 Nüwa Backup is a **local-first desktop backup and recovery application** for Windows.
@@ -23,6 +23,24 @@ Application Service Layer (Rust, src/app/)
 Core Engine (Rust, src/) — backup, restore, verify, storage
     |
     v
+Application Service Layer (Rust, src/app/) — 7 services
+    |
+    v
+Tauri Commands (Rust, src-tauri/) — 25+ invoke() handlers
+    |
+    v
+React UI (TypeScript, ui/) — 7 pages + components
+
+**Phase S — Repository Engine (parallel track, src/repository/):**
+`
+  Repository CLI
+       |
+  repo_manager
+       |
+  block_store -> metadata -> chunk_engine -> catalog -> block_map
+       |
+  transaction -> verify -> retention -> recovery -> legacy
+`
 File System / SQLite
 ```
 
@@ -34,7 +52,7 @@ File System / SQLite
 - SMB/UNC path support
 - Retention policy with count/dry-run/prune
 
-### Phase 2.5 (ACTIVE)
+### Phase 2.5 (CLOSED)
 
 **Completed UI Pages:**
 
@@ -61,6 +79,36 @@ File System / SQLite
 **Not Yet Implemented:**
 - Disk Clone — disabled placeholder (Phase 5)
 - Enterprise Backup Catalog Browser — future
+
+### Phase S — Repository Engine (WAVE 1 COMPLETE)
+
+Phase S establishes Nüwa's unified backup storage foundation. It is independent from all feature phases and serves as the shared data engine for all future backup types (file, volume, disk, system image).
+
+**Wave 1 Complete (S-01/S-02/S-03):**
+
+| Module | File | Status | Tests |
+|--------|------|--------|-------|
+| Repository Init | src/repository/repo_manager.rs | Complete | 8 |
+| Block Store | src/repository/block_store/ | Complete | 18 |
+| Metadata Engine | src/repository/metadata/ | Complete | 11 |
+
+**Enterprise Readiness (Architecture v1.1):**
+- Repository identity: UUID + repository.json manifest
+- Capability model: compression, encryption, dedup flags
+- Asset abstraction: asset_id/asset_type reserved fields
+- Version migration: format_version + min_compatible_version
+- Block Map logical_address semantics (unified address space)
+
+**Architecture Documents:**
+- docs/phase-s/Nuwa_Repository_Engine_Architecture_v1.0.md — Frozen baseline
+- docs/phase-s/Nuwa_Repository_Engine_Architecture_v1.1.md — Enterprise Readiness Revision
+- docs/phase-s/Nuwa_Repository_Engine_Implementation_Plan_v1.1.md — Implementation baseline
+- docs/phase-s/Phase_S_Wave_1_Completion_Report.md — Wave 1 evidence
+
+**Quality Gates:**
+- 225 tests passing (lib 156 + integration 69)
+- cargo build --features repository — zero warnings
+- All Phase 1/2.5/acceptance tests maintained
 
 ---
 
@@ -183,7 +231,15 @@ Backup points in D:\Backups:
 
 ---
 
-## Backup Storage Layout
+## Backup Storage Layout (Phase 1 flat-file, Phase S+ Repository Engine)
+
+**Phase 1 (CLOSED):** Each backup operation creates a timestamped directory under the destination root:
+
+**Phase S (ACTIVE):** The Repository Engine manages a unified block-based repository at a configured root path. See docs/phase-s/ for the full architecture.
+
+---
+
+### Phase 1 Flat-File Layout
 
 Each backup operation creates a timestamped directory under the destination root:
 
