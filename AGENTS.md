@@ -177,6 +177,7 @@ Before starting any new task, Codex must read:
 9. **docs/phase-s/Nuwa_Repository_Engine_Architecture_v1.0.md** — Phase S Architecture Frozen Baseline.
 10. **docs/phase-s/Nuwa_Repository_Engine_Architecture_v1.1.md** — Enterprise Readiness Revision (additive to v1.0).
 11. **docs/phase-s/Nuwa_Repository_Engine_Implementation_Plan_v1.1.md** — Phase S Implementation Baseline.
+12. **docs/phase-s/Phase_S_Known_Limitations_and_Roadmap.md** — Phase S known limitations and future roadmap.
 
 After reading, Codex must output and confirm:
 
@@ -843,6 +844,7 @@ Rules:
 - Object storage backend (Enterprise)
 - Cloud tiering (Enterprise)
 - Small file packing / container block format (future optimization)
+- Retention does NOT free disk space (only marks Restore Point DELETED, physical blocks retained)
 
 **Architecture Compliance (v1.1 Enterprise Readiness):**
 - Repository identity (UUID + repository.json) — implemented

@@ -178,6 +178,7 @@ The following tasks were completed but do not have individual report files. Thei
 | Phase_S_Stage3_API_Freeze_Report.md | **AUTHORITATIVE** | Stage 3: API freeze validation. Volume Backup compatible. |
 | Phase_S_Scale_Analysis.md | REFERENCE | A-08: Block store scale and SQLite query complexity analysis. |
 | Phase_S_Volume_Compatibility.md | REFERENCE | A-09: Volume Backup data flow compatibility. |
+| Phase_S_Known_Limitations_and_Roadmap.md | REFERENCE | Phase S known limitations and future roadmap. Updated as features are implemented. |
 | Phase_S_Closing_Report.md | **AUTHORITATIVE** | Phase S closing report. Baseline freeze. 5 audit gates PASS. |
 ## docs/phase-3/ — Reserved: NTFS Volume Image, VSS, Block Backup
 
