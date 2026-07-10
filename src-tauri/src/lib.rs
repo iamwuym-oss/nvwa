@@ -68,6 +68,7 @@ pub fn run() {
             commands::restore::list_restore_points,
             commands::restore::get_restore_preview,
             commands::restore::execute_restore,
+            commands::restore::delete_backup_set,
             commands::file_browser::list_roots,
             commands::file_browser::list_directory,
             commands::history::query_history,

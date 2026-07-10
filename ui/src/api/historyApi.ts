@@ -104,6 +104,7 @@ function operationDisplay(op: string): { label: string; color: "success" | "warn
     case "backup":  return { label: "Backup",  color: "success" };
     case "restore": return { label: "Restore", color: "info" };
     case "verify":  return { label: "Verify",  color: "warning" };
+      case "delete_backup_set": return { label: "Delete Backup Set", color: "error" };
     default:        return { label: op,        color: "neutral" };
   }
 }

@@ -1,12 +1,12 @@
-﻿// restart_persistence_tests.rs -- Restart Persistence Test
+// restart_persistence_tests.rs -- Restart Persistence Test
 // Simulates app restart by writing data, then re-reading from disk.
+use nuwa_backup::app::models::history::HistoryFilter;
+use nuwa_backup::app::services::{config_service, history_service, schedule_service};
+use nuwa_backup::config::Config;
+use nuwa_backup::history::{HistoryDb, OperationRecord};
 use std::fs;
 use std::path::Path;
 use std::sync::Mutex;
-use nuwa_backup::app::services::{config_service, history_service, schedule_service};
-use nuwa_backup::app::models::history::HistoryFilter;
-use nuwa_backup::config::Config;
-use nuwa_backup::history::{HistoryDb, OperationRecord};
 static CWD_LOCK: Mutex<()> = Mutex::new(());
 fn make_config_toml(dir: &Path) -> String {
     let src = dir.join("source").to_string_lossy().replace("\\", "\\\\");
@@ -18,7 +18,9 @@ fn make_config_toml(dir: &Path) -> String {
 }
 fn create_history_in(dest_dir: &Path) {
     let db_path = HistoryDb::history_db_path(dest_dir);
-    if let Some(parent) = db_path.parent() { fs::create_dir_all(parent).unwrap(); }
+    if let Some(parent) = db_path.parent() {
+        fs::create_dir_all(parent).unwrap();
+    }
     let db = HistoryDb::open_or_create(&db_path).unwrap();
     db.record_operation(&OperationRecord {
         backup_id: "persist-test-bp-001".into(),
@@ -27,9 +29,13 @@ fn create_history_in(dest_dir: &Path) {
         source_root: dest_dir.join("source").to_string_lossy().into_owned(),
         dest_path: dest_dir.to_string_lossy().into_owned(),
         job_name: Some("MyJob".into()),
-        file_count: 42, total_bytes: 1048576, duration_ms: 3000, exit_code: 0,
+        file_count: 42,
+        total_bytes: 1048576,
+        duration_ms: 3000,
+        exit_code: 0,
         status: "success".into(),
-    }).unwrap();
+    })
+    .unwrap();
 }
 fn with_dir<F: FnOnce(&Path) -> T, T>(name: &str, f: F) -> T {
     let _lock = CWD_LOCK.lock().unwrap_or_else(|e| e.into_inner());
@@ -60,15 +66,26 @@ fn test_restart_history_persistence() {
     with_dir("p_history", |dir| {
         let dest = dir.join("dest_backup");
         fs::create_dir_all(&dest).unwrap();
-        let src_esc = dir.join("source").to_string_lossy().replace("\\","\\\\");
-        let dst_esc = dest.to_string_lossy().replace("\\","\\\\");
-        let config_toml = format!("\n[job.MyJob]\nsource = \"{}\"\ndest = \"{}\"\n", src_esc, dst_esc);
+        let src_esc = dir.join("source").to_string_lossy().replace("\\", "\\\\");
+        let dst_esc = dest.to_string_lossy().replace("\\", "\\\\");
+        let config_toml = format!(
+            "\n[job.MyJob]\nsource = \"{}\"\ndest = \"{}\"\n",
+            src_esc, dst_esc
+        );
         fs::write(dir.join("nuwa.toml"), &config_toml).unwrap();
         fs::create_dir_all(dir.join("source")).unwrap();
         create_history_in(&dest);
-        let r1 = history_service::query_history(HistoryFilter { operation: None, limit: Some(10) }).expect("q1");
+        let r1 = history_service::query_history(HistoryFilter {
+            operation: None,
+            limit: Some(10),
+        })
+        .expect("q1");
         assert!(r1.total > 0);
-        let r2 = history_service::query_history(HistoryFilter { operation: None, limit: Some(10) }).expect("q2");
+        let r2 = history_service::query_history(HistoryFilter {
+            operation: None,
+            limit: Some(10),
+        })
+        .expect("q2");
         assert_eq!(r2.total, r1.total);
         assert_eq!(r2.records[0].backup_id, "persist-test-bp-001");
     });

@@ -22,7 +22,7 @@ function App() {
 
   const renderPage = () => {
     switch (currentPage) {
-      case "dashboard": return <Dashboard />;
+      case "dashboard": return <Dashboard onNavigate={setCurrentPage} />;
       case "backup":    return <Backup />;
       case "restore":   return <Restore />;
       case "history":   return <History />;

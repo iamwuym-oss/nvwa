@@ -5,11 +5,11 @@
 // Service Layer (schedule_service.rs), never in this command file.
 // ============================================================================
 
-use crate::app::error::AppError;
-use crate::app::models::schedule::{
+use nuwa_backup::app::error::AppError;
+use nuwa_backup::app::models::schedule::{
     ScheduleDeleteResult, ScheduleProfileRequest, ScheduleProfileView,
 };
-use crate::app::services::schedule_service;
+use nuwa_backup::app::services::schedule_service;
 use tauri::command;
 
 /// List all schedule profiles.

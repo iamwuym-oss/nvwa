@@ -1,4 +1,4 @@
-﻿// ============================================================================
+// ============================================================================
 // Dashboard.tsx -- Dashboard page
 //
 // Data flow:
@@ -24,6 +24,7 @@ import ErrorState from "../../components/feedback/ErrorState";
 import NoActivityState from "../../components/feedback/NoActivityState";
 import { theme } from "../../theme";
 import { getDashboard, DashboardView } from "../../api/dashboardApi";
+import type { Page } from "../../App";
 
 // ---------------------------------------------------------------------------
 // Chart data (static for now, will come from backend in a future phase)
@@ -82,7 +83,7 @@ function StatusBadge({ status }: { status: string }) {
 }
 
 // ---------------------------------------------------------------------------
-export default function Dashboard() {
+export default function Dashboard({ onNavigate }: { onNavigate?: (page: Page) => void }) {
   const [data, setData] = useState<DashboardView | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -153,7 +154,7 @@ export default function Dashboard() {
     <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
       {/* ---- Hero Section ---- */}
       <div style={{ marginBottom: "20px" }}>
-        <HeroCard protectionStatus={data.protectionStatus} healthStatus={data.healthStatus} totalJobs={data.totalJobs} lastBackupAgo={data.lastBackupAgo} />
+        <HeroCard protectionStatus={data.protectionStatus} healthStatus={data.healthStatus} totalJobs={data.totalJobs} lastBackupAgo={data.lastBackupAgo} onBackupNow={onNavigate ? () => onNavigate("backup") : undefined} onRestoreFiles={onNavigate ? () => onNavigate("restore") : undefined} />
       </div>
 
       {/* ---- Metric Cards ---- */}

@@ -73,6 +73,7 @@ function operationBadgeVariant(op: string): "success" | "warning" | "error" | "i
     case "backup":  return "success";
     case "restore": return "info";
     case "verify":  return "warning";
+    case "delete_backup_set": return "error";
     default:        return "neutral";
   }
 }

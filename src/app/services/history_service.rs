@@ -76,6 +76,7 @@ fn query_history_from_config(
 pub fn list_operation_types() -> Vec<String> {
     vec![
         "backup".to_string(),
+        "delete_backup_set".to_string(),
         "restore".to_string(),
         "verify".to_string(),
     ]
@@ -349,8 +350,9 @@ mod tests {
     #[test]
     fn test_list_operation_types() {
         let types = list_operation_types();
-        assert_eq!(types.len(), 3);
+        assert_eq!(types.len(), 4);
         assert!(types.contains(&"backup".to_string()));
+        assert!(types.contains(&"delete_backup_set".to_string()));
     }
 
     #[test]

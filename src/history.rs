@@ -8,9 +8,9 @@
 // 4. Rebuild history index from manifests
 //
 // Authority relationship (strictly enforced):
-//   manifest.json  ← Sole authoritative credential for each backup point (irreplaceable)
-//        ↑
-//   .nuwa_history.db  ← History index, rebuildable by scanning manifests (deletable, rebuildable)
+//   manifest.json  鈫?Sole authoritative credential for each backup point (irreplaceable)
+//        鈫?
+//   .nuwa_history.db  鈫?History index, rebuildable by scanning manifests (deletable, rebuildable)
 //
 // If SQLite conflicts with manifest, manifest takes precedence.
 // ============================================================================
@@ -106,6 +106,17 @@ impl HistoryDb {
         Ok(())
     }
 
+    /// Delete operation records by backup_id
+    pub fn delete_operation_by_backup_id(&self, backup_id: &str) -> Result<u32, NuwaError> {
+        let conn = Self::open_connection(&self.db_path)?;
+        let count = conn
+            .execute(
+                "DELETE FROM operations WHERE backup_id = ?1",
+                rusqlite::params![backup_id],
+            )
+            .map_err(|e| Self::db_error(&self.db_path, e))?;
+        Ok(count as u32)
+    }
     /// Query history records
     ///
     /// - limit: Maximum records to return (default 10)

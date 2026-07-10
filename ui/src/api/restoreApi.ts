@@ -3,9 +3,9 @@
 //
 // This file is the ONLY place where the Restore page talks to the backend.
 // It provides:
-//   - listRestorePoints() — list all available backup points
-//   - getRestorePreview(backupId) — preview files in a backup point
-//   - executeRestore(request) — run a restore operation
+//   - listRestorePoints() �?list all available backup points
+//   - getRestorePreview(backupId) �?preview files in a backup point
+//   - executeRestore(request) �?run a restore operation
 //
 // The Restore.tsx page never imports mockData.ts or calls invoke() directly.
 // ============================================================================
@@ -299,6 +299,29 @@ export async function executeRestore(request: RestoreRequest): Promise<RestoreOp
     return await invoke<RestoreOperationResult>("execute_restore", { request });
   } catch (err) {
     console.error("Failed to execute restore:", err);
+    throw err;
+  }
+
+}
+/// Delete a backup set by backup_id.
+/// Permanently removes backup data + history record.
+/// Does NOT affect job configuration.
+export async function deleteBackupSet(backupId: string): Promise<void> {
+  const useMock = import.meta.env.VITE_MOCK_DATA === "true" ||
+                  import.meta.env.VITE_MOCK_DATA === true;
+
+  if (useMock) {
+    await new Promise((r) => setTimeout(r, 500));
+    const idx = MOCK_RESTORE_POINTS.findIndex((p) => p.backup_id === backupId);
+    if (idx === -1) throw new Error("Restore point not found");
+    MOCK_RESTORE_POINTS.splice(idx, 1);
+    return;
+  }
+
+  try {
+    await invoke("delete_backup_set", { backupId });
+  } catch (err) {
+    console.error("Failed to delete backup set:", err);
     throw err;
   }
 }

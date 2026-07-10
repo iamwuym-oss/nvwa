@@ -1,4 +1,4 @@
-﻿// ============================================================================
+// ============================================================================
 // backup_service_tests.rs -- Test the backup service layer
 //
 // Test scenarios:
@@ -162,18 +162,22 @@ fn test_run_backup_dry_job_not_found() {
     });
 }
 
-
 #[test]
 fn test_run_backup_source_missing() {
     with_clean_dir("run_source_missing", |dir| {
         let toml = format!(
             "\n[job.TestJob]\nsource = \"{}\"\ndest = \"{}\"\n",
-            dir.join("missing_source").to_string_lossy().replace("\\", "\\\\"),
+            dir.join("missing_source")
+                .to_string_lossy()
+                .replace("\\", "\\\\"),
             dir.join("dest").to_string_lossy().replace("\\", "\\\\")
         );
         fs::write(dir.join("nuwa.toml"), &toml).unwrap();
         let result = backup_service::run_backup("TestJob");
-        assert!(result.is_err(), "run_backup with missing source should error");
+        assert!(
+            result.is_err(),
+            "run_backup with missing source should error"
+        );
     });
 }
 
@@ -183,7 +187,10 @@ fn test_list_jobs_with_corrupt_config() {
         fs::write(dir.join("nuwa.toml"), "[[[ invalid toml [[[").unwrap();
         let result = backup_service::list_jobs();
         if let Ok(jobs) = result {
-            assert!(jobs.is_empty(), "Corrupt config should return empty list or error");
+            assert!(
+                jobs.is_empty(),
+                "Corrupt config should return empty list or error"
+            );
         }
     });
 }

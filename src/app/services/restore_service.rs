@@ -226,6 +226,84 @@ pub fn execute_restore(request: &RestoreRequest) -> Result<RestoreOperationResul
     })
 }
 
+/// Delete a backup set by backup_id.
+///
+/// This permanently removes:
+///   1. The backup directory (all files + manifest)
+///   2. The history record
+///
+/// It does NOT affect:
+///   - Job configuration
+///   - Other backup sets
+///   - The config file
+pub fn delete_backup_set(backup_id: &str) -> Result<(), AppError> {
+    if backup_id.trim().is_empty() {
+        return Err(AppError::config("Backup point ID must not be empty"));
+    }
+
+    // 1. Find the backup directory and read manifest metadata BEFORE deletion
+    let backup_dir = find_backup_dir(backup_id)?;
+    let manifest_path = backup_dir.join("manifest.json");
+
+    // Read manifest to capture file metadata for history
+    let (source_root, file_count, total_bytes) = if manifest_path.exists() {
+        match crate::manifest::Manifest::from_file(&manifest_path) {
+            Ok(m) => (
+                m.source_root.clone(),
+                m.summary.file_count,
+                m.summary.total_bytes,
+            ),
+            Err(_) => (String::new(), 0, 0),
+        }
+    } else {
+        (String::new(), 0, 0)
+    };
+
+    // Find job name before deleting the config reference
+    let job_name = find_job_name_for_backup_dir(&backup_dir);
+
+    eprintln!(
+        "Deleting backup set: {} at {}",
+        backup_id,
+        backup_dir.display()
+    );
+
+    // 2. Delete associated history records and record the deletion event
+    if let Some(job_cfg) = find_job_for_backup_dir(&backup_dir) {
+        let db_path = crate::history::HistoryDb::history_db_path(&job_cfg.dest);
+        if let Ok(db) = crate::history::HistoryDb::open_or_create(&db_path) {
+            let deleted = db.delete_operation_by_backup_id(backup_id).unwrap_or(0);
+            eprintln!(
+                "Deleted {} history records for backup set {}",
+                deleted, backup_id
+            );
+
+            // Record a new history entry so the deletion is visible in the History page
+            let timestamp = chrono::Local::now()
+                .format("%Y-%m-%dT%H:%M:%S%.3fZ")
+                .to_string();
+            let _ = db.record_operation(&crate::history::OperationRecord {
+                backup_id: backup_id.into(),
+                operation: "delete_backup_set".into(),
+                timestamp,
+                source_root,
+                dest_path: job_cfg.dest.to_string_lossy().into_owned(),
+                job_name,
+                file_count,
+                total_bytes,
+                duration_ms: 0,
+                exit_code: 0,
+                status: "success".into(),
+            });
+        }
+    }
+
+    // 3. Delete the backup directory (after reading manifest and recording history)
+    std::fs::remove_dir_all(&backup_dir)
+        .map_err(|e| AppError::storage(format!("Failed to delete backup directory: {}", e)))?;
+
+    Ok(())
+}
 // ---------------------------------------------------------------------------
 // Private helpers
 // ---------------------------------------------------------------------------
@@ -256,6 +334,19 @@ fn find_job_for_backup_dir(backup_dir: &Path) -> Option<crate::config::JobConfig
         let expected = job_cfg.dest.join(backup_dir.file_name()?);
         if expected == backup_dir {
             return Some(job_cfg.clone());
+        }
+    }
+    None
+}
+
+/// Find the job NAME for a backup directory by searching all job destinations.
+/// Returns None if the backup dir does not correspond to any configured job.
+fn find_job_name_for_backup_dir(backup_dir: &Path) -> Option<String> {
+    let config = Config::load().ok()?;
+    for (name, job_cfg) in &config.job {
+        let expected = job_cfg.dest.join(backup_dir.file_name()?);
+        if expected == backup_dir {
+            return Some(name.clone());
         }
     }
     None

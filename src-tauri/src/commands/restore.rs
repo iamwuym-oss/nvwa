@@ -1,4 +1,4 @@
-﻿// ============================================================================
+// ============================================================================
 // commands/restore.rs -- Tauri commands for the Restore page
 //
 // This layer ONLY:
@@ -31,4 +31,12 @@ pub fn get_restore_preview(backup_id: String) -> Result<RestorePreview, AppError
 #[tauri::command]
 pub fn execute_restore(request: RestoreRequest) -> Result<RestoreOperationResult, AppError> {
     restore_service::execute_restore(&request)
+}
+
+/// Delete a backup set by backup_id.
+/// Permanently removes backup data + history record.
+/// Does NOT affect job configuration.
+#[tauri::command]
+pub fn delete_backup_set(backup_id: String) -> Result<(), AppError> {
+    restore_service::delete_backup_set(&backup_id)
 }

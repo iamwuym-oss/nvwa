@@ -1,6 +1,6 @@
-﻿# Nüwa Backup — Document Index
+# Nüwa Backup — Document Index
 
-**Last Updated:** 2026-07-09 (T2.5-04E/04F added)
+**Last Updated:** 2026-07-10 (T2.5-05A inter-page linkage fixes)
 
 ---
 
