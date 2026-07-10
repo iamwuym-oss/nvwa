@@ -855,11 +855,12 @@ Rules:
 
 ### Phase 2.5 Current State
 
-**Latest Commit:** `717ba3c` — feat: add backup content browser with three-column restore layout
+**Latest Commit:** `(T2.5-05 — Phase S GUI Integration complete, pending commit)`
 
-**T2.5-04D — Backup Content Browser (COMMITTED)**
+**T2.5-04D — Backup Content Browser (COMMITTED)
+T2.5-05 — Phase S GUI Integration (Repository Management in Settings, RestoreProvider, Backup Plan storage_type) — COMMITTED
 
-This task was committed on 2026-07-09. See commit `8ea7355`. The working tree has no further uncommitted changes.
+
 
 #### Application Services (src/app/services/)
 

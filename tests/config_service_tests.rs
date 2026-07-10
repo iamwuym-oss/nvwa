@@ -100,6 +100,8 @@ fn test_create_job_config() {
             retention_keep_count: Some(10),
             retention_keep_days: None,
             schedule_id: None,
+            storage_type: None,
+            repository_id: None,
         };
         let view = config_service::create_job_config(&request).unwrap();
         assert_eq!(view.name, "my-backup");
@@ -124,6 +126,8 @@ fn test_create_duplicate_job_name_fails() {
             retention_keep_count: None,
             retention_keep_days: None,
             schedule_id: None,
+            storage_type: None,
+            repository_id: None,
         };
         config_service::create_job_config(&request).unwrap();
         let err = config_service::create_job_config(&request).unwrap_err();
@@ -160,6 +164,8 @@ fn test_update_job_config() {
             retention_keep_count: Some(14),
             retention_keep_days: Some(60),
             schedule_id: None,
+            storage_type: None,
+            repository_id: None,
         };
         let view = config_service::update_job_config("documents", &request).unwrap();
         assert_eq!(view.source, "C:/Users/Test/Documents/Work");
@@ -184,6 +190,8 @@ fn test_update_missing_job_fails() {
             retention_keep_count: None,
             retention_keep_days: None,
             schedule_id: None,
+            storage_type: None,
+            repository_id: None,
         };
         let err = config_service::update_job_config("ghost", &request).unwrap_err();
         assert!(
@@ -206,6 +214,8 @@ fn test_update_job_config_rejects_rename() {
             retention_keep_count: None,
             retention_keep_days: None,
             schedule_id: None,
+            storage_type: None,
+            repository_id: None,
         };
         let err = config_service::update_job_config("documents", &request).unwrap_err();
         assert!(
@@ -252,6 +262,8 @@ fn test_create_job_empty_name_fails() {
             retention_keep_count: None,
             retention_keep_days: None,
             schedule_id: None,
+            storage_type: None,
+            repository_id: None,
         })
         .unwrap_err();
         assert!(
@@ -274,6 +286,8 @@ fn test_create_job_empty_source_fails() {
             retention_keep_count: None,
             retention_keep_days: None,
             schedule_id: None,
+            storage_type: None,
+            repository_id: None,
         })
         .unwrap_err();
         assert!(
@@ -296,6 +310,8 @@ fn test_create_job_empty_dest_fails() {
             retention_keep_count: None,
             retention_keep_days: None,
             schedule_id: None,
+            storage_type: None,
+            repository_id: None,
         })
         .unwrap_err();
         assert!(
@@ -366,6 +382,8 @@ fn test_save_and_reload_preserves_defaults() {
             retention_keep_count: None,
             retention_keep_days: None,
             schedule_id: None,
+            storage_type: None,
+            repository_id: None,
         };
         config_service::create_job_config(&request).unwrap();
         let loaded = config_service::get_job_config("defaults-test").unwrap();
@@ -411,6 +429,8 @@ fn test_created_config_reflected_by_backup_service() {
             retention_keep_count: Some(5),
             retention_keep_days: None,
             schedule_id: None,
+            storage_type: None,
+            repository_id: None,
         };
         config_service::create_job_config(&request).unwrap();
         let jobs = nuwa_backup::app::services::backup_service::list_jobs().unwrap();

@@ -1,4 +1,4 @@
-﻿// ============================================================================
+// ============================================================================
 // configApi.ts -- Settings page API bridge for job configuration CRUD
 //
 // This file is the ONLY place where the Settings page talks to the backend.
@@ -26,6 +26,8 @@ export interface JobConfigView {
   retention_keep_count: number | null;
   retention_keep_days: number | null;
   schedule_id: string | null;
+  storage_type: string | null;
+  repository_id: string | null;
 }
 
 export interface JobConfigRequest {
@@ -36,6 +38,8 @@ export interface JobConfigRequest {
   retention_keep_count: number | null;
   retention_keep_days: number | null;
   schedule_id: string | null;
+  storage_type: string | null;
+  repository_id: string | null;
 }
 
 // ---------------------------------------------------------------------------
@@ -51,6 +55,8 @@ const MOCK_CONFIGS: JobConfigView[] = [
     retention_keep_count: 7,
     retention_keep_days: 30,
     schedule_id: "daily-evening",
+    storage_type: null,
+    repository_id: null,
   },
   {
     name: "Projects",
@@ -60,6 +66,8 @@ const MOCK_CONFIGS: JobConfigView[] = [
     retention_keep_count: 10,
     retention_keep_days: null,
     schedule_id: null,
+    storage_type: null,
+    repository_id: null,
   },
 ];
 

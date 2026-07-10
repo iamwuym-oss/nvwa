@@ -30,7 +30,7 @@ pub fn get_restore_preview(backup_id: String) -> Result<RestorePreview, AppError
 /// Execute a restore operation.
 #[tauri::command]
 pub fn execute_restore(request: RestoreRequest) -> Result<RestoreOperationResult, AppError> {
-    restore_service::execute_restore(&request)
+    restore_service::execute_restore(request)
 }
 
 /// Delete a backup set by backup_id.

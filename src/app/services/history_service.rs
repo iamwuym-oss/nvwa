@@ -165,6 +165,8 @@ mod tests {
                 compress: false,
                 retention: None,
                 schedule_id: None,
+                storage_type: None,
+                repository_id: None,
             },
         );
         Config {
@@ -300,6 +302,8 @@ mod tests {
                 compress: false,
                 retention: None,
                 schedule_id: None,
+                storage_type: None,
+                repository_id: None,
             },
         );
         job.insert(
@@ -310,6 +314,8 @@ mod tests {
                 compress: false,
                 retention: None,
                 schedule_id: None,
+                storage_type: None,
+                repository_id: None,
             },
         );
         let config = Config {

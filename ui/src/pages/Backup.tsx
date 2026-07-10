@@ -37,6 +37,7 @@ import {
   listSchedules,
   ScheduleProfileView,
 } from "../api/scheduleApi";
+import { listRepos, RepoInfoResponse } from "../api/repoApi";
 
 // ---------------------------------------------------------------------------
 // Inline SVG icons
@@ -104,17 +105,22 @@ function PlanForm({ initial, onSave, onCancel, saving, error }: PlanFormProps) {
   const [keepCount, setKeepCount] = useState(initial?.retention_keep_count?.toString() ?? "");
   const [keepDays, setKeepDays] = useState(initial?.retention_keep_days?.toString() ?? "");
   const [scheduleId, setScheduleId] = useState<string | null>(initial?.schedule_id ?? null);
+  const [storageType, setStorageType] = useState<string | null>(initial?.storage_type ?? null);
+  const [repositoryId, setRepositoryId] = useState<string | null>(initial?.repository_id ?? null);
+  const [repos, setRepos] = useState<RepoInfoResponse[]>([]);
   const [availableSchedules, setAvailableSchedules] = useState<ScheduleProfileView[]>([]);
   const [formError, setFormError] = useState<string | null>(null);
 
   useEffect(() => { listSchedules().then((s) => setAvailableSchedules(s)).catch(() => {}); }, []);
+  useEffect(() => { listRepos().then((r) => setRepos(r)).catch(() => {}); }, []);
+  useEffect(() => { setStorageType(initial?.storage_type ?? null); setRepositoryId(initial?.repository_id ?? null); }, [initial]);
 
   const handleSubmit = async () => {
     setFormError(null);
     if (!name.trim()) { setFormError("Plan name is required"); return; }
     if (!source.trim()) { setFormError("Source path is required"); return; }
     if (!dest.trim()) { setFormError("Destination path is required"); return; }
-    const request: JobConfigRequest = { name: name.trim(), source: source.trim(), dest: dest.trim(), compress, retention_keep_count: keepCount ? parseInt(keepCount) || null : null, retention_keep_days: keepDays ? parseInt(keepDays) || null : null, schedule_id: scheduleId };
+    const request: JobConfigRequest = { name: name.trim(), source: source.trim(), dest: dest.trim(), compress, retention_keep_count: keepCount ? parseInt(keepCount) || null : null, retention_keep_days: keepDays ? parseInt(keepDays) || null : null, schedule_id: scheduleId, storage_type: storageType, repository_id: repositoryId };
     await onSave(request);
   };
 
@@ -138,6 +144,25 @@ function PlanForm({ initial, onSave, onCancel, saving, error }: PlanFormProps) {
         <div><label style={labelStyle}>Plan Name</label><input style={inputStyle} value={name} onChange={(e: any) => setName(e.target.value)} placeholder="e.g., Documents Backup" disabled={saving} /></div>
         <div><label style={labelStyle}>Source Path</label><PathInput value={source} onChange={setSource} placeholder="C:\\Users\\YourName\\Documents" disabled={saving} /></div>
         <div><label style={labelStyle}>Destination Path</label><PathInput value={dest} onChange={setDest} placeholder="D:\\Backups" disabled={saving} /></div>
+        <div><label style={labelStyle}>Storage Type</label>
+          <select style={inputStyle} value={storageType || ""} onChange={(e: any) => setStorageType(e.target.value || null)} disabled={saving}>
+            <option value="">Flat File (legacy)</option>
+            <option value="repository">Repository (enterprise)</option>
+          </select></div>
+        {storageType === "repository" && (
+          <div><label style={labelStyle}>Repository</label>
+            <select style={inputStyle} value={repositoryId || ""} onChange={(e: any) => setRepositoryId(e.target.value || null)} disabled={saving}>
+              <option value="">-- Select Repository --</option>
+              {repos.map((r) => (<option key={r.id} value={r.id}>{r.name} ({r.path})</option>))}
+            </select>
+            {repos.length === 0 && (
+              <p style={{ fontSize: theme.font.sizeXs, color: theme.colors.warning, marginTop: "4px" }}>
+                No repositories available. Create one in Settings first.
+              </p>
+            )}
+          </div>
+        )}
+
         <div><label style={{ ...labelStyle, marginBottom: "8px" }}>Compression</label>
           <label style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", color: theme.colors.textPrimary, fontSize: theme.font.sizeMd }}>
             <input type="checkbox" checked={compress} onChange={(e: any) => setCompress(e.target.checked)} disabled={saving} style={{ accentColor: theme.colors.primary }} /> Enable compression (zstd)

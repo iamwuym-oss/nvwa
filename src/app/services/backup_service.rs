@@ -27,7 +27,11 @@ use crate::history::{HistoryDb, OperationRecord};
 /// Each job's status is derived from its configuration validity and
 /// the last recorded backup operation in the history database.
 pub fn list_jobs() -> Result<Vec<BackupJobView>, AppError> {
-    let config = Config::load().map_err(AppError::from)?;
+    let config = match Config::load() {
+        Ok(c) => c,
+        // If no config file exists, return empty list (clean first-time experience)
+        Err(_) => return Ok(Vec::new()),
+    };
 
     let jobs: Vec<BackupJobView> = config
         .job

@@ -73,7 +73,12 @@ pub fn run() {
             commands::file_browser::list_directory,
             commands::history::query_history,
             commands::history::list_history_operation_types,
+            commands::repo::create_repo,
+            commands::repo::list_repos,
+            commands::repo::get_repo_info,
+            commands::repo::verify_repo,
         ])
         .run(tauri::generate_context!())
         .expect("error while running Nuwa Backup GUI");
 }
+

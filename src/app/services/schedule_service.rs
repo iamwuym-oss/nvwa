@@ -633,6 +633,8 @@ mod tests {
                 compress: false,
                 retention: None,
                 schedule_id: Some(sched_id.clone()),
+                storage_type: None,
+                repository_id: None,
             },
         );
         (config, sched_id)

@@ -115,7 +115,8 @@ fn test_list_jobs_with_valid_config() {
 fn test_list_jobs_no_config() {
     with_clean_dir("list_jobs_no_config", |_dir| {
         let result = backup_service::list_jobs();
-        assert!(result.is_err(), "Should error when no config exists");
+        assert!(result.is_ok(), "no config should not error");
+        assert!(result.unwrap().is_empty(), "empty list expected");
     });
 }
 

@@ -1,8 +1,8 @@
 ﻿# Nüwa Backup — Project Engineering Memory
 
-**Version:** 0.2.1
-**Last Updated:** 2026-07-10 (Phase 2.5 Final Acceptance Bugfixes)
-**Current Phase:** Phase 2.5 ? Tauri Desktop GUI + Application Layer (116 lib tests, 19 config service tests, 7 services, 6 active pages, 8 Tauri command modules) ? IN PROGRESS (last commit: 0a8ed93) — IN PROGRESS (last commit: 8ea7355)
+**Version:** 0.3.0
+**Last Updated:** 2026-07-11 (Phase S GUI Integration Complete)
+**Current Phase:** Phase 2.5 — Tauri Desktop GUI + Application Layer + Phase S GUI Integration — CLOSED
 **Phase 1 Status:** CLOSED (PARTIAL — non-Windows space check limitation accepted)
 
 ---
@@ -489,7 +489,7 @@ GPT/MBR parser, boot partition detection, BCD repair, WinPE, bare metal recovery
 |:----:|:------:|
 | T2.5-00 — Remove egui GUI & Cleanup | ✅ DONE / PASS |
 | T2.5-01 — Tauri 2.0 Scaffold + Command Bridge | ✅ DONE / PASS |
-| T2.5-02..08 — GUI Pages (pending Phase 2.5 planning) | ⏳ NOT STARTED |
+| T2.5-02 — T2.5-04F — Full UI Pages & Services (Dashboard, Backup, Restore, History, Schedule, Settings) | ✅ ALL DONE / PASS |
 
 ### T2.5-00 — Remove egui GUI, Clean Up, Document Migration
 
@@ -648,4 +648,5 @@ React UI -> invoke() -> Tauri command -> app::services::backup_service -> backup
 | T2.5-04F | History Page + Service + Tauri Commands | ✅ DONE / PASS (0a8ed93) |
 | T2.5-DOC-01A | Documentation synchronization | ✅ DONE / PASS |
 | T2.5-DOC-02 | AGENTS + README alignment | ✅ DONE / PASS |
+
 

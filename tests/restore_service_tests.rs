@@ -88,7 +88,7 @@ fn test_get_restore_preview_invalid_backup_id() {
 fn test_execute_restore_empty_backup_id() {
     with_clean_dir("empty_id", |dir| {
         create_empty_config_in(dir);
-        let err = restore_service::execute_restore(&RestoreRequest {
+        let err = restore_service::execute_restore(RestoreRequest {
             backup_id: "".into(),
             dest: "D:\\Restore".into(),
             overwrite: false,
@@ -106,7 +106,7 @@ fn test_execute_restore_empty_backup_id() {
 fn test_execute_restore_empty_dest() {
     with_clean_dir("empty_dest", |dir| {
         create_empty_config_in(dir);
-        let err = restore_service::execute_restore(&RestoreRequest {
+        let err = restore_service::execute_restore(RestoreRequest {
             backup_id: "test-bp".into(),
             dest: "".into(),
             overwrite: false,
@@ -124,7 +124,7 @@ fn test_execute_restore_empty_dest() {
 fn test_execute_restore_not_found() {
     with_clean_dir("not_found", |dir| {
         create_empty_config_in(dir);
-        let err = restore_service::execute_restore(&RestoreRequest {
+        let err = restore_service::execute_restore(RestoreRequest {
             backup_id: "nonexistent-bp".into(),
             dest: dir.join("restore").to_string_lossy().into_owned(),
             overwrite: false,

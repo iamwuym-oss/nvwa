@@ -44,6 +44,12 @@ pub struct JobConfig {
     /// Reference to a ScheduleProfileConfig id (None means manual only)
     #[serde(default)]
     pub schedule_id: Option<String>,
+    /// Storage type: "flat-file" (default) or "repository"
+    #[serde(default)]
+    pub storage_type: Option<String>,
+    /// Repository UUID (when storage_type = "repository")
+    #[serde(default)]
+    pub repository_id: Option<String>,
 }
 
 /// Retention policy

@@ -178,6 +178,8 @@ fn job_config_to_view(name: &str, cfg: &JobConfig) -> JobConfigView {
         retention_keep_count: keep_count,
         retention_keep_days: keep_days,
         schedule_id: cfg.schedule_id.clone(),
+        storage_type: cfg.storage_type.clone(),
+        repository_id: cfg.repository_id.clone(),
     }
 }
 
@@ -199,6 +201,8 @@ fn request_to_job_config(request: &JobConfigRequest) -> JobConfig {
         compress: request.compress,
         retention,
         schedule_id: request.schedule_id.clone(),
+        storage_type: request.storage_type.clone(),
+        repository_id: request.repository_id.clone(),
     }
 }
 

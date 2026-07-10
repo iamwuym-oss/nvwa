@@ -59,26 +59,40 @@ File System / SQLite
 | Page | Status |
 |------|--------|
 | Dashboard | ✅ Real data, health status, activity list, storage chart, navigation to Backup/Restore pages |
-| Settings | ✅ Global settings placeholder (backup plan CRUD moved to Backup page) |
-| Backup | ✅ Job list, run backup, empty state |
-| Restore | ✅ 3-column layout with plan grouping, file tree, restore form (committed) |
+| Settings | ✅ Backup Job CRUD + Repository Management section |
+| Backup | ✅ Job list, run backup, empty state, Storage Type dropdown (Flat File / Repository) |
+| Restore | ✅ 3-column layout with plan grouping, file tree, restore form, Provider dispatch backend |
 | History | ✅ Filterable operation history table, real HistoryDb backend, shows delete_backup_set operations |
 | Schedule | ✅ Full CRUD with enable/disable toggle, job linking |
 
 **Completed Infrastructure:**
 - Tauri 2.0 desktop GUI (replaces egui)
 - React + TypeScript + Vite frontend
-- Application Service Layer (src/app/) — 5 services, 6 models
-- In-App File Browser (FileBrowserModal) — replaces OS native dialog
-- 25 Tauri commands across 7 modules
-- 186 Rust tests, all passing
+- Application Service Layer (src/app/) -- 10 services (added: repo_service, repo_registry, restore_provider)
+- In-App File Browser (FileBrowserModal) -- replaces OS native dialog
+- 25+ Tauri commands across 8 modules
+- 372 Rust tests, all passing
+
+**Phase S GUI Integration (T2.5-05):**
+- Repository Management in Settings (create/list/verify)
+- RestoreProvider trait with FlatFileRestoreProvider + RepositoryRestoreProvider dispatch
+- Backup Plan extended: storage_type + repository_id fields on JobConfig
+- RepoRegistry: JSON-based repository registration (name/UUID/path)
+- FT-01~FT-05 automated integration tests: 5/5 PASS
+- UT-01~UT-07 manual UI acceptance: 7/7 PASS
+
+**Known Gaps (deferred):**
+| ID | Gap | Target |
+|:--:|-----|--------|
+| G-01 | Repository-backed backup execution | Future phase |
+| G-02 | Repository-backed restore execution | Future phase |
 
 **Configuration:**
-- `VITE_MOCK_DATA=false` in `ui/.env` — uses real Tauri backend for all API calls
+- `VITE_MOCK_DATA=false` in `ui/.env` -- uses real Tauri backend for all API calls
 
 **Not Yet Implemented:**
-- Disk Clone — disabled placeholder (Phase 5)
-- Enterprise Backup Catalog Browser — future
+- Disk Clone -- disabled placeholder (Phase 5)
+- Enterprise Backup Catalog Browser -- future
 
 ### Phase S — Repository Engine (CLOSED BASELINE)
 
