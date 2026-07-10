@@ -4,7 +4,7 @@
 **Version:** 2.0
 **Date:** 2026-07-09
 
-> ⚠️ This document tracks Phase 2.5 progress. Phase 2.5 is **not closed** because History and Schedule pages were placeholders at draft time (now implemented in 0a8ed93), and T2.5-04D Backup Content Browser was recently committed. See [Phase_2_5_Current_Status.md](./Phase_2_5_Current_Status.md) for the latest state.
+> ⚠️ This document tracks Phase 2.5 progress. Phase 2.5 is **not closed** because T2.5-04D Backup Content Browser was recently committed. History and Schedule pages were placeholders at draft time but are now fully implemented (committed in 0a8ed93). See [Phase_2_5_Current_Status.md](./Phase_2_5_Current_Status.md) for the latest state.
 
 ## 1. Phase Summary
 
@@ -89,9 +89,9 @@ File System / SQLite
 
 ## 5. Current Limitations
 
-1. **History page was a placeholder at draft time** 鈥?now implemented in 0a8ed93
-2. **Schedule page was a placeholder at draft time** 鈥?now implemented in 0a8ed93
-3. **Clone page is disabled** 鈥?12-line "future phase" placeholder
+1. **History page** 鈥?now implemented in 0a8ed93
+2. **Schedule page** 鈥?now implemented in 0a8ed93
+3. **Clone page** 鈥?12-line "future phase" placeholder
 4. **T2.5-04D is uncommitted** 鈥?Restore 3-column layout and BackupTreeView pending commit
 5. **Backup Content Browser is UI-only enhancement** 鈥?uses mock data, not a full enterprise catalog browser
 6. **No Tauri command integration tests** 鈥?service tests exist but invoke chain is untested
@@ -106,12 +106,12 @@ File System / SQLite
 | Restore | 628 | 鉁?3-column layout 鈥?plan grouping, file tree, restore form (04D uncommitted) |
 | Backup | 421 | 鉁?Complete 鈥?job list, run backup, empty state (depends on Settings plans) |
 
-### Pages Still Placeholder
+### Page Status Summary
 
 | Page | Lines | Status |
 |------|:-----:|:------:|
-| History | 4 | 鉂?Placeholder 鈥?"Backup history coming soon." |
-| Schedule | 4 | 鉂?Placeholder 鈥?"Schedule management coming soon." |
+| History | 420 | ✅ Complete — filterable table with real HistoryDb backend |
+| Schedule | 695 | ✅ Complete — full CRUD with enable/disable toggle |
 | Clone | 12 | 鉂?Disabled 鈥?"planned for a future phase" |## 6. Frozen Core Modules
 
 The following modules are frozen and must NOT be modified:

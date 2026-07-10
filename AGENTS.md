@@ -837,8 +837,8 @@ This task was committed on 2026-07-09. See commit `8ea7355`. The working tree ha
 | Settings | ✅ Complete | Backup Job CRUD via config_service |
 | Backup | ✅ Complete | Reads jobs from Settings; run/empty states |
 | Restore | ✅ 3-column layout | Plan grouping + BackupTreeView (committed in 8ea7355) |
-| History | ❌ Placeholder | 4-line stub, no backend service |
-| Schedule | ❌ Placeholder | 4-line stub, no backend service |
+| History | ✅ Complete | 420-line page with filterable table, real HistoryDb backend |
+| Schedule | ✅ Complete | 695-line page with full CRUD, enable/disable, job linking |
 | Clone | ❌ Disabled | Future phase notice only |
 
 #### Configuration Model
@@ -860,12 +860,12 @@ This task was committed on 2026-07-09. See commit `8ea7355`. The working tree ha
 
 The following are common mistakes that must be avoided:
 
-1. Phase 2.5 is **IN PROGRESS**, not CLOSED. History/Schedule remain placeholders.
+1. Phase 2.5 is **IN PROGRESS**, not CLOSED. History and Schedule are fully implemented (committed in 0a8ed93).
 2. **Do NOT restore egui** direction — it was superseded by Tauri 2.0 + React
 3. **Do NOT re-introduce OS native dialog** — FileBrowserModal is the current solution
 4. **Do NOT create a BackupPlan abstraction** — JobConfig is the factual model
 5. **Do NOT claim mock restore data represents real backend catalog** capability
-6. **Do NOT claim History/Schedule are implemented**
+6. **Do NOT re-create History/Schedule** — they are already implemented and committed
 7. **Do NOT bypass the Application Layer** — UI must never call Core Engine modules or SQLite directly
 8. **Do NOT modify frozen core modules**: backup.rs, restore.rs, verify.rs, manifest.rs, checksum.rs, storage.rs, prune.rs
 

@@ -85,7 +85,7 @@ Mock preview files include nested directories: Projects/Source Code/, Photos/Vac
 - **Tree is frontend-only** — backup_id → flat file list → tree conversion is done in the browser
 - **No file search/filter** in the tree
 - **No multi-select** for partial restore
-- **History/Schedule pages still placeholders**
+- **History/Schedule pages now implemented** (committed in 0a8ed93 after this draft)
 
 ---
 

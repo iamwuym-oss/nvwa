@@ -44,6 +44,8 @@ File System / SQLite
 | Settings | ✅ Backup Plan CRUD (list/create/edit/delete) |
 | Backup | ✅ Job list, run backup, empty state |
 | Restore | ✅ 3-column layout with plan grouping, file tree, restore form (committed) |
+| History | ✅ Filterable operation history table with real HistoryDb backend |
+| Schedule | ✅ Full CRUD with enable/disable toggle, job linking |
 
 **Completed Infrastructure:**
 - Tauri 2.0 desktop GUI (replaces egui)
@@ -54,8 +56,6 @@ File System / SQLite
 - 152 Rust tests, all passing
 
 **Not Yet Implemented:**
-- History page — placeholder only
-- Schedule page — placeholder only
 - Disk Clone — disabled placeholder
 - Enterprise Backup Catalog Browser — mock data only
 

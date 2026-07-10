@@ -464,7 +464,7 @@ The desktop GUI technology route has changed from **egui + eframe** to **Tauri 2
 | Created ui/ | React 19 + TypeScript + Vite 6 frontend scaffold |
 | Created ui/src/App.tsx | Page router with 7 pages + Sidebar/TopBar layout |
 | Created ui/src/components/ | Sidebar.tsx (nav), TopBar.tsx (page title + version) |
-| Created ui/src/pages/ | All 7 page stubs (Dashboard, Backup, Restore, History, Schedule, Settings, Clone placeholder) |
+| Created ui/src/pages/ | All 7 pages (Dashboard, Backup, Restore, History, Schedule, Settings full implementation; Clone placeholder) |
 | Created ui/src/styles.css | Base app styles (dark tech theme, flex layout) |
 | Connected nuwa-backup core | src-tauri Cargo.toml depends on nuwa-backup = { path = ".." } |
 
