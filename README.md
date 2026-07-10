@@ -40,11 +40,11 @@ File System / SQLite
 
 | Page | Status |
 |------|--------|
-| Dashboard | ✅ Real data, health status, activity list, storage chart |
-| Settings | ✅ Backup Plan CRUD (list/create/edit/delete) |
+| Dashboard | ✅ Real data, health status, activity list, storage chart, navigation to Backup/Restore pages |
+| Settings | ✅ Global settings placeholder (backup plan CRUD moved to Backup page) |
 | Backup | ✅ Job list, run backup, empty state |
 | Restore | ✅ 3-column layout with plan grouping, file tree, restore form (committed) |
-| History | ✅ Filterable operation history table with real HistoryDb backend |
+| History | ✅ Filterable operation history table, real HistoryDb backend, shows delete_backup_set operations |
 | Schedule | ✅ Full CRUD with enable/disable toggle, job linking |
 
 **Completed Infrastructure:**
@@ -52,12 +52,15 @@ File System / SQLite
 - React + TypeScript + Vite frontend
 - Application Service Layer (src/app/) — 5 services, 6 models
 - In-App File Browser (FileBrowserModal) — replaces OS native dialog
-- 14 Tauri commands across 6 modules
-- 152 Rust tests, all passing
+- 25 Tauri commands across 7 modules
+- 186 Rust tests, all passing
+
+**Configuration:**
+- `VITE_MOCK_DATA=false` in `ui/.env` — uses real Tauri backend for all API calls
 
 **Not Yet Implemented:**
-- Disk Clone — disabled placeholder
-- Enterprise Backup Catalog Browser — mock data only
+- Disk Clone — disabled placeholder (Phase 5)
+- Enterprise Backup Catalog Browser — future
 
 ---
 
