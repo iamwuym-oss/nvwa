@@ -38,14 +38,27 @@ pub enum JobStatus {
     Deleted,
 }
 
-/// Restore Point status (transaction state machine)
+/// Restore Point status (transaction + retention state machine).
+///
+/// Transaction states (Wave 3): CREATING → WRITING → VERIFYING → COMMITTED
+/// Failure terminal state: FAILED
+/// Retention states (S-09):  COMMITTED → DELETING → DELETED
+///
+/// DELETING/DELETED are written by Retention Engine only.
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
 pub enum PointStatus {
     Creating,
     Writing,
     Verifying,
+    #[serde(rename = "COMMITTED")]
     Committed,
     Failed,
+    /// Retention Engine phase 1: deletion in progress (crash-recoverable)
+    #[serde(rename = "DELETING")]
+    Deleting,
+    /// Retention Engine phase 3: deletion complete
+    #[serde(rename = "DELETED")]
+    Deleted,
 }
 
 impl PointStatus {
@@ -56,16 +69,20 @@ impl PointStatus {
             PointStatus::Verifying => "VERIFYING",
             PointStatus::Committed => "COMMITTED",
             PointStatus::Failed => "FAILED",
+            PointStatus::Deleting => "DELETING",
+            PointStatus::Deleted => "DELETED",
         }
     }
 
-    pub fn from_str(s: &str) -> Option<Self> {
+    pub fn parse_from_str(s: &str) -> Option<Self> {
         match s {
             "CREATING" => Some(PointStatus::Creating),
             "WRITING" => Some(PointStatus::Writing),
             "VERIFYING" => Some(PointStatus::Verifying),
             "COMMITTED" => Some(PointStatus::Committed),
             "FAILED" => Some(PointStatus::Failed),
+            "DELETING" => Some(PointStatus::Deleting),
+            "DELETED" => Some(PointStatus::Deleted),
             _ => None,
         }
     }
@@ -191,9 +208,11 @@ mod tests {
             PointStatus::Verifying,
             PointStatus::Committed,
             PointStatus::Failed,
+            PointStatus::Deleting,
+            PointStatus::Deleted,
         ] {
             let s = status.as_str();
-            let back = PointStatus::from_str(s).unwrap();
+            let back = PointStatus::parse_from_str(s).unwrap();
             assert_eq!(*status, back);
         }
     }

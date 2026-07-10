@@ -593,6 +593,16 @@ fn main() {
                 }
             }
         },
+        #[cfg(feature = "repository")]
+        Command::Repo { subcommand } => {
+            match nuwa_backup::repository::cli::commands::handle_repo_command(&subcommand) {
+                Ok(_) => ExitCode::Success,
+                Err(e) => {
+                    eprintln!("{}", e);
+                    ExitCode::from(&e)
+                }
+            }
+        }
     };
     process::exit(exit as i32);
 }

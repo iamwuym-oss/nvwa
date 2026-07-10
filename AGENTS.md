@@ -103,10 +103,10 @@ Product scope and boundary decisions are governed by the following authoritative
 
 ## 7. Current Phase
 
-**Current Phase: Phase 2.5 — Tauri Desktop GUI + Application Layer (CLOSING) + Phase S — Repository Engine (WAVE 1 COMPLETE)**
+**Current Phase: Phase 2.5 — Tauri Desktop GUI (CLOSED) + Phase S — Repository Engine (CLOSED)**
 
 Phase 1 (file-level backup CLI), Phase 2 (CLI usability, egui GUI), and Phase 2.5 (Tauri Desktop GUI) are **CLOSED frozen baselines**.
-Phase S (Repository Engine — unified storage foundation) is the current active development phase. Wave 1 (S-01/S-02/S-03) is complete.
+Phase S (Repository Engine — unified storage foundation) is CLOSED. All 13 tasks (S-01 through S-13) complete. Architecture v1.1 baseline frozen.
 
 ### Completed Baselines
 
@@ -115,7 +115,7 @@ Phase S (Repository Engine — unified storage foundation) is the current active
 | Phase 1 | File-level backup/restore CLI (Rust) | CLOSED |
 | Phase 2 | CLI usability: config, history, scheduler, SMB, UNC, egui GUI | CLOSED |
 | Phase 2.5 | Tauri 2.0 desktop GUI, React frontend, Application Layer | CLOSED |
-| Phase S | Repository Engine (unified storage foundation) | WAVE 1 COMPLETE |
+| Phase S | Repository Engine (unified storage foundation) | CLOSED |
 
 ### Phase 1 Implemented Scope (Frozen Baseline)
 
@@ -707,7 +707,7 @@ A Phase Closing task must:
 | v4.0 | 2026-07-05 | Phase 1 CLOSED and frozen as baseline. Added: Phase 1 Baseline Freeze Rule (§29), Phase 2 Planning Rule (§30), Future Phase Boundary Rule (§31), Document Authority Levels (§32), Phase Closing Rule (§33). Updated required reading list. |
 | v5.0 | 2026-07-05 | Added Technology Stack Clarification. Confirmed Rust CLI as the only authorized tech stack. FastAPI/Vanilla JS explicitly excluded. Superseded template text rule added. |
 | v5.1 | 2026-07-05 | Added Phase 2 GUI Direction. Confirmed Phase 2 includes local desktop GUI coding (egui+eframe). Acronis True Image-like UI. Clone page as disabled placeholder only. |
-| v6.0 | 2026-07-10 | Phase S Repository Engine added. Enterprise Readiness v1.1. Wave 1 (S-01/S-02/S-03) complete. Phase 2.5 CLOSED. Updated required reading. |
+| v7.0 | 2026-07-10 | Phase S CLOSED. All 13 tasks complete. Architecture v1.1 frozen. API freeze review completed. |
 | v5.3 | 2026-07-10 | Inter-page linkage fixes: Dashboard navigation, VITE_MOCK_DATA=false, delete_backup_set history recording, layout 50/50 columns. |
 | v5.2 | 2026-07-07 | Phase 2.5 GUI migration: replaced egui+eframe with Tauri 2.0 + React + TypeScript + Vite. Added Application Service Layer (src/app/). Updated Tech Stack to include Tauri/React. |
 
@@ -818,9 +818,9 @@ Rules:
 - Daemon/system service/IPC (future)
 - Cloud backup, enterprise management, multi-device (permanent excluded)
 
-### Phase S — Repository Engine Development Rules
+### Phase S — Repository Engine (CLOSED BASELINE)
 
-**Status:** WAVE 1 COMPLETE (S-01/S-02/S-03)
+**Status:** CLOSED (All 13 tasks complete)
 
 **Allowed in Phase S Wave 2+:**
 - Chunk Engine (ChunkEngine trait + FixedChunkPolicy)
@@ -900,7 +900,7 @@ This task was committed on 2026-07-09. See commit `8ea7355`. The working tree ha
 
 The following are common mistakes that must be avoided:
 
-1. Phase 2.5 is **CLOSED**. Phase S is the current active phase (WAVE 1 COMPLETE). See Phase S section for current development rules.
+1. Phase 2.5 and Phase S are **CLOSED** frozen baselines. Phase 3 (Volume Backup Foundation) is the next phase for planning.
 2. **VITE_MOCK_DATA** must be `false` for real backend testing. When true, all API layers return isolated mock data and inter-page data flow will not work.
 3. **delete_backup_set** operations are recorded in History as a new `delete_backup_set` record. The backend reads manifest.json metadata before deleting.
 4. **Dashboard navigation** — "Run Backup Now" and "Restore Files" navigate to respective pages via App.tsx -> Dashboard -> HeroCard prop chain.

@@ -64,6 +64,11 @@ pub enum Command {
         /// Subcommand: create, list, delete
         subcommand: ScheduleSubcommand,
     },
+    /// Repository management (Phase S)
+    #[cfg(feature = "repository")]
+    Repo {
+        subcommand: crate::repository::cli::commands::RepoSubcommand,
+    },
 }
 
 #[derive(Debug, Clone)]
@@ -96,6 +101,8 @@ impl Command {
             "list" => Self::parse_list(&args[2..]),
             "prune" => Self::parse_prune(&args[2..]),
             "schedule" => Self::parse_schedule(&args[2..]),
+            #[cfg(feature = "repository")]
+            "repo" => Self::parse_repo(&args[2..]),
             "history" => Self::parse_history(&args[2..]),
             "--help" | "-h" => {
                 println!("{}", Self::usage_full());
@@ -647,8 +654,15 @@ impl Command {
         })
     }
 
+    /// Parse `nuwa repo <subcommand> [args]`
+    #[cfg(feature = "repository")]
+    fn parse_repo(args: &[String]) -> Result<Self, NuwaError> {
+        let sub = crate::repository::cli::commands::RepoSubcommand::parse(args)?;
+        Ok(Command::Repo { subcommand: sub })
+    }
+
     fn usage() -> String {
-        "Usage: nuwa <subcommand> [options]\n  Subcommands: init, backup, restore, verify, list, history, prune, schedule\n  nuwa --help for detailed help".to_string()
+        "Usage: nuwa <subcommand> [options]\n  Subcommands: init, backup, restore, verify, list, history, prune, schedule, repo\n  nuwa --help for detailed help".to_string()
     }
 
     fn usage_full() -> String {

@@ -82,7 +82,7 @@ Before any coding task begins, Codex MUST read these documents in order:
 #
 ## Phase S — Repository Engine
 
-**Status:** WAVE 1 COMPLETE (S-01/S-02/S-03)
+**Status:** CLOSED (All 13 tasks complete)
 **Started:** 2026-07-10
 **Wave 1 Commit:** e50fbb4 (plus uncommitted Wave 1 fixes)
 **Prerequisite:** None (independent from Phase 2.5)
@@ -127,8 +127,26 @@ Remaining Waves (not started): Chunk Engine, Catalog, Block Map, Crash Consisten
 - Repository Engine does NOT know data source types (File/Volume/Disk)
 - block-map.db is NOT rebuildable from block-store
 - catalog.db is NOT rebuildable (full-point restore only if lost)
-- Phase S Wave 1 implements: Repository Init, Block Store, Metadata Engine
+- Phase S implements: Repository Init, Block Store, Metadata Engine, Block Map, Catalog, Transaction/Consistency, Verify, Retention, Recovery, Legacy Compat, CLI
 - Phase S does NOT implement block GC, encryption, CDC, or cloud tier
+
+### Phase S Final Audit (5 Gates, All PASS)
+
+| Gate | Audit | Result | Report |
+|------|-------|--------|--------|
+| Stage 1 | Architecture Re-Audit | PASS (5 fixes) | Phase_S_Stage1_Audit_Report.md |
+| Stage 2 | Integrity + Crash + Retention | PASS (337 tests) | Phase_S_Stage2_Audit_Report.md |
+| Stage 3 | API Freeze + Scale + Volume Compat | PASS | Phase_S_Stage3_API_Freeze_Report.md |
+| A-08 | Scale Review | PASS | Phase_S_Scale_Analysis.md |
+| A-09 | Volume Backup Compatibility | PASS | Phase_S_Volume_Compatibility.md |
+
+**Total: 337 tests passed, 0 failures, 0 clippy warnings, cargo fmt PASS**
+
+### Frozen Baseline (Do Not Modify Without Approval)
+
+- BlockStore, BlockMapEngine, CatalogEngine, ChunkPolicy traits
+- All data models: BlockHeader, BlockId, FileEntry, FileExtent, BlockMapEntry
+- All entry points: init_repo, open_repo, check_repo, verify_repo, rebuild_repo, apply_retention, CrashConsistencyManager
 ## Phase 1 Core Freeze
 
 The Phase 1 file-level backup/restore CLI is frozen. Codex must not rewrite,
@@ -145,7 +163,7 @@ approves a task that modifies it.
 | Phase 1 | File-level backup/restore CLI | CLOSED |
 | Phase 2 | CLI usability: config, history, scheduler, SMB, GUI (egui) | CLOSED |
 | Phase 2.5 | Tauri 2.0 desktop GUI + Application Layer | CLOSED |
-| Phase S | Repository Engine (unified storage foundation) | WAVE 1 DONE |
+| Phase S | Repository Engine (unified storage foundation) | CLOSED |
 | Phase 3 | NTFS non-system volume image, VSS, block backup | NOT STARTED |
 | Phase 4 | WinPE recovery media, system restore, BCD repair | NOT STARTED |
 | Phase 5 | Disk cloning | NOT STARTED |

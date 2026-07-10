@@ -1,4 +1,4 @@
-// restart_persistence_tests.rs -- Restart Persistence Test
+﻿// restart_persistence_tests.rs -- Restart Persistence Test
 // Simulates app restart by writing data, then re-reading from disk.
 use nuwa_backup::app::models::history::HistoryFilter;
 use nuwa_backup::app::services::{config_service, history_service, schedule_service};
@@ -52,7 +52,7 @@ fn with_dir<F: FnOnce(&Path) -> T, T>(name: &str, f: F) -> T {
 #[test]
 fn test_restart_config_persistence() {
     with_dir("p_config", |dir| {
-        fs::write(dir.join("nuwa.toml"), &make_config_toml(dir)).unwrap();
+        fs::write(dir.join("nuwa.toml"), make_config_toml(dir)).unwrap();
         fs::create_dir_all(dir.join("source")).unwrap();
         let _jobs = config_service::list_job_configs().expect("list jobs");
         let config = Config::load().expect("Config reload");
@@ -93,7 +93,7 @@ fn test_restart_history_persistence() {
 #[test]
 fn test_restart_schedule_persistence() {
     with_dir("p_schedule", |dir| {
-        fs::write(dir.join("nuwa.toml"), &make_config_toml(dir)).unwrap();
+        fs::write(dir.join("nuwa.toml"), make_config_toml(dir)).unwrap();
         fs::create_dir_all(dir.join("source")).unwrap();
         let s = schedule_service::list_schedules().expect("list");
         assert_eq!(s.len(), 1);

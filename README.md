@@ -80,9 +80,9 @@ File System / SQLite
 - Disk Clone — disabled placeholder (Phase 5)
 - Enterprise Backup Catalog Browser — future
 
-### Phase S — Repository Engine (WAVE 1 COMPLETE)
+### Phase S — Repository Engine (CLOSED BASELINE)
 
-Phase S establishes Nüwa's unified backup storage foundation. It is independent from all feature phases and serves as the shared data engine for all future backup types (file, volume, disk, system image).
+Phase S establishes Nüwa's unified backup storage foundation. **CLOSED BASELINE.** All 13 tasks complete. 337 tests pass. 5-stage audit passed.
 
 **Wave 1 Complete (S-01/S-02/S-03):**
 
@@ -235,7 +235,7 @@ Backup points in D:\Backups:
 
 **Phase 1 (CLOSED):** Each backup operation creates a timestamped directory under the destination root:
 
-**Phase S (ACTIVE):** The Repository Engine manages a unified block-based repository at a configured root path. See docs/phase-s/ for the full architecture.
+**Phase S (CLOSED):** The Repository Engine manages a unified block-based repository at a configured root path. See docs/phase-s/ for the full architecture.
 
 ---
 

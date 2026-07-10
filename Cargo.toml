@@ -27,3 +27,7 @@ thiserror = "1"
 
 [dev-dependencies]
 tempfile = "3"
+
+[[test]]
+name = "repository_integration_tests"
+required-features = ["repository"]

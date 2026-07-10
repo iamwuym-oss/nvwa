@@ -1,5 +1,5 @@
 // ============================================================================
-// repo_manager.rs — S-01: Repository initialization, opening, and validation
+// repo_manager.rs 鈥?S-01: Repository initialization, opening, and validation
 // ============================================================================
 //
 // Phase S S-01. Manages the lifecycle of a backup Repository.
@@ -48,8 +48,13 @@ pub struct RepoHandle {
 }
 
 impl RepoHandle {
-    pub fn repo_db(&self) -> rusqlite::Result<Connection> {
-        Connection::open(&self.repo_db_path)
+    pub fn repo_db(&self) -> Result<Connection, RepositoryError> {
+        let conn = Connection::open(&self.repo_db_path)?;
+        conn.execute_batch("PRAGMA journal_mode=WAL;")?;
+        conn.execute_batch("PRAGMA synchronous=NORMAL;")?;
+        conn.execute_batch("PRAGMA foreign_keys=ON;")?;
+        conn.execute_batch("PRAGMA busy_timeout=5000;")?;
+        Ok(conn)
     }
 }
 
@@ -85,8 +90,9 @@ fn init_repo_db(
 
     // Enable WAL mode for crash safety
     conn.execute_batch("PRAGMA journal_mode=WAL;")?;
-
+    conn.execute_batch("PRAGMA synchronous=NORMAL;")?;
     conn.execute_batch("PRAGMA foreign_keys=ON;")?;
+    conn.execute_batch("PRAGMA busy_timeout=5000;")?;
 
     // Create tables
     conn.execute_batch(
@@ -151,7 +157,7 @@ fn init_repo_db(
 /// Creates the directory structure and repo.db with schema.
 pub fn init_repo(root: &Path, block_size: u32) -> Result<RepoHandle, RepositoryError> {
     // Validate block size (256KB default, must be between 4KB and 4MB)
-    if block_size < 4096 || block_size > 4_194_304 {
+    if !(4096..=4_194_304).contains(&block_size) {
         return Err(RepositoryError::General {
             detail: format!(
                 "Block size must be between 4KB and 4MB. Got {} ({}KB)",
@@ -209,6 +215,10 @@ pub fn open_repo(root: &Path) -> Result<RepoHandle, RepositoryError> {
 
     let db_path = root.join(".nuwarepo").join("repo.db");
     let conn = Connection::open(&db_path)?;
+    conn.execute_batch("PRAGMA journal_mode=WAL;")?;
+    conn.execute_batch("PRAGMA synchronous=NORMAL;")?;
+    conn.execute_batch("PRAGMA foreign_keys=ON;")?;
+    conn.execute_batch("PRAGMA busy_timeout=5000;")?;
 
     // Verify repository version
     let version: String = conn
@@ -394,7 +404,7 @@ pub fn check_repo(handle: &RepoHandle) -> Result<(), RepositoryError> {
                 |row| row.get(0),
             )
             .map_err(|_| {
-                RepositoryError::SelfCheckFailed(format!("Cannot query table list from repo.db"))
+                RepositoryError::SelfCheckFailed("Cannot query table list from repo.db".to_string())
             })?;
 
         if count == 0 {

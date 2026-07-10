@@ -167,8 +167,18 @@ The following tasks were completed but do not have individual report files. Thei
 
 | Document | Authority | Purpose |
 |----------|-----------|---------|
-| Nuwa_Repository_Engine_Architecture_v1.0.md | **AUTHORITATIVE** | Phase S architecture baseline. Frozen. Supersedes all earlier storage format designs. |
-| Nuwa_Repository_Engine_Implementation_Plan_v1.1.md | **AUTHORITATIVE** | Phase S implementation plan. Rust module structure, task breakdown, test strategy, error model. |
+| Nuwa_Repository_Engine_Architecture_v1.0.md | **AUTHORITATIVE** | Phase S architecture baseline. Frozen. |
+| Nuwa_Repository_Engine_Architecture_v1.1.md | **AUTHORITATIVE** | Enterprise Readiness revision. Amendment on v1.0. |
+| Nuwa_Repository_Engine_Implementation_Plan_v1.0.md | **AUTHORITATIVE** | Phase S implementation plan. Rust module structure, task breakdown, test strategy, error model. |
+| Phase_S_Wave_1_Completion_Report.md | REFERENCE | Wave 1 (S-01/S-02/S-03) completion evidence. |
+| Phase_S_API_Freeze_Review.md | REFERENCE | API freeze review and Volume Backup compatibility assessment. |
+| S-12_Benchmark_Framework.md | REFERENCE | Scale benchmark methodology documentation. |
+| Phase_S_Stage1_Audit_Report.md | REFERENCE | Stage 1: Architecture re-audit. 5 issues fixed. |
+| Phase_S_Stage2_Audit_Report.md | REFERENCE | Stage 2: Integration, Retention, Crash tests (337 pass). |
+| Phase_S_Stage3_API_Freeze_Report.md | **AUTHORITATIVE** | Stage 3: API freeze validation. Volume Backup compatible. |
+| Phase_S_Scale_Analysis.md | REFERENCE | A-08: Block store scale and SQLite query complexity analysis. |
+| Phase_S_Volume_Compatibility.md | REFERENCE | A-09: Volume Backup data flow compatibility. |
+| Phase_S_Closing_Report.md | **AUTHORITATIVE** | Phase S closing report. Baseline freeze. 5 audit gates PASS. |
 ## docs/phase-3/ — Reserved: NTFS Volume Image, VSS, Block Backup
 
 *(reserved)*

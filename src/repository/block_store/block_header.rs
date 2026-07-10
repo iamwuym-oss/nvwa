@@ -1,9 +1,9 @@
 // ============================================================================
-// block_header.rs — 64-byte Block Header encoding/decoding
+// block_header.rs 鈥?64-byte Block Header encoding/decoding
 // ============================================================================
 //
 // Block Header is a fixed 64-byte binary structure embedded at the start
-// of every block file in block-store/. See Architecture v1.0 §5.3.
+// of every block file in block-store/. See Architecture v1.0 搂5.3.
 //
 // Key design rules:
 // - Reserved fields are set to zero and MUST be ignored on read
@@ -123,7 +123,11 @@ impl BlockHeader {
         }
 
         // Validate CRC32C
-        let stored_crc = u32::from_le_bytes(buf[60..64].try_into().unwrap());
+        let stored_crc = u32::from_le_bytes(
+            buf[60..64]
+                .try_into()
+                .expect("validated BLOCK_HEADER_SIZE buffer"),
+        );
         let computed_crc = crc32c(&buf[0..60]);
         if stored_crc != computed_crc {
             return Err(RepositoryError::invalid_block_header(
@@ -135,11 +139,31 @@ impl BlockHeader {
             ));
         }
 
-        let version = u16::from_le_bytes(buf[4..6].try_into().unwrap());
-        let hash_algo = u16::from_le_bytes(buf[16..18].try_into().unwrap());
-        let compression_val = u16::from_le_bytes(buf[18..20].try_into().unwrap());
-        let raw_size = u64::from_le_bytes(buf[20..28].try_into().unwrap());
-        let stored_size = u64::from_le_bytes(buf[28..36].try_into().unwrap());
+        let version = u16::from_le_bytes(
+            buf[4..6]
+                .try_into()
+                .expect("validated BLOCK_HEADER_SIZE buffer"),
+        );
+        let hash_algo = u16::from_le_bytes(
+            buf[16..18]
+                .try_into()
+                .expect("validated BLOCK_HEADER_SIZE buffer"),
+        );
+        let compression_val = u16::from_le_bytes(
+            buf[18..20]
+                .try_into()
+                .expect("validated BLOCK_HEADER_SIZE buffer"),
+        );
+        let raw_size = u64::from_le_bytes(
+            buf[20..28]
+                .try_into()
+                .expect("validated BLOCK_HEADER_SIZE buffer"),
+        );
+        let stored_size = u64::from_le_bytes(
+            buf[28..36]
+                .try_into()
+                .expect("validated BLOCK_HEADER_SIZE buffer"),
+        );
 
         let compression = Compression::from_u16(compression_val).ok_or_else(|| {
             RepositoryError::invalid_block_header(
@@ -163,7 +187,7 @@ fn crc32c(data: &[u8]) -> u32 {
     let table: [u32; 256] = {
         let poly: u32 = 0x1EDC6F41;
         let mut table = [0u32; 256];
-        for i in 0..256 {
+        for (i, item) in table.iter_mut().enumerate() {
             let mut crc = i as u32;
             for _ in 0..8 {
                 if crc & 1 != 0 {
@@ -172,7 +196,7 @@ fn crc32c(data: &[u8]) -> u32 {
                     crc >>= 1;
                 }
             }
-            table[i] = crc;
+            *item = crc;
         }
         table
     };
@@ -235,11 +259,11 @@ mod tests {
         let header = BlockHeader::new(Compression::Zstd, 12345, 6789);
         let encoded = header.encode();
         // Bytes 6-15: reserved
-        for i in 6..16 {
+        for (i, _) in encoded.iter().enumerate().take(16).skip(6) {
             assert_eq!(encoded[i], 0, "Reserved byte {} is not zero", i);
         }
         // Bytes 36-59: reserved
-        for i in 36..60 {
+        for (i, _) in encoded.iter().enumerate().take(60).skip(36) {
             assert_eq!(encoded[i], 0, "Reserved byte {} is not zero", i);
         }
     }
