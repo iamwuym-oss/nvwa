@@ -194,16 +194,20 @@ impl CatalogEngine for SqliteCatalog {
             let modified: String = row.get(4)?;
             let sha256: Option<String> = row.get(5)?;
 
-            let entry_type = match entry_type_str.as_str() {
-                "directory" => CatalogEntryType::Directory,
-                _ => CatalogEntryType::File,
-            };
-
-            Ok((file_id, path, entry_type, size, modified, sha256))
+            Ok((file_id, path, entry_type_str, size, modified, sha256))
         });
 
         match file_result {
-            Ok((file_id, path, entry_type, size, modified, sha256)) => {
+            Ok((file_id, path, entry_type_str, size, modified, sha256)) => {
+                let entry_type = match entry_type_str.as_str() {
+                    "file" => CatalogEntryType::File,
+                    "directory" => CatalogEntryType::Directory,
+                    other => {
+                        return Err(RepositoryError::General {
+                            detail: format!("Unknown catalog entry_type: '{}'", other),
+                        });
+                    }
+                };
                 // Fetch extents for this file
                 let mut ext_stmt = self.conn.prepare(
                     "SELECT file_offset, logical_offset, length
@@ -259,6 +263,13 @@ impl CatalogEngine for SqliteCatalog {
     }
 
     fn close(self: Box<Self>) -> Result<PathBuf, RepositoryError> {
+        // WAL checkpoint before closing - ensures metadata SHA-256 matches
+        // on-disk .db content (not just WAL)
+        self.conn
+            .execute_batch("PRAGMA wal_checkpoint(TRUNCATE);")
+            .map_err(|e| RepositoryError::General {
+                detail: format!("Failed to checkpoint catalog database: {}", e),
+            })?;
         self.conn
             .close()
             .map_err(|(_conn, e)| RepositoryError::General {
