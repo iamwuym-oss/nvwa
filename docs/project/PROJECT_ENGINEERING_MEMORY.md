@@ -1,16 +1,16 @@
-ï»¿# NÃ¼wa Backup â€” Project Engineering Memory
+# N¨¹wa Backup ¡ª Project Engineering Memory
 
 **Version:** 0.3.0
 **Last Updated:** 2026-07-11 (Phase S GUI Integration Complete)
-**Current Phase:** Phase 2.5 â€” Tauri Desktop GUI + Application Layer + Phase S GUI Integration â€” CLOSED
-**Phase 1 Status:** CLOSED (PARTIAL â€” non-Windows space check limitation accepted)
+**Current Phase:** Phase 2.5 ¡ª Tauri Desktop GUI + Application Layer + Phase S GUI Integration ¡ª CLOSED
+**Phase 1 Status:** CLOSED (PARTIAL ¡ª non-Windows space check limitation accepted)
 
 ---
 
 ## 1. Purpose
 
 This document is Codex's long-term engineering memory entry point. It records
-the essential project state â€” what phase we are in, what has been done, what
+the essential project state ¡ª what phase we are in, what has been done, what
 is allowed and forbidden, and which documents must be read before starting
 any new task.
 
@@ -20,32 +20,32 @@ any new task.
 
 Before any coding task begins, Codex MUST read these documents in order:
 
-1. **AGENTS.md** â€” Product identity, phase rules, task lifecycle,
+1. **AGENTS.md** ¡ª Product identity, phase rules, task lifecycle,
    code organization rules, CLI contract, test rules, Definition of Done.
 
-2. **docs/project/PROJECT_ENGINEERING_MEMORY.md** â€” This file.
+2. **docs/project/PROJECT_ENGINEERING_MEMORY.md** ¡ª This file.
 
-3. **docs/project/DOCUMENT_INDEX.md** â€” Document index with authority levels.
+3. **docs/project/DOCUMENT_INDEX.md** ¡ª Document index with authority levels.
 
-4. **docs/phase-1/Phase_1_Closing_Report.md** â€” Phase 1 closing decision,
+4. **docs/phase-1/Phase_1_Closing_Report.md** ¡ª Phase 1 closing decision,
    freeze status, and evidence summary.
 
-5. **docs/phase-1/Phase_1_Final_Acceptance_Report.md** â€” What was implemented
+5. **docs/phase-1/Phase_1_Final_Acceptance_Report.md** ¡ª What was implemented
    and tested in Phase 1.
 
-6. **docs/phase-1/Phase_1_Technical_Baseline.md** â€” Module structure, data
+6. **docs/phase-1/Phase_1_Technical_Baseline.md** ¡ª Module structure, data
    flow, safety rules, error codes.
 
-7. **docs/phase-1/Phase_1_Known_Limitations_and_Risks.md** â€” All known
+7. **docs/phase-1/Phase_1_Known_Limitations_and_Risks.md** ¡ª All known
    limitations and risks from Phase 1.
 
-8. **docs/phase-1/Phase_1_to_Phase_2_Handoff.md** â€” Phase handoff boundary.
+8. **docs/phase-1/Phase_1_to_Phase_2_Handoff.md** ¡ª Phase handoff boundary.
 
 ---
 
 ## 3. Current Phase 1 Facts
 
-- NÃ¼wa Backup is a **local-first, single-machine file backup CLI**.
+- N¨¹wa Backup is a **local-first, single-machine file backup CLI**.
 - Phase 1 is **file-level backup/restore only**.
 - Phase 1 is **NOT** volume backup, disk image, or system recovery.
 - Phase 1 uses flat-file storage + JSON manifest (NOT `.nwb`).
@@ -70,7 +70,7 @@ Before any coding task begins, Codex MUST read these documents in order:
 | Phase 1 Test Evidence | `docs/phase-1/Phase_1_Test_Evidence.md` | AUTHORITATIVE |
 | Phase 1 Known Limitations and Risks | `docs/phase-1/Phase_1_Known_Limitations_and_Risks.md` | AUTHORITATIVE |
 | Phase 1 Code Map | `docs/phase-1/Phase_1_Code_Map.md` | REFERENCE |
-| Phase 1 â†’ Phase 2 Handoff | `docs/phase-1/Phase_1_to_Phase_2_Handoff.md` | AUTHORITATIVE |
+| Phase 1 ¡ú Phase 2 Handoff | `docs/phase-1/Phase_1_to_Phase_2_Handoff.md` | AUTHORITATIVE |
 
 ### Phase 2.5 Status
 
@@ -80,7 +80,7 @@ Before any coding task begins, Codex MUST read these documents in order:
 - See docs/phase-2.5/Phase_2_5_Tauri_Migration_Decision.md for migration details.
 
 #
-## Phase S â€” Repository Engine
+## Phase S ¡ª Repository Engine
 
 **Status:** CLOSED (All 13 tasks complete)
 **Started:** 2026-07-10
@@ -89,13 +89,13 @@ Before any coding task begins, Codex MUST read these documents in order:
 
 ### Scope
 
-Phase S (Storage Foundation) establishes NÃ¼wa's unified backup storage engine.
+Phase S (Storage Foundation) establishes N¨¹wa's unified backup storage engine.
 It is independent from all feature phases. Phase 3 (Volume Backup) and Phase 3.1 (File Backup v2) depend on Phase S.
 
 ### Architecture Documents
 
-- docs/phase-s/Nuwa_Repository_Engine_Architecture_v1.0.md â€” Architecture Frozen Baseline
-- docs/phase-s/Nuwa_Repository_Engine_Implementation_Plan_v1.1.md â€” Implementation Plan
+- docs/phase-s/Nuwa_Repository_Engine_Architecture_v1.0.md ¡ª Architecture Frozen Baseline
+- docs/phase-s/Nuwa_Repository_Engine_Implementation_Plan_v1.1.md ¡ª Implementation Plan
 
 ### Wave 1 Implementation Status (2026-07-10)
 
@@ -115,7 +115,7 @@ Remaining Waves (not started): Chunk Engine, Catalog, Block Map, Crash Consisten
 | Block Identity | SHA-256(raw data) |
 | Block Header | 64 bytes fixed |
 | Storage Layout | .nuwarepo/ + backup-instances/ + block-store/ |
-| Data Model | Backup Job â†’ Restore Point â†’ Backup Instance |
+| Data Model | Backup Job ¡ú Restore Point ¡ú Backup Instance |
 | Catalog | Per-Backup-Instance SQLite (trait) |
 | Block Map | Per-Backup-Instance SQLite (trait) |
 | Transaction | Crash Consistency Manager (state machine + journal) |
@@ -217,10 +217,10 @@ During Task 2.0B (2026-07-05), the following was found and addressed:
 
 | Finding | Detail |
 |---------|--------|
-| AGENTS.md disk file | **Clean** â€” No FastAPI / SQLAlchemy / Vanilla JS / Tailwind CSS text present |
+| AGENTS.md disk file | **Clean** ¡ª No FastAPI / SQLAlchemy / Vanilla JS / Tailwind CSS text present |
 | Contamination source | System-level instruction template (not part of any project file) |
 | Action taken | Added explicit Technology Stack Clarification to AGENTS.md stating Rust CLI is the only confirmed stack |
-| Superseded text | Any FastAPI/Vanilla JS references are superseded and not applicable to NÃ¼wa Backup |
+| Superseded text | Any FastAPI/Vanilla JS references are superseded and not applicable to N¨¹wa Backup |
 | Phase 2 planning must use | `docs/phase-2/Phase_2_Planning_Source_Baseline.md` as the authoritative planning baseline |
 | Phase 2 coding still requires | Explicit user approval |
 
@@ -228,7 +228,7 @@ During Task 2.0B (2026-07-05), the following was found and addressed:
 
 Before any coding task begins, Codex MUST now also read:
 
-9. **docs/phase-2/Phase_2_Planning_Source_Baseline.md** â€” Phase 2 planning authority baseline, confirmed/optional/forbidden scope.
+9. **docs/phase-2/Phase_2_Planning_Source_Baseline.md** ¡ª Phase 2 planning authority baseline, confirmed/optional/forbidden scope.
 
 
 ## 10. Phase 2 UI Decision (Task 2.0B Updated)
@@ -237,7 +237,7 @@ Before any coding task begins, Codex MUST now also read:
 
 
 **Date:** 2026-07-05
-**Status:** User confirmed â€” Phase 2 includes local desktop GUI coding.
+**Status:** User confirmed ¡ª Phase 2 includes local desktop GUI coding.
 
 ### Key Decisions
 
@@ -249,13 +249,13 @@ Before any coding task begins, Codex MUST now also read:
 | Not Web GUI | Confirmed excluded |
 | Not FastAPI / Vanilla JS | Confirmed excluded |
 | Clone page in UI | **Allowed as disabled placeholder only** |
-| Clone functionality | **Not approved** â€” remains Phase 5 |
+| Clone functionality | **Not approved** ¡ª remains Phase 5 |
 
 ### Phase 2 Planning Must Use
 
-1. `docs/phase-2/Phase_2_Revised_Plan.md` (v2) â€” Confirmed scope and timeline
-2. `docs/phase-2/Phase_2_UI_Direction_Decision.md` â€” UI decisions record
-3. `docs/phase-2/Phase_2_Planning_Source_Baseline.md` â€” Audit trail and contamination cleanup
+1. `docs/phase-2/Phase_2_Revised_Plan.md` (v2) ¡ª Confirmed scope and timeline
+2. `docs/phase-2/Phase_2_UI_Direction_Decision.md` ¡ª UI decisions record
+3. `docs/phase-2/Phase_2_Planning_Source_Baseline.md` ¡ª Audit trail and contamination cleanup
 
 
 ## 11. Product Runtime Language Policy
@@ -285,18 +285,18 @@ Chinese characters in src/, tests/, or Cargo.toml are a blocking defect.
 
 ---
 
-## 12. T2-08 â€” Dashboard Page Completion Record
+## 12. T2-08 ¡ª Dashboard Page Completion Record
 
 **Date:** 2026-07-06
-**Task:** T2-08 â€” Implement Dashboard page for Nuwa Backup GUI
-**Status:** âœ… COMPLETE (user confirmed "T2-08å°±åˆ°è¿™é‡Œäº†")
+**Task:** T2-08 ¡ª Implement Dashboard page for Nuwa Backup GUI
+**Status:** ? COMPLETE (user confirmed "T2-08¾Íµ½ÕâÀïÁË")
 
 ### Scope Implemented
 
 **New file:** `src/gui/pages/dashboard.rs` (~670 lines)
 **Modified:**
-- `src/gui/app.rs` â€” Added navigation handling + `use dashboard`
-- `src/gui/theme.rs` â€” Added light content colors, increased font sizes, `TOP_BAR_HEIGHT` 40â†’48
+- `src/gui/app.rs` ¡ª Added navigation handling + `use dashboard`
+- `src/gui/theme.rs` ¡ª Added light content colors, increased font sizes, `TOP_BAR_HEIGHT` 40¡ú48
 
 ### Dashboard Layout (Confirmed with User)
 
@@ -325,31 +325,31 @@ Chinese characters in src/, tests/, or Cargo.toml are a blocking defect.
 
 | File | Change |
 |------|--------|
-| `src/gui/pages/dashboard.rs` | New â€” Full Dashboard implementation |
-| `src/gui/app.rs` | Modified â€” Nav handling + use dashboard |
-| `src/gui/theme.rs` | Modified â€” Light content colors, larger fonts, TOP_BAR_HEIGHT 40â†’48 |
+| `src/gui/pages/dashboard.rs` | New ¡ª Full Dashboard implementation |
+| `src/gui/app.rs` | Modified ¡ª Nav handling + use dashboard |
+| `src/gui/theme.rs` | Modified ¡ª Light content colors, larger fonts, TOP_BAR_HEIGHT 40¡ú48 |
 
 ### Quality Gates
 
 | Gate | Result |
 |------|--------|
-| `cargo build --features gui` | âœ… PASS |
-| GUI launched successfully | âœ… PASS (process started, Dashboard UI visible) |
-| Phase 1 core frozen | âœ… No Phase 1 core files modified |
-| Forbidden scope | âœ… No .nwb, VSS, encryption, daemon, clone |
+| `cargo build --features gui` | ? PASS |
+| GUI launched successfully | ? PASS (process started, Dashboard UI visible) |
+| Phase 1 core frozen | ? No Phase 1 core files modified |
+| Forbidden scope | ? No .nwb, VSS, encryption, daemon, clone |
 
 ### Remaining Phase 2 GUI Pages
 
 | Page | File | Status |
 |------|------|--------|
-| Backup | `src/gui/pages/backup.rs` | â³ Stub |
-| Restore | `src/gui/pages/restore.rs` | â³ Stub |
-| History | `src/gui/pages/history.rs` | â³ Stub |
-| Schedule | `src/gui/pages/schedule.rs` | â³ Stub |
-| Settings | `src/gui/pages/settings.rs` | â³ Stub |
-| Clone | `src/gui/pages/clone.rs` | âœ… Done (disabled placeholder) |
+| Backup | `src/gui/pages/backup.rs` | ? Stub |
+| Restore | `src/gui/pages/restore.rs` | ? Stub |
+| History | `src/gui/pages/history.rs` | ? Stub |
+| Schedule | `src/gui/pages/schedule.rs` | ? Stub |
+| Settings | `src/gui/pages/settings.rs` | ? Stub |
+| Clone | `src/gui/pages/clone.rs` | ? Done (disabled placeholder) |
 
-**Next recommended task:** Backup page (`backup.rs`) â€” core functionality enabling actual backup operations from GUI.
+**Next recommended task:** Backup page (`backup.rs`) ¡ª core functionality enabling actual backup operations from GUI.
 
 ---
 
@@ -362,35 +362,35 @@ Chinese characters in src/, tests/, or Cargo.toml are a blocking defect.
 
 | Area | Status |
 |------|:------:|
-| T2-01 Config/Job | âœ… PASS |
-| T2-02 History/SQLite | âœ… PASS |
-| T2-03 CLI Output/JSON | âœ… PASS |
-| T2-04 Retention/Prune | âœ… PASS |
-| T2-05 Scheduler | âœ… PASS |
-| T2-06 SMB/UNC | âœ… PASS |
-| T2-07 GUI Scaffold | âœ… PASS |
-| T2-08 GUI Dashboard | âœ… PASS |
-| T2-09 Clone Placeholder | âœ… PASS |
+| T2-01 Config/Job | ? PASS |
+| T2-02 History/SQLite | ? PASS |
+| T2-03 CLI Output/JSON | ? PASS |
+| T2-04 Retention/Prune | ? PASS |
+| T2-05 Scheduler | ? PASS |
+| T2-06 SMB/UNC | ? PASS |
+| T2-07 GUI Scaffold | ? PASS |
+| T2-08 GUI Dashboard | ? PASS |
+| T2-09 Clone Placeholder | ? PASS |
 
 ### Deferred (User Decision)
 
 | Item | Status |
 |------|:------:|
-| GUI Backup/Restore/History/Schedule/Settings | DEFERRED â€” stubs only |
+| GUI Backup/Restore/History/Schedule/Settings | DEFERRED ¡ª stubs only |
 
 ### Quality Gates (Final)
 
 | Gate | Result |
 |------|:------:|
-| `cargo fmt --check` | âœ… PASS |
-| `cargo clippy --all-targets -- -D warnings` | âœ… PASS |
-| `cargo build` | âœ… PASS |
-| `cargo test` (105 tests) | âœ… ALL PASS |
-| `cargo build --features gui` | âœ… PASS |
-| GUI launch | âœ… PASS |
-| Forbidden scope audit | âœ… No violations |
-| Phase 1 core protection | âœ… Intact |
-| English-only / mojibake | âœ… Clean |
+| `cargo fmt --check` | ? PASS |
+| `cargo clippy --all-targets -- -D warnings` | ? PASS |
+| `cargo build` | ? PASS |
+| `cargo test` (105 tests) | ? ALL PASS |
+| `cargo build --features gui` | ? PASS |
+| GUI launch | ? PASS |
+| Forbidden scope audit | ? No violations |
+| Phase 1 core protection | ? Intact |
+| English-only / mojibake | ? Clean |
 
 ### Phase 3 Permission
 
@@ -407,10 +407,10 @@ Phase 3 coding is NOT authorized without explicit user approval.
 
 ---
 
-## 14. Phase 3 â€” Scope Reset (T3-00)
+## 14. Phase 3 ¡ª Scope Reset (T3-00)
 
 **Date:** 2026-07-06
-**Status:** PLANNING â€” T3-00 documentation complete, coding not started
+**Status:** PLANNING ¡ª T3-00 documentation complete, coding not started
 
 ### Phase 3 Theme
 
@@ -432,7 +432,7 @@ NTFS non-system volume image backup and restore MVP.
 - Windows only, Administrator mode required
 - Local fixed disk, NTFS only, non-system/non-boot volumes only
 - CLI-first (no GUI in Phase 3)
-- Volume restore is destructive â€” requires explicit confirmation
+- Volume restore is destructive ¡ª requires explicit confirmation
 - Must reject system/boot/ESP/Recovery/FAT32/exFAT/dynamic disks/RAID
 - See `docs/phase-3/Phase_3_Plan.md` for full safety boundary
 
@@ -448,12 +448,12 @@ GPT/MBR parser, boot partition detection, BCD repair, WinPE, bare metal recovery
 
 | Task | Status |
 |:----:|:------:|
-| T3-00 â€” Phase 3 Scope Reset & Documentation | âœ… DONE / PASS |
-| T3-01 â€” .nwb v0.2 Format + Block SHA-256 | â³ NOT STARTED |
-| T3-02 â€” VSS Snapshot Lifecycle Proof | â³ NOT STARTED |
-| T3-03 â€” Non-System NTFS Volume Backup CLI | â³ NOT STARTED |
-| T3-04 â€” Non-System NTFS Volume Restore CLI | â³ NOT STARTED |
-| T3-CLOSE â€” Phase 3 Final Validation | â³ NOT STARTED |
+| T3-00 ¡ª Phase 3 Scope Reset & Documentation | ? DONE / PASS |
+| T3-01 ¡ª .nwb v0.2 Format + Block SHA-256 | ? NOT STARTED |
+| T3-02 ¡ª VSS Snapshot Lifecycle Proof | ? NOT STARTED |
+| T3-03 ¡ª Non-System NTFS Volume Backup CLI | ? NOT STARTED |
+| T3-04 ¡ª Non-System NTFS Volume Restore CLI | ? NOT STARTED |
+| T3-CLOSE ¡ª Phase 3 Final Validation | ? NOT STARTED |
 
 ### Key Documents
 
@@ -481,20 +481,20 @@ GPT/MBR parser, boot partition detection, BCD repair, WinPE, bare metal recovery
  T h e   d e s k t o p   G U I   t e c h n o l o g y   r o u t e   h a s   c h a n g e d   f r o m   * * e g u i   +   e f r a m e * *   t o   * * T a u r i   2 . 0   +   R e a c t   +   T y p e S c r i p t   +   V i t e * * . 
  
  
-## 15. Phase 2.5 â€” Tauri Desktop GUI & Application Layer
+## 15. Phase 2.5 ¡ª Tauri Desktop GUI & Application Layer
 
 ### Phase 2.5 Status
 
 | Task | Status |
 |:----:|:------:|
-| T2.5-00 â€” Remove egui GUI & Cleanup | âœ… DONE / PASS |
-| T2.5-01 â€” Tauri 2.0 Scaffold + Command Bridge | âœ… DONE / PASS |
-| T2.5-02 â€” T2.5-04F â€” Full UI Pages & Services (Dashboard, Backup, Restore, History, Schedule, Settings) | âœ… ALL DONE / PASS |
+| T2.5-00 ¡ª Remove egui GUI & Cleanup | ? DONE / PASS |
+| T2.5-01 ¡ª Tauri 2.0 Scaffold + Command Bridge | ? DONE / PASS |
+| T2.5-02 ¡ª T2.5-04F ¡ª Full UI Pages & Services (Dashboard, Backup, Restore, History, Schedule, Settings) | ? ALL DONE / PASS |
 
-### T2.5-00 â€” Remove egui GUI, Clean Up, Document Migration
+### T2.5-00 ¡ª Remove egui GUI, Clean Up, Document Migration
 
 **Date:** 2026-07-06
-**Status:** DONE â€” egui GUI removed, Tauri 2.0 direction confirmed
+**Status:** DONE ¡ª egui GUI removed, Tauri 2.0 direction confirmed
 
 #### Decision
 
@@ -516,10 +516,10 @@ The desktop GUI technology route has changed from **egui + eframe** to **Tauri 2
 | Quality gates | fmt/clippy/build/test all PASS (105 tests) |
 | Documentation | Created Phase 2.5 migration decision doc |
 
-### T2.5-01 â€” Tauri 2.0 Scaffold + Command Bridge
+### T2.5-01 ¡ª Tauri 2.0 Scaffold + Command Bridge
 
 **Date:** 2026-07-07
-**Status:** DONE / PASS â€” full Tauri 2.0 scaffold with React + TypeScript frontend and Rust command bridge
+**Status:** DONE / PASS ¡ª full Tauri 2.0 scaffold with React + TypeScript frontend and Rust command bridge
 
 #### What Was Done (T2.5-01)
 
@@ -552,13 +552,13 @@ Tauri Frontend (React + TypeScript) -> invoke() IPC -> Tauri Rust Commands (src-
 
 | Gate | Result |
 |------|:------:|
-| cargo fmt --check | âœ… PASS |
-| cargo clippy --all-targets -- -D warnings | âœ… PASS |
-| cargo build | âœ… PASS |
-| cargo test | âœ… PASS (105 tests) |
-| Forbidden scope audit | âœ… No forbidden features introduced |
-| Phase 1 core protection | âœ… Intact |
-| English-only / mojibake | âœ… Clean |
+| cargo fmt --check | ? PASS |
+| cargo clippy --all-targets -- -D warnings | ? PASS |
+| cargo build | ? PASS |
+| cargo test | ? PASS (105 tests) |
+| Forbidden scope audit | ? No forbidden features introduced |
+| Phase 1 core protection | ? Intact |
+| English-only / mojibake | ? Clean |
 
 #### Key Documents
 
@@ -632,21 +632,125 @@ React UI -> invoke() -> Tauri command -> app::services::backup_service -> backup
 
 | Task | Scope | Status |
 |:----:|-------|:------:|
-| T2.5-02 | Dashboard UI Architecture (React pages, mock data, layout components) | âœ… DONE / PASS |
-| T2.5-03A | Application API Layer Foundation (models, services, error, Tauri bridge) | âœ… DONE / PASS |
-| T2.5-03A.1 | Dashboard Product Polish (skeleton, empty/error states, micro-interactions) | âœ… DONE / PASS |
-| T2.5-03B | Backup Application Service | âœ… DONE / PASS |
-| T2.5-03C | Backup UI Integration | âœ… DONE / PASS |
-| T2.5-03D | Restore Application Service + UI | âœ… DONE / PASS |
-| T2.5-03D.1 | Restore Safety Hardening (path validation, rename reject) | âœ… DONE / PASS |
-| T2.5-04A | Config Job CRUD Service (plan CRUD) | âœ… DONE / PASS |
-| T2.5-04B | Settings Backup Plan UI | âœ… DONE / PASS |
-| T2.5-04C | Native Path Picker (tauri-plugin-dialog) | âœ… DONE / PASS (superseded by 04C.1) |
-| T2.5-04C.1 | In-App File Browser (FileBrowserModal) | âœ… DONE / PASS |
-| T2.5-04D | Backup Content Browser (Restore 3-column + BackupTreeView) | âœ… DONE / PASS (8ea7355) |
-| T2.5-04E | Schedule Consistency Hardening (lifecycle sync, two-phase delete, tests) | âœ… DONE / PASS (0a8ed93) |
-| T2.5-04F | History Page + Service + Tauri Commands | âœ… DONE / PASS (0a8ed93) |
-| T2.5-DOC-01A | Documentation synchronization | âœ… DONE / PASS |
-| T2.5-DOC-02 | AGENTS + README alignment | âœ… DONE / PASS |
+| T2.5-02 | Dashboard UI Architecture (React pages, mock data, layout components) | ? DONE / PASS |
+| T2.5-03A | Application API Layer Foundation (models, services, error, Tauri bridge) | ? DONE / PASS |
+| T2.5-03A.1 | Dashboard Product Polish (skeleton, empty/error states, micro-interactions) | ? DONE / PASS |
+| T2.5-03B | Backup Application Service | ? DONE / PASS |
+| T2.5-03C | Backup UI Integration | ? DONE / PASS |
+| T2.5-03D | Restore Application Service + UI | ? DONE / PASS |
+| T2.5-03D.1 | Restore Safety Hardening (path validation, rename reject) | ? DONE / PASS |
+| T2.5-04A | Config Job CRUD Service (plan CRUD) | ? DONE / PASS |
+| T2.5-04B | Settings Backup Plan UI | ? DONE / PASS |
+| T2.5-04C | Native Path Picker (tauri-plugin-dialog) | ? DONE / PASS (superseded by 04C.1) |
+| T2.5-04C.1 | In-App File Browser (FileBrowserModal) | ? DONE / PASS |
+| T2.5-04D | Backup Content Browser (Restore 3-column + BackupTreeView) | ? DONE / PASS (8ea7355) |
+| T2.5-04E | Schedule Consistency Hardening (lifecycle sync, two-phase delete, tests) | ? DONE / PASS (0a8ed93) |
+| T2.5-04F | History Page + Service + Tauri Commands | ? DONE / PASS (0a8ed93) |
+| T2.5-DOC-01A | Documentation synchronization | ? DONE / PASS |
+| T2.5-DOC-02 | AGENTS + README alignment | ? DONE / PASS |
 
 
+
+## 16. P-00C ¡ª Crash Consistency Manager Audit + Fix
+
+**Status:** ? COMPLETE
+
+**Contract:** `docs/phase-s/P-00_File_Backup_Repository_Data_Contract.md` v0.7
+
+### Changes to Phase S Frozen Types (Section 4 of P-00 Contract)
+
+| Type | Field | Change | File |
+|------|-------|--------|------|
+| `CatalogEntryType` | (new enum) | Added `File`/`Directory` variants | `catalog/engine.rs` |
+| `FileExtent` | `file_offset: u64` | Added per-file offset | `catalog/engine.rs` |
+| `FileEntry` | `entry_type: CatalogEntryType` | Added entry type | `catalog/engine.rs` |
+| `FileEntry` | `sha256: Option<String>` | Added per-file hash | `catalog/engine.rs` |
+| `CatalogEngine` | `add_directory()` | Added trait method | `catalog/engine.rs` |
+| `RecoveryReport` | `auto_committed` removed | Replaced by `journal_cleaned`, `state_mismatch`, `orphans_cleaned` | `transaction/manager.rs` |
+
+### CrashConsistencyManager Changes
+
+| Requirement | Implementation | Status |
+|-------------|----------------|--------|
+| ¡ì3.2: `begin()` sets repo.db=WRITING, journal=CREATING | `create_restore_point(status="WRITING")` + `TransactionJournal(state=Creating)` | ? |
+| ¡ì3.2: `enter_writing()` transitions journal CREATING¡úWRITING | `journal.state = TransactionState::Writing` + persist | ? |
+| ¡ì5.3#1: No auto-commit from non-terminal states | `recover_at_startup()` marks non-terminal as FAILED only | ? |
+| ¡ì5.3#2: commit reorder (repo.db before journal) | `set_restore_point_status(COMMITTED)` before journal write | ? |
+| ¡ì5.3#3: Use RepoHandle API, not raw SQL | All calls through `repo.set_restore_point_status()` etc. | ? |
+
+### RepoHandle API (New)
+
+| Method | Purpose |
+|--------|---------|
+| `create_restore_point()` | Insert restore_points row |
+| `update_restore_point_stats()` | Update block_count/total_raw_bytes |
+| `set_restore_point_status()` | Update status field |
+| `get_restore_point_status()` | Read status (returns `Result<Option<String>>`) |
+| `list_non_terminal_restore_points()` | Find incomplete transactions |
+
+### Files Changed (P-00C)
+
+- `src/repository/transaction/manager.rs` ¡ª CrashConsistencyManager rewrite
+- `src/repository/repo_manager.rs` ¡ª RepoHandle CRUD API
+- `src/repository/catalog/engine.rs` ¡ª CatalogEntryType, file_offset, sha256, add_directory
+- `src/repository/catalog/mod.rs` ¡ª Module sync
+- `src/repository/catalog/sqlite_catalog.rs` ¡ª SQLite implementation update
+- `tests/repository_integration_tests.rs` ¡ª Gate 3/4 tests, retention fix
+
+### Quality Gates
+
+| Gate | Result |
+|------|--------|
+| `cargo fmt --check` | ? |
+| `cargo clippy --features repository --all-targets -- -D warnings` | ? |
+| `cargo build --features repository` | ? |
+| `cargo test --features repository --lib` | 292/292 ? |
+
+---
+
+## 17. P-01 ¡ª Repository File Backup Writer + CLI
+
+**Status:** ? COMPLETE
+
+### Scope
+
+- P-01a: RepositoryBackupWriter lifecycle (new ¡ú begin ¡ú write ¡ú finalize ¡ú fail)
+- P-01b: Directory traversal + file processing (backup_directory, write_file, write_directory)
+- P-01c: Metadata with real SHA-256 per-file hashes
+- P-01d: CLI integration (`nuwa backup --source <path> --repo <path>`)
+
+### New Files
+
+| File | Description |
+|------|-------------|
+| `src/repository/backup_writer.rs` | RepositoryBackupWriter (397 lines) |
+
+### Changed Files
+
+| File | Change |
+|------|--------|
+| `src/repository/mod.rs` | Added `pub mod backup_writer` + re-exports |
+| `src/cli.rs` | Added `--repo` param to `Command::Backup`, Mode 3 in help text |
+| `src/main.rs` | Added `execute_repo_backup()` function |
+
+### CLI Usage
+
+```
+nuwa backup --source <path> --repo <path> [--compress] [--json]
+```
+
+### Quality Gates
+
+| Gate | Result |
+|------|--------|
+| `cargo fmt --check` | ? |
+| `cargo clippy --features repository --all-targets -- -D warnings` | ? |
+| `cargo build --features repository` | ? |
+| `cargo test --features repository --lib` | 292/292 ? |
+
+### Remaining (P-02+)
+
+- P-02: Repository Restore from catalog + block_map + block_store
+- P-03: Repository Verify CLI
+- Gate 5: Application Layer + Tauri UI integration
+- Gate 6: Flat File code removal

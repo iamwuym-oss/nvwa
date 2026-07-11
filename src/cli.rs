@@ -16,6 +16,10 @@ pub enum Command {
         compress: bool,
         /// Optional job name, mutually exclusive with source/dest
         job: Option<String>,
+
+        /// Repository path (P-01, mutually exclusive with --dest/--job)
+        #[cfg(feature = "repository")]
+        repo: Option<PathBuf>,
         /// JSON output mode
         json_output: bool,
     },
@@ -210,6 +214,8 @@ impl Command {
             dest,
             compress,
             job,
+            #[cfg(feature = "repository")]
+            repo: None,
             json_output,
         })
     }
@@ -698,6 +704,14 @@ backup options (choose one mode):
   --json            Output in JSON format
 
 restore options:
+
+    Mode 3 - Repository mode (requires --features repository):
+    --source <path>   Source path
+    --repo <path>     Repository path (required, use 'nuwa repo init' first)
+    --compress        Enable compression (optional)
+    --json            Output in JSON format
+
+  restore options:
   --backup <path>   Backup directory (required)
   --dest <path>     Restore target (required)
   --overwrite       Overwrite existing files (optional)

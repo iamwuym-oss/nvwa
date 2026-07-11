@@ -21,6 +21,7 @@
 // - Transaction journal is the SOURCE OF TRUTH for crash recovery
 // - Verify Engine is READ-ONLY - never modifies data
 
+pub mod backup_writer;
 pub mod block_map;
 pub mod block_store;
 pub mod catalog;
@@ -36,6 +37,7 @@ pub mod transaction;
 pub mod verify;
 
 // Re-export key types at the repository level for convenience
+pub use backup_writer::{BackupResult, RepositoryBackupWriter};
 pub use block_map::engine::{BlockMapEngine, BlockMapEntry};
 pub use block_map::sqlite_block_map::SqliteBlockMap;
 pub use block_store::block_id::BlockId;

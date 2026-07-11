@@ -56,6 +56,111 @@ impl RepoHandle {
         conn.execute_batch("PRAGMA busy_timeout=5000;")?;
         Ok(conn)
     }
+
+    // ---- RestorePoint CRUD API (P-00C) ----
+
+    /// Create a new Restore Point entry in repo.db.
+    /// Returns an error if the point_id already exists.
+    #[allow(clippy::too_many_arguments)]
+    pub fn create_restore_point(
+        &self,
+        point_id: &str,
+        job_id: &str,
+        chain_id: &str,
+        chain_position: i64,
+        created_at: &str,
+        status: &str,
+        instance_path: &str,
+    ) -> Result<(), RepositoryError> {
+        let conn = self.repo_db()?;
+        conn.execute(
+            "INSERT INTO restore_points (point_id, job_id, chain_id, chain_position, created_at, status, instance_path)
+             VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)",
+            rusqlite::params![point_id, job_id, chain_id, chain_position, created_at, status, instance_path],
+        )?;
+        Ok(())
+    }
+
+    /// Update block_count and total_raw_bytes for a Restore Point.
+    /// Returns NotFound error if point_id does not exist.
+    pub fn update_restore_point_stats(
+        &self,
+        point_id: &str,
+        block_count: i64,
+        total_raw_bytes: i64,
+    ) -> Result<(), RepositoryError> {
+        let conn = self.repo_db()?;
+        let rows = conn.execute(
+            "UPDATE restore_points SET block_count = ?1, total_raw_bytes = ?2 WHERE point_id = ?3",
+            rusqlite::params![block_count, total_raw_bytes, point_id],
+        )?;
+        if rows == 0 {
+            return Err(RepositoryError::General {
+                detail: format!("Restore point not found: {}", point_id),
+            });
+        }
+        Ok(())
+    }
+
+    /// Update the status of a Restore Point.
+    /// Returns NotFound error if point_id does not exist.
+    pub fn set_restore_point_status(
+        &self,
+        point_id: &str,
+        status: &str,
+    ) -> Result<(), RepositoryError> {
+        let conn = self.repo_db()?;
+        let rows = conn.execute(
+            "UPDATE restore_points SET status = ?1 WHERE point_id = ?2",
+            rusqlite::params![status, point_id],
+        )?;
+        if rows == 0 {
+            return Err(RepositoryError::General {
+                detail: format!("Restore point not found: {}", point_id),
+            });
+        }
+        Ok(())
+    }
+
+    /// Get the status of a Restore Point.
+    /// Returns None if the point_id does not exist.
+    pub fn get_restore_point_status(
+        &self,
+        point_id: &str,
+    ) -> Result<Option<String>, RepositoryError> {
+        let conn = self.repo_db()?;
+        let result = conn.query_row(
+            "SELECT status FROM restore_points WHERE point_id = ?1",
+            [point_id],
+            |row| row.get::<_, String>(0),
+        );
+        match result {
+            Ok(status) => Ok(Some(status)),
+            Err(rusqlite::Error::QueryReturnedNoRows) => Ok(None),
+            Err(e) => Err(e.into()),
+        }
+    }
+
+    /// List all non-terminal (not COMMITTED, not FAILED) Restore Points.
+    /// Used during startup recovery to find incomplete transactions.
+    pub fn list_non_terminal_restore_points(
+        &self,
+    ) -> Result<Vec<(String, String)>, RepositoryError> {
+        let conn = self.repo_db()?;
+        let mut stmt = conn.prepare(
+            "SELECT point_id, status FROM restore_points
+             WHERE status NOT IN ('COMMITTED', 'FAILED')
+             ORDER BY created_at ASC",
+        )?;
+        let rows = stmt
+            .query_map([], |row| {
+                let point_id: String = row.get(0)?;
+                let status: String = row.get(1)?;
+                Ok((point_id, status))
+            })?
+            .collect::<Result<Vec<_>, _>>()?;
+        Ok(rows)
+    }
 }
 
 /// Check if a path contains an existing Nuwa Repository.

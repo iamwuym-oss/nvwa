@@ -29,10 +29,18 @@ fn main() {
             dest,
             compress,
             job,
+            #[cfg(feature = "repository")]
+            repo,
             json_output,
         } => {
             let start = std::time::Instant::now();
             let job_name = job.clone();
+            #[cfg(feature = "repository")]
+            if let Some(ref repo_path) = repo {
+                let exit_code =
+                    execute_repo_backup(repo_path, &source.unwrap(), compress, json_output);
+                process::exit(exit_code as i32);
+            }
             let (resolved_source, resolved_dest, resolved_compress) =
                 match resolve_backup_params(source, dest, compress, job.as_deref()) {
                     Ok((ref src, ref dst, ref comp)) => {
@@ -607,6 +615,92 @@ fn main() {
     process::exit(exit as i32);
 }
 
+#[cfg(feature = "repository")]
+fn execute_repo_backup(
+    repo_path: &std::path::Path,
+    source: &std::path::Path,
+    compress: bool,
+    json_output: bool,
+) -> ExitCode {
+    use nuwa_backup::repository::RepositoryBackupWriter;
+
+    let start = std::time::Instant::now();
+    let repo = match nuwa_backup::repository::open_repo(repo_path) {
+        Ok(h) => h,
+        Err(_) => {
+            eprintln!(
+                "Error: Repository not found at '{}'. Use 'nuwa repo init' first.",
+                repo_path.display()
+            );
+            return ExitCode::InvalidArgs;
+        }
+    };
+    let job_id = "cli-repo-backup";
+    {
+        let conn = match repo.repo_db() {
+            Ok(c) => c,
+            Err(e) => {
+                eprintln!("Error: Cannot open repository database: {}", e);
+                return ExitCode::GeneralFailure;
+            }
+        };
+        let _ = conn.execute(
+            "INSERT OR IGNORE INTO backup_jobs (job_id, job_name, source_type, created_at, status) VALUES (?1, ?2, 0, ?3, 'active')",
+            rusqlite::params![job_id, job_id, &chrono::Utc::now().to_rfc3339()],
+        );
+    }
+    let mut writer = match RepositoryBackupWriter::new(&repo, job_id, compress) {
+        Ok(w) => w,
+        Err(e) => {
+            eprintln!("Error: Cannot create backup writer: {}", e);
+            return ExitCode::GeneralFailure;
+        }
+    };
+    if let Err(e) = writer.begin() {
+        eprintln!("Error: Cannot begin backup transaction: {}", e);
+        let _ = writer.fail();
+        return ExitCode::GeneralFailure;
+    }
+    if let Err(e) = writer.backup_directory(source) {
+        eprintln!("Error: Backup failed during file processing: {}", e);
+        let _ = writer.fail();
+        return ExitCode::GeneralFailure;
+    }
+    match writer.finalize() {
+        Ok(r) => {
+            let duration_ms = start.elapsed().as_millis() as u64;
+            if json_output {
+                let msg = format!(
+                    r#"{{"restore_point_id":"{}","file_count":{},"directory_count":{},"block_count":{},"total_raw_bytes":{},"duration_ms":{}}}"#,
+                    r.point_id,
+                    r.file_count,
+                    r.directory_count,
+                    r.block_count,
+                    r.total_raw_bytes,
+                    duration_ms
+                );
+                let out = cli_output::JsonOutput::success("backup", &msg, duration_ms);
+                return cli_output::print_json_compact(&out);
+            }
+            println!("[OK] Backup completed successfully.");
+            println!("  Restore Point ID: {}", r.point_id);
+            println!(
+                "  Files: {}, Directories: {}",
+                r.file_count, r.directory_count
+            );
+            println!(
+                "  Blocks: {}, Total Raw Bytes: {}",
+                r.block_count, r.total_raw_bytes
+            );
+            println!("  Duration: {} ms", duration_ms);
+            ExitCode::Success
+        }
+        Err(e) => {
+            eprintln!("Error: Backup finalize failed: {}", e);
+            ExitCode::GeneralFailure
+        }
+    }
+}
 fn resolve_backup_params(
     source: Option<std::path::PathBuf>,
     dest: Option<std::path::PathBuf>,

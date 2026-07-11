@@ -1,5 +1,5 @@
 ﻿// ============================================================================
-// mod.rs — Catalog Engine module entry point
+// mod.rs — Catalog Engine module entry point (P-00C: added CatalogEntryType)
 // ============================================================================
 //
 // Phase S Wave 2: Catalog provides file-level metadata for Restore Points.
@@ -9,5 +9,5 @@
 pub mod engine;
 pub mod sqlite_catalog;
 
-pub use engine::{CatalogEngine, FileEntry, FileExtent};
+pub use engine::{CatalogEngine, CatalogEntryType, FileEntry, FileExtent};
 pub use sqlite_catalog::SqliteCatalog;

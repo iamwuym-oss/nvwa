@@ -1,4 +1,4 @@
-ï»¿# NÃ¼wa Backup â€” Document Index
+# N¨¹wa Backup ¡ª Document Index
 
 **Last Updated:** 2026-07-11 (Phase S GUI Integration Complete)
 
@@ -20,12 +20,12 @@ authority level, and applicability.
 
 ---
 
-## docs/project/ â€” Cross-Phase, Long-Term Valid
+## docs/project/ ¡ª Cross-Phase, Long-Term Valid
 
 | Document | Authority | Purpose |
 |----------|-----------|---------|
 | `PROJECT_ENGINEERING_MEMORY.md` | AUTHORITATIVE | Long-term project state, phase boundaries, task-before-read checklist |
-| `DOCUMENT_INDEX.md` | AUTHORITATIVE | This file â€” document index and navigation |
+| `DOCUMENT_INDEX.md` | AUTHORITATIVE | This file ¡ª document index and navigation |
 | `PROPOSAL_FOR_NEW_PROJECT.md` | REFERENCE | Original project proposal |
 | `01_Product_Requirements_Document.md` | REFERENCE | Original PRD |
 | `02_Development_Plan.md` | REFERENCE | Task breakdown by phase |
@@ -37,7 +37,7 @@ authority level, and applicability.
 
 ---
 
-## docs/phase-0/ â€” Phase 0: Project Setup & Guardrails
+## docs/phase-0/ ¡ª Phase 0: Project Setup & Guardrails
 
 | Document | Authority | Purpose |
 |----------|-----------|---------|
@@ -48,7 +48,7 @@ authority level, and applicability.
 
 ---
 
-## docs/phase-1/ â€” Phase 1: File-Level Backup/Restore CLI (CLOSED)
+## docs/phase-1/ ¡ª Phase 1: File-Level Backup/Restore CLI (CLOSED)
 
 | Document | Authority | Purpose |
 |----------|-----------|---------|
@@ -63,7 +63,7 @@ authority level, and applicability.
 
 ---
 
-## docs/phase-2/ â€” Phase 2: CLI Usability + GUI Dashboard (CLOSED)
+## docs/phase-2/ ¡ª Phase 2: CLI Usability + GUI Dashboard (CLOSED)
 
 | Document | Authority | Purpose |
 |----------|-----------|---------|
@@ -76,15 +76,15 @@ authority level, and applicability.
 Phase 2 implementation has started under task-specific approval.
 
 Current task status:
-- T2-01 â€” Configuration system / backup job: DONE / PASS
-- T2-02 â€” Backup history / SQLite schema: DONE / PASS
-- T2-03 â€” CLI output enhancement: DONE / PASS
-- T2-04 â€” Retention policy / prune: DONE / PASS
-- T2-05 â€” Windows Task Scheduler: DONE / PASS
-- T2-06 â€” SMB / UNC path support: DONE / PASS (manual SMB validation completed on \\localhost\C$ admin share; backup/list/verify/restore all confirmed working)
-- T2-07 â€” GUI dependency + scaffold: DONE / PASS
-- T2-08 â€” GUI 7 pages: NOT STARTED / requires user approval
-- T2-09 â€” GUI Clone placeholder: NOT STARTED / requires user approval
+- T2-01 ¡ª Configuration system / backup job: DONE / PASS
+- T2-02 ¡ª Backup history / SQLite schema: DONE / PASS
+- T2-03 ¡ª CLI output enhancement: DONE / PASS
+- T2-04 ¡ª Retention policy / prune: DONE / PASS
+- T2-05 ¡ª Windows Task Scheduler: DONE / PASS
+- T2-06 ¡ª SMB / UNC path support: DONE / PASS (manual SMB validation completed on \\localhost\C$ admin share; backup/list/verify/restore all confirmed working)
+- T2-07 ¡ª GUI dependency + scaffold: DONE / PASS
+- T2-08 ¡ª GUI 7 pages: NOT STARTED / requires user approval
+- T2-09 ¡ª GUI Clone placeholder: NOT STARTED / requires user approval
 
 Language compliance:
 - Product runtime language is English-only (T2-LANG-01 enforced).
@@ -118,7 +118,7 @@ No clone engine, clone CLI command, disk access, partition access, PhysicalDrive
 ---
 
 
-## docs/phase-2.5/ â€” Phase 2.5: Tauri Desktop GUI + Application Layer
+## docs/phase-2.5/ ¡ª Phase 2.5: Tauri Desktop GUI + Application Layer
 
 | Document | Authority | Purpose |
 |----------|-----------|---------|
@@ -138,32 +138,32 @@ The following tasks were completed but do not have individual report files. Thei
 - T2.5-03D.1 (Restore Safety Hardening)
 - T2.5-04A (Config Job CRUD Service)
 - T2.5-04B (Settings Backup Plan UI)
-- T2.5-04C (Native Path Picker â€” superseded)
+- T2.5-04C (Native Path Picker ¡ª superseded)
 - T2.5-04C.1 (In-App File Browser)
 
 ### Phase 2.5 Task Status
 
 | Task | Status |
 |:----:|:------:|
-| T2.5-00 â€” Remove egui GUI & Cleanup | âœ… DONE / PASS |
-| T2.5-01 â€” Tauri 2.0 Scaffold + Command Bridge | âœ… DONE / PASS |
-| T2.5-02 â€” Dashboard UI Architecture | âœ… DONE / PASS |
-| T2.5-03A â€” Application API Layer Foundation | âœ… DONE / PASS |
-| T2.5-03A.1 â€” Dashboard Product Polish | âœ… DONE / PASS |
-| T2.5-03B â€” Backup Application Service Foundation | âœ… DONE / PASS |
-| T2.5-03C â€” Backup UI Integration | âœ… DONE / PASS |
-| T2.5-03D â€” Restore Service + UI | âœ… DONE / PASS |
-| T2.5-03D.1 â€” Restore Safety Hardening | âœ… DONE / PASS |
-| T2.5-04A â€” Config Job CRUD Service | âœ… DONE / PASS |
-| T2.5-04B â€” Settings Backup Plan UI | âœ… DONE / PASS |
-| T2.5-04C â€” Native Path Picker | âœ… DONE / PASS (superseded by 04C.1) |
-| T2.5-04C.1 â€” In-App File Browser | âœ… DONE / PASS |
-| T2.5-04D â€” Backup Content Browser | âœ… DONE / PASS (committed 8ea7355) |
-| T2.5-DOC-01A â€” Documentation sync | âœ… DONE / PASS |
-| T2.5-DOC-02 â€” AGENTS + README alignment | âœ… DONE / PASS |
+| T2.5-00 ¡ª Remove egui GUI & Cleanup | ? DONE / PASS |
+| T2.5-01 ¡ª Tauri 2.0 Scaffold + Command Bridge | ? DONE / PASS |
+| T2.5-02 ¡ª Dashboard UI Architecture | ? DONE / PASS |
+| T2.5-03A ¡ª Application API Layer Foundation | ? DONE / PASS |
+| T2.5-03A.1 ¡ª Dashboard Product Polish | ? DONE / PASS |
+| T2.5-03B ¡ª Backup Application Service Foundation | ? DONE / PASS |
+| T2.5-03C ¡ª Backup UI Integration | ? DONE / PASS |
+| T2.5-03D ¡ª Restore Service + UI | ? DONE / PASS |
+| T2.5-03D.1 ¡ª Restore Safety Hardening | ? DONE / PASS |
+| T2.5-04A ¡ª Config Job CRUD Service | ? DONE / PASS |
+| T2.5-04B ¡ª Settings Backup Plan UI | ? DONE / PASS |
+| T2.5-04C ¡ª Native Path Picker | ? DONE / PASS (superseded by 04C.1) |
+| T2.5-04C.1 ¡ª In-App File Browser | ? DONE / PASS |
+| T2.5-04D ¡ª Backup Content Browser | ? DONE / PASS (committed 8ea7355) |
+| T2.5-DOC-01A ¡ª Documentation sync | ? DONE / PASS |
+| T2.5-DOC-02 ¡ª AGENTS + README alignment | ? DONE / PASS |
 
 
-## docs/phase-s/ â€” Phase S: Repository Engine (NEW)
+## docs/phase-s/ ¡ª Phase S: Repository Engine (NEW)
 
 | Document | Authority | Purpose |
 |----------|-----------|---------|
@@ -180,25 +180,26 @@ The following tasks were completed but do not have individual report files. Thei
 | Phase_S_Volume_Compatibility.md | REFERENCE | A-09: Volume Backup data flow compatibility. |
 | Phase_S_Known_Limitations_and_Roadmap.md | REFERENCE | Phase S known limitations and future roadmap. Updated as features are implemented. |
 | Phase_S_Closing_Report.md | **AUTHORITATIVE** | Phase S closing report. Baseline freeze. 5 audit gates PASS. |
-## docs/phase-3/ â€” Reserved: NTFS Volume Image, VSS, Block Backup
+| P-00_File_Backup_Repository_Data_Contract.md | **AUTHORITATIVE** | P-00 File Backup Repository Data Contract v0.7. Defines Restore Point state machine, Catalog Path Security Contract, crash recovery rules, Gate 1-6 definitions. |
+## docs/phase-3/ ¡ª Reserved: NTFS Volume Image, VSS, Block Backup
 
 *(reserved)*
 
 ---
 
-## docs/phase-4/ â€” Reserved: WinPE Recovery Media, System Restore
+## docs/phase-4/ ¡ª Reserved: WinPE Recovery Media, System Restore
 
 *(reserved)*
 
 ---
 
-## docs/phase-5/ â€” Reserved: Disk Cloning
+## docs/phase-5/ ¡ª Reserved: Disk Cloning
 
 *(reserved)*
 
 ---
 
-## docs/phase-6-plus/ â€” Reserved: Differential, Encryption, Cross-Platform
+## docs/phase-6-plus/ ¡ª Reserved: Differential, Encryption, Cross-Platform
 
 *(reserved)*
 
@@ -211,7 +212,7 @@ The following tasks were completed but do not have individual report files. Thei
 3. Authoritative documents take precedence over Reference documents.
 4. If documents conflict, higher-priority documents (lower number) win.
 5. AGENTS.md at project root is the highest-priority operational document.
-## docs/phase-2/ â€” Phase 2: CLI Usability + GUI Dashboard (CLOSED)
+## docs/phase-2/ ¡ª Phase 2: CLI Usability + GUI Dashboard (CLOSED)
 
 | Document | Authority | Purpose |
 |----------|-----------|---------|
@@ -226,30 +227,30 @@ The following tasks were completed but do not have individual report files. Thei
 
 | Task | Status |
 |:----:|:------:|
-| T2-01 â€” Config / Job | âœ… DONE / PASS |
-| T2-02 â€” Backup History / SQLite | âœ… DONE / PASS |
-| T2-03 â€” CLI Output Enhancement | âœ… DONE / PASS |
-| T2-04 â€” Retention / Prune | âœ… DONE / PASS |
-| T2-05 â€” Windows Task Scheduler | âœ… DONE / PASS |
-| T2-06 â€” SMB / UNC Path | âœ… DONE / PASS |
-| T2-07 â€” GUI Scaffold | âœ… DONE / PASS |
-| T2-08 â€” GUI Dashboard | âœ… DONE / PASS |
-| T2-09 â€” GUI Clone Placeholder | âœ… DONE / PASS |
+| T2-01 ¡ª Config / Job | ? DONE / PASS |
+| T2-02 ¡ª Backup History / SQLite | ? DONE / PASS |
+| T2-03 ¡ª CLI Output Enhancement | ? DONE / PASS |
+| T2-04 ¡ª Retention / Prune | ? DONE / PASS |
+| T2-05 ¡ª Windows Task Scheduler | ? DONE / PASS |
+| T2-06 ¡ª SMB / UNC Path | ? DONE / PASS |
+| T2-07 ¡ª GUI Scaffold | ? DONE / PASS |
+| T2-08 ¡ª GUI Dashboard | ? DONE / PASS |
+| T2-09 ¡ª GUI Clone Placeholder | ? DONE / PASS |
 
 ### Phase 2 Deferred Items
 
 | Item | Reason |
 |------|--------|
-| GUI Backup page (stub) | User decision â€” stop at Dashboard baseline |
-| GUI Restore page (stub) | User decision â€” stop at Dashboard baseline |
-| GUI History page (stub) | User decision â€” stop at Dashboard baseline |
-| GUI Schedule page (stub) | User decision â€” stop at Dashboard baseline |
-| GUI Settings page (stub) | User decision â€” stop at Dashboard baseline |
+| GUI Backup page (stub) | User decision ¡ª stop at Dashboard baseline |
+| GUI Restore page (stub) | User decision ¡ª stop at Dashboard baseline |
+| GUI History page (stub) | User decision ¡ª stop at Dashboard baseline |
+| GUI Schedule page (stub) | User decision ¡ª stop at Dashboard baseline |
+| GUI Settings page (stub) | User decision ¡ª stop at Dashboard baseline |
 
 **Phase 2: CLOSED / ACCEPTED WITH KNOWN LIMITATIONS**
 **Phase 3 coding is NOT authorized without explicit user approval.**
 
-## docs/phase-3/ â€” Phase 3: NTFS Non-System Volume Image MVP (PLANNING)
+## docs/phase-3/ ¡ª Phase 3: NTFS Non-System Volume Image MVP (PLANNING)
 
 | Document | Authority | Purpose |
 |----------|-----------|---------|
@@ -259,22 +260,23 @@ The following tasks were completed but do not have individual report files. Thei
 
 | Task | Status |
 |:----:|:------:|
-| T3-00 â€” Scope Reset & Documentation | âœ… DONE / PASS |
-| T3-01 â€” .nwb v0.2 Format + Block SHA-256 | â³ NOT STARTED |
-| T3-02 â€” VSS Snapshot Lifecycle Proof | â³ NOT STARTED |
-| T3-03 â€” Non-System NTFS Volume Backup CLI | â³ NOT STARTED |
-| T3-04 â€” Non-System NTFS Volume Restore CLI | â³ NOT STARTED |
-| T3-CLOSE â€” Phase 3 Final Validation | â³ NOT STARTED |
+| T3-00 ¡ª Scope Reset & Documentation | ? DONE / PASS |
+| T3-01 ¡ª .nwb v0.2 Format + Block SHA-256 | ? NOT STARTED |
+| T3-02 ¡ª VSS Snapshot Lifecycle Proof | ? NOT STARTED |
+| T3-03 ¡ª Non-System NTFS Volume Backup CLI | ? NOT STARTED |
+| T3-04 ¡ª Non-System NTFS Volume Restore CLI | ? NOT STARTED |
+| T3-CLOSE ¡ª Phase 3 Final Validation | ? NOT STARTED |
 
 ### Phase 3.5/4 Status
 
 | Phase | Scope | Status |
 |-------|-------|:------:|
-| Phase 2.5 | Tauri desktop GUI + Application Layer | âœ… IN PROGRESS (152 tests, 14 Tauri commands, 5 services, 4 active pages) |
-| Phase 3.5 | GUI volume pages, GPT/MBR, boot partition, dynamic disk/RAID, BCD design | âŒ NOT AUTHORIZED |
-| Phase 4 | System recovery / WinPE / BMR | âŒ NOT AUTHORIZED |
-| Phase 5 | Disk clone | âŒ NOT AUTHORIZED |
-| Phase 6+ | Differential, encryption, cross-platform | âŒ NOT AUTHORIZED |
+| Phase 2.5 | Tauri desktop GUI + Application Layer | ? IN PROGRESS (152 tests, 14 Tauri commands, 5 services, 4 active pages) |
+| Phase 3.5 | GUI volume pages, GPT/MBR, boot partition, dynamic disk/RAID, BCD design | ? NOT AUTHORIZED |
+| Phase 4 | System recovery / WinPE / BMR | ? NOT AUTHORIZED |
+| Phase 5 | Disk clone | ? NOT AUTHORIZED |
+| Phase 6+ | Differential, encryption, cross-platform | ? NOT AUTHORIZED |
 
 **Phase 3 is in PLANNING. T3-00 complete. Coding not started.**
+
 
