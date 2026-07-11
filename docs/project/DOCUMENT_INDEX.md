@@ -181,6 +181,7 @@ The following tasks were completed but do not have individual report files. Thei
 | Phase_S_Known_Limitations_and_Roadmap.md | REFERENCE | Phase S known limitations and future roadmap. Updated as features are implemented. |
 | Phase_S_Closing_Report.md | **AUTHORITATIVE** | Phase S closing report. Baseline freeze. 5 audit gates PASS. |
 | P-00_File_Backup_Repository_Data_Contract.md | **AUTHORITATIVE** | P-00 File Backup Repository Data Contract v0.7. Defines Restore Point state machine, Catalog Path Security Contract, crash recovery rules, Gate 1-6 definitions. |
+| P-02_Repository_Restore_Plan.md | **AUTHORITATIVE** | P-02 Repository Restore Reader implementation plan. Defines 14-step preflight, restore algorithm, error semantics, Gate 2-3 test cases (27). |
 ## docs/phase-3/ ¡ª Reserved: NTFS Volume Image, VSS, Block Backup
 
 *(reserved)*

@@ -40,6 +40,9 @@ Before any coding task begins, Codex MUST read these documents in order:
    limitations and risks from Phase 1.
 
 8. **docs/phase-1/Phase_1_to_Phase_2_Handoff.md** ！ Phase handoff boundary.
+9. **docs/phase-s/P-00_File_Backup_Repository_Data_Contract.md** ！ P-00 File Backup Repository Data Contract v0.7. Defines Restore Point state machine, Catalog Path Security Contract, crash recovery rules, Gate 1-6 definitions.
+10. **docs/phase-s/P-02_Repository_Restore_Plan.md** ！ P-02 Repository Restore Reader implementation plan.
+11. **docs/project/DOCUMENT_INDEX.md** ！ See also full document index with authority levels.
 
 ---
 
@@ -228,7 +231,8 @@ During Task 2.0B (2026-07-05), the following was found and addressed:
 
 Before any coding task begins, Codex MUST now also read:
 
-9. **docs/phase-2/Phase_2_Planning_Source_Baseline.md** ！ Phase 2 planning authority baseline, confirmed/optional/forbidden scope.
+9. **docs/phase-s/P-02_Repository_Restore_Plan.md** ！ P-02 Repository Restore Reader implementation plan. 14-step preflight, restore algorithm, error semantics, Gate 2-3 test cases.
+10. **docs/phase-2/Phase_2_Planning_Source_Baseline.md** ！ Phase 2 planning authority baseline, confirmed/optional/forbidden scope.
 
 
 ## 10. Phase 2 UI Decision (Task 2.0B Updated)
@@ -750,7 +754,52 @@ nuwa backup --source <path> --repo <path> [--compress] [--json]
 
 ### Remaining (P-02+)
 
-- P-02: Repository Restore from catalog + block_map + block_store
+- P-02: Repository Restore Reader (See Sect 18)
 - P-03: Repository Verify CLI
 - Gate 5: Application Layer + Tauri UI integration
 - Gate 6: Flat File code removal
+
+## 18. P-02 ！ Repository Restore Reader
+
+**Status:** PLANNED
+**Plan Document:** docs/phase-s/P-02_Repository_Restore_Plan.md
+
+### Scope
+
+- P-02a: Repository Preflight + Restore Point Identity & Integrity Validation (14-step)
+- P-02b: Catalog Entry Validation (entry_type strict, extent verification)
+- P-02c: Streaming File Restore (sequential write_all, SHA-256, atomic rename)
+- P-02d: Directory Restore (per-ancestor dir guard, empty dir preservation)
+- P-02e: Full & Selective Restore + RestoreOutcome (Complete/Partial)
+- P-02f: Gate 2 & 3 Tests (27 test cases)
+
+### Key Design Decisions
+
+| Decision | Detail |
+|----------|--------|
+| Only COMMITTED Restore Points eligible | Any other status ★ reject |
+| 14-step Preflight before any data read | Identity + 4-way metadata integrity check |
+| Integrity errors = hard Err | Path escape, hash mismatch, block corruption |
+| IO errors = soft fail (RestoreOutcome::Partial) | Single-file failure recorded in summary |
+| Sequential write_all (no write_at) | Cross-platform safety, no sparse assumption |
+| Windows atomic replace via ReplaceFileW | Overwrite safety on Windows |
+| Per-ancestor dir guard (no create_dir_all) | Reject symlink/junction/reparse at every level |
+| Shared path module (path_security.rs) | Writer + Reader use same security rules |
+
+### New Modules
+
+| Module | File | Purpose |
+|--------|------|---------|
+| M1 | src/repository/path_security.rs | validate_catalog_relative_path, prepare_restore_file_target, prepare_restore_directory |
+| M2 | src/repository/repo_manager.rs | RestorePointRecord struct, get_restore_point() API |
+| P-02 main | src/repository/file_restore_reader.rs | FileRestoreReader |
+
+### Dependencies
+
+| ID | Dependency | Status |
+|----|-----------|--------|
+| F1 | SqliteCatalog WAL checkpoint | DEFERRED (P-01 bug) |
+| F2 | CatalogEntryType strict parsing | DEFERRED (P-01 bug) |
+| M1 | path_security.rs | NOT STARTED |
+| M2 | get_restore_point() | NOT STARTED |
+
