@@ -103,7 +103,7 @@ Product scope and boundary decisions are governed by the following authoritative
 
 ## 7. Current Phase
 
-**Current Phase: Phase 2.5 — Tauri Desktop GUI (CLOSED) + Phase S — Repository Engine (CLOSED)**
+**Current Phase: Phase 2.5 — Tauri Desktop GUI (CLOSED) + Phase S — Repository Engine (CLOSED) + Phase P — Repository Migration (ALL COMPLETE)**
 
 Phase 1 (file-level backup CLI), Phase 2 (CLI usability, egui GUI), and Phase 2.5 (Tauri Desktop GUI) are **CLOSED frozen baselines**.
 Phase S (Repository Engine — unified storage foundation) is CLOSED. All 13 tasks (S-01 through S-13) complete. Architecture v1.1 baseline frozen.
@@ -116,6 +116,7 @@ Phase S (Repository Engine — unified storage foundation) is CLOSED. All 13 tas
 | Phase 2 | CLI usability: config, history, scheduler, SMB, UNC, egui GUI | CLOSED |
 | Phase 2.5 | Tauri 2.0 desktop GUI, React frontend, Application Layer | CLOSED |
 | Phase S | Repository Engine (unified storage foundation) | CLOSED |
+| Phase P | Flat File → Repository Migration (P-00C~P-08) | **ALL COMPLETE** |
 
 ### Phase 1 Implemented Scope (Frozen Baseline)
 
@@ -710,6 +711,7 @@ A Phase Closing task must:
 | v5.1 | 2026-07-05 | Added Phase 2 GUI Direction. Confirmed Phase 2 includes local desktop GUI coding (egui+eframe). Acronis True Image-like UI. Clone page as disabled placeholder only. |
 | v7.0 | 2026-07-10 | Phase S CLOSED. All 13 tasks complete. Architecture v1.1 frozen. API freeze review completed. |
 | v5.3 | 2026-07-10 | Inter-page linkage fixes: Dashboard navigation, VITE_MOCK_DATA=false, delete_backup_set history recording, layout 50/50 columns. |
+| v5.4 | 2026-07-12 | Phase P COMPLETE. All P-00C~P-08 tasks done. Flat-file modules deleted. Repository-only architecture. 370 tests. Updated Current Phase. |
 | v5.2 | 2026-07-07 | Phase 2.5 GUI migration: replaced egui+eframe with Tauri 2.0 + React + TypeScript + Vite. Added Application Service Layer (src/app/). Updated Tech Stack to include Tauri/React. |
 
 
@@ -728,7 +730,7 @@ This project (Nüwa Backup) is a **Rust CLI + Desktop GUI application**. The con
 | JSON | serde_json | **CONFIRMED** |
 | SHA-256 | sha2 crate | **CONFIRMED** |
 | Compression | zstd crate (optional, feature-gated) | **CONFIRMED** |
-| Storage | Flat-file directory + JSON manifest (Phase 1); Repository Engine (Phase S+); .nwb experimental (Phase 3+) | **CONFIRMED** |
+| Storage | Flat-file directory + JSON manifest (Phase 1, **DELETED in P-07**); Repository Engine (Phase S+, current); .nwb experimental (Phase 3+) | **CONFIRMED** |
 | Python / FastAPI / SQLAlchemy | **NOT PART OF NÜWA BACKUP** | **EXCLUDED** |
 | Desktop GUI framework | **Tauri 2.0** | **CONFIRMED** |
 | Frontend UI | **React 19 + TypeScript + Vite 6** | **CONFIRMED** |
@@ -759,7 +761,7 @@ The Phase 2 egui implementation was removed and replaced. The following decision
 
 | Decision | Value |
 |----------|-------|
-| GUI coding status | **Phase 2 (egui) CLOSED. Phase 2.5 (Tauri) IN PROGRESS** |
+| GUI coding status | **Phase 2 (egui) CLOSED. Phase 2.5 (Tauri) CLOSED. Phase P integration COMPLETE** |
 | UI direction | **Acronis True Image-like local desktop GUI** |
 | Desktop framework | **Tauri 2.0** |
 | Frontend | **React 19 + TypeScript + Vite 6** |
@@ -831,7 +833,7 @@ Rules:
 - Verify Engine (three-level verification)
 - Retention Engine (logical deletion + orphan candidates)
 - Recovery module (repo.db scan-based rebuild)
-- Legacy adapter (flat-file read-only)
+- Legacy adapter (flat-file read-only) **(DELETED in P-07)**
 - Repository CLI (repo init/check/verify/rebuild)
 
 **Forbidden in Phase S:**
@@ -855,7 +857,7 @@ Rules:
 
 ### Phase 2.5 Current State
 
-**Latest Commit:** `(T2.5-05 — Phase S GUI Integration complete, pending commit)`
+**Latest Commit:** `(P-08 — Full regression + residual scan complete. 370 tests passing)`
 
 **T2.5-04D — Backup Content Browser (COMMITTED)
 T2.5-05 — Phase S GUI Integration (Repository Management in Settings, RestoreProvider, Backup Plan storage_type) — COMMITTED
@@ -903,7 +905,7 @@ T2.5-05 — Phase S GUI Integration (Repository Management in Settings, RestoreP
 
 The following are common mistakes that must be avoided:
 
-1. Phase 2.5 and Phase S are **CLOSED** frozen baselines. Phase 3 (Volume Backup Foundation) is the next phase for planning.
+1. Phase 2.5, Phase S, and Phase P are **CLOSED** frozen baselines. Phase 3 (Volume Backup Foundation) is the next phase for planning.
 2. **VITE_MOCK_DATA** must be `false` for real backend testing. When true, all API layers return isolated mock data and inter-page data flow will not work.
 3. **delete_backup_set** operations are recorded in History as a new `delete_backup_set` record. The backend reads manifest.json metadata before deleting.
 4. **Dashboard navigation** — "Run Backup Now" and "Restore Files" navigate to respective pages via App.tsx -> Dashboard -> HeroCard prop chain.

@@ -42,7 +42,6 @@ pub struct RepoHandle {
     pub nuwarepo_dir: PathBuf,
     pub block_store_dir: PathBuf,
     pub instances_dir: PathBuf,
-    pub legacy_dir: PathBuf,
     pub repo_db_path: PathBuf,
     pub info: RepositoryInfo,
 }
@@ -174,7 +173,6 @@ fn create_directory_structure(root: &Path) -> Result<(), RepositoryError> {
         root.join(".nuwarepo"),
         root.join("block-store"),
         root.join("backup-instances"),
-        root.join("legacy"),
     ];
 
     for dir in &dirs {
@@ -295,7 +293,6 @@ pub fn init_repo(root: &Path, block_size: u32) -> Result<RepoHandle, RepositoryE
         nuwarepo_dir: root.join(".nuwarepo"),
         block_store_dir: root.join("block-store"),
         instances_dir: root.join("backup-instances"),
-        legacy_dir: root.join("legacy"),
         repo_db_path: db_path,
         info: RepositoryInfo {
             version: 1,
@@ -448,7 +445,6 @@ pub fn open_repo(root: &Path) -> Result<RepoHandle, RepositoryError> {
         nuwarepo_dir: root.join(".nuwarepo"),
         block_store_dir: root.join("block-store"),
         instances_dir: root.join("backup-instances"),
-        legacy_dir: root.join("legacy"),
         repo_db_path: db_path,
         info: RepositoryInfo {
             version: version_num,
@@ -587,7 +583,6 @@ mod tests {
         assert!(handle.nuwarepo_dir.exists());
         assert!(handle.block_store_dir.exists());
         assert!(handle.instances_dir.exists());
-        assert!(handle.legacy_dir.exists());
         assert!(handle.repo_db_path.exists());
     }
 

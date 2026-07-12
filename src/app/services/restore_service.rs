@@ -9,7 +9,7 @@
 //
 // This service is the single entry point for all restore operations.
 // It delegates to RestoreProvider implementations for each storage backend.
-// UI contract is unchanged. Phase 1/2 flat-file behavior is preserved.
+// P-07: Repository-only. All restore operations use Repository Engine.
 // ============================================================================
 
 use std::time::Instant;
@@ -18,22 +18,16 @@ use crate::app::error::AppError;
 use crate::app::models::restore::{
     RestoreOperationResult, RestorePointView, RestorePreview, RestoreRequest,
 };
-use crate::app::services::restore_provider::{
-    FlatFileRestoreProvider, RepositoryRestoreProvider, RestoreProvider,
-};
+use crate::app::services::restore_provider::{RepositoryRestoreProvider, RestoreProvider};
 use crate::history::{HistoryDb, OperationRecord};
 
 // ---------------------------------------------------------------------------
 // Providers
 // ---------------------------------------------------------------------------
 
-/// All registered restore providers. Order matters: FlatFile first (fast path).
+/// All registered restore providers (Repository Engine only).
 fn all_providers() -> Vec<Box<dyn RestoreProvider>> {
-    vec![
-        Box::new(FlatFileRestoreProvider),
-        #[cfg(feature = "repository")]
-        Box::new(RepositoryRestoreProvider),
-    ]
+    vec![Box::new(RepositoryRestoreProvider)]
 }
 
 /// Find the provider that can handle a specific backup_id.
@@ -53,8 +47,7 @@ fn provider_for_backup(backup_id: &str) -> Result<Box<dyn RestoreProvider>, AppE
 // Public API (unchanged contract)
 // ---------------------------------------------------------------------------
 
-/// List all available restore points across all configured jobs and all
-/// storage backends (flat-file, repository, etc.).
+/// List all available restore points across all configured jobs.
 ///
 /// Returns restore points sorted by timestamp (newest first).
 /// Returns an empty Vec if no restore points are found.
@@ -141,7 +134,6 @@ pub fn execute_restore(request: RestoreRequest) -> Result<RestoreOperationResult
 /// Delete a backup set by backup_id.
 ///
 /// Finds the provider that owns this backup_id and delegates deletion.
-/// Flat-file: removes backup directory + history records.
 /// Repository: removes instance directory + history records (does NOT run GC).
 pub fn delete_backup_set(backup_id: &str) -> Result<(), AppError> {
     let provider = provider_for_backup(backup_id)?;

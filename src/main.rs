@@ -26,169 +26,51 @@ fn main() {
         },
         Command::Backup {
             source,
-            dest,
+            dest: _dest,
             compress,
             job,
             #[cfg(feature = "repository")]
             repo,
             json_output,
         } => {
-            let start = std::time::Instant::now();
-            let job_name = job.clone();
+            let _job_name = job.clone();
             #[cfg(feature = "repository")]
-            if let Some(ref repo_path) = repo {
-                let exit_code =
-                    execute_repo_backup(repo_path, &source.unwrap(), compress, json_output);
-                process::exit(exit_code as i32);
-            }
-            let (resolved_source, resolved_dest, resolved_compress) =
-                match resolve_backup_params(source, dest, compress, job.as_deref()) {
-                    Ok((ref src, ref dst, ref comp)) => {
-                        // Validate destination path
-                        if let Err(e) = nuwa_backup::path_support::validate_repository_path(dst) {
-                            if json_output {
-                                let out =
-                                    cli_output::JsonOutput::failure("backup", &e.to_string(), 0);
-                                let code = cli_output::print_json_compact(&out);
-                                process::exit(code as i32);
-                            }
-                            eprintln!("{}", e);
-                            process::exit(ExitCode::from(&e) as i32);
-                        }
-                        if let Err(e) = nuwa_backup::path_support::preflight_dest_check(dst) {
-                            if json_output {
-                                let out =
-                                    cli_output::JsonOutput::failure("backup", &e.to_string(), 0);
-                                let code = cli_output::print_json_compact(&out);
-                                process::exit(code as i32);
-                            }
-                            eprintln!("{}", e);
-                            process::exit(ExitCode::from(&e) as i32);
-                        }
-                        (src.clone(), dst.clone(), *comp)
-                    }
-                    Err(e) => {
-                        if json_output {
-                            let out = cli_output::JsonOutput::failure("backup", &e.to_string(), 0);
-                            let code = cli_output::print_json_compact(&out);
-                            process::exit(code as i32);
-                        }
-                        eprintln!("{}", e);
-                        process::exit(ExitCode::from(&e) as i32);
+            {
+                let repo_path = match repo {
+                    Some(ref p) => p.as_path(),
+                    None => {
+                        eprintln!("Error: --repo <path> is required for backup.");
+                        process::exit(ExitCode::InvalidArgs as i32);
                     }
                 };
-            let result = nuwa_backup::backup::execute_backup(
-                &resolved_source,
-                &resolved_dest,
-                resolved_compress,
-            );
-            let duration_ms = start.elapsed().as_millis() as u64;
-            match result {
-                Ok(dir) => {
-                    let dir_path = std::path::Path::new(&dir);
-                    let mut file_count = 0u64;
-                    let mut total_bytes = 0u64;
-                    let mut backup_id = String::new();
-                    if let Some(parent) = dir_path.parent() {
-                        let summaries = nuwa_backup::list::execute_list(parent).ok();
-                        let dir_name = dir_path
-                            .file_name()
-                            .unwrap_or_default()
-                            .to_string_lossy()
-                            .to_string();
-                        let backup_info = summaries
-                            .and_then(|s| s.into_iter().find(|bp| bp.dir_name == dir_name));
-                        if let Some(info) = backup_info {
-                            file_count = info.file_count;
-                            total_bytes = info.total_bytes;
-                            backup_id = info.backup_id.clone();
-                            record_operation_history(
-                                &info.backup_id,
-                                "backup",
-                                &resolved_source.to_string_lossy(),
-                                &resolved_dest,
-                                job_name.as_deref(),
-                                info.file_count,
-                                info.total_bytes,
-                                duration_ms,
-                                0,
-                                "success",
-                            );
-                        }
-                    }
-
-                    if json_output {
-                        let mut out = cli_output::JsonOutput::success(
-                            "backup",
-                            "Backup completed",
-                            duration_ms,
-                        );
-                        out.backup_point = Some(dir);
-                        out.file_count = Some(file_count);
-                        out.total_bytes = Some(total_bytes);
-                        out.backup_id = Some(backup_id);
-                        let code = cli_output::print_json_compact(&out);
-                        process::exit(code as i32);
-                    }
-
-                    println!("[OK] Backup completed. Backup point: {}", dir);
-                    cli_output::print_backup_summary(&dir, file_count, total_bytes, duration_ms);
-
-                    // Auto-prune if job has retention policy
-                    if let Some(ref jn) = job_name {
-                        if let Ok(config) = nuwa_backup::config::Config::load() {
-                            if let Ok((_, job_cfg)) = config.find_job(Some(jn)) {
-                                if let Some(ref retention) = job_cfg.retention {
-                                    match nuwa_backup::prune::execute_prune(
-                                        &resolved_dest,
-                                        retention.keep_count,
-                                        retention.keep_days,
-                                        false,
-                                    ) {
-                                        Ok(prune_result) => {
-                                            if prune_result.deleted_count > 0 {
-                                                println!(
-                                                    "  Retention: pruned {} old backup point(s)",
-                                                    prune_result.deleted_count
-                                                );
-                                            }
-                                        }
-                                        Err(e) => {
-                                            eprintln!("  [WARNING] Auto-prune failed: {}", e);
-                                        }
-                                    }
+                let src_path = match source {
+                    Some(ref s) => s.clone(),
+                    None => {
+                        if let Some(ref jn) = job {
+                            if let Ok(config) = nuwa_backup::config::Config::load() {
+                                if let Ok((_, job_cfg)) = config.find_job(Some(jn)) {
+                                    job_cfg.source.clone()
+                                } else {
+                                    eprintln!("Error: Job not found in config.");
+                                    process::exit(ExitCode::InvalidArgs as i32);
                                 }
+                            } else {
+                                eprintln!("Error: --source <path> or --job <name> is required.");
+                                process::exit(ExitCode::InvalidArgs as i32);
                             }
+                        } else {
+                            eprintln!("Error: --source <path> or --job <name> is required.");
+                            process::exit(ExitCode::InvalidArgs as i32);
                         }
                     }
-
-                    ExitCode::Success
-                }
-                Err(e) => {
-                    let error_msg = e.to_string();
-                    record_operation_history(
-                        &format!("failed-{}", chrono::Utc::now().format("%Y%m%d_%H%M%S")),
-                        "backup",
-                        &resolved_source.to_string_lossy(),
-                        &resolved_dest,
-                        job_name.as_deref(),
-                        0,
-                        0,
-                        duration_ms,
-                        ExitCode::from(&e) as i32,
-                        "failure",
-                    );
-
-                    if json_output {
-                        let out =
-                            cli_output::JsonOutput::failure("backup", &error_msg, duration_ms);
-                        let code = cli_output::print_json_compact(&out);
-                        process::exit(code as i32);
-                    }
-
-                    eprintln!("[ERROR] Backup failed: {}", error_msg);
-                    ExitCode::from(&e)
-                }
+                };
+                let exit_code = execute_repo_backup(repo_path, &src_path, compress, json_output);
+                process::exit(exit_code as i32);
+            }
+            #[cfg(not(feature = "repository"))]
+            {
+                eprintln!("Error: --repo is required. Build with --features repository.");
+                process::exit(ExitCode::InvalidArgs as i32);
             }
         }
         Command::Restore {
@@ -198,214 +80,123 @@ fn main() {
             json_output,
         } => {
             let start = std::time::Instant::now();
-            // Validate restore destination path
-            if let Err(e) = nuwa_backup::path_support::validate_repository_path(&dest) {
-                if json_output {
-                    let out = cli_output::JsonOutput::failure("restore", &e.to_string(), 0);
-                    let code = cli_output::print_json_compact(&out);
-                    process::exit(code as i32);
-                }
-                eprintln!("{}", e);
-                process::exit(ExitCode::from(&e) as i32);
-            }
-            let src_info = nuwa_backup::storage::read_manifest(&backup).ok();
-            let result = nuwa_backup::restore::execute_restore(&backup, &dest, overwrite);
-            let duration_ms = start.elapsed().as_millis() as u64;
-            match result {
-                Ok(r) => {
-                    let (exit_code, status) = if r.checksum_failures > 0 {
-                        (ExitCode::RestoreFailure as i32, "partial")
-                    } else {
-                        (0, "success")
+            #[cfg(feature = "repository")]
+            {
+                let repo = match nuwa_backup::repository::open_repo(&backup) {
+                    Ok(h) => h,
+                    Err(e) => {
+                        let msg = format!("Cannot open repository: {}", e);
+                        if json_output {
+                            let out = cli_output::JsonOutput::failure("restore", msg.as_str(), 0);
+                            let code = cli_output::print_json_compact(&out);
+                            process::exit(code as i32);
+                        }
+                        eprintln!("{}", msg);
+                        process::exit(ExitCode::GeneralFailure as i32);
+                    }
+                };
+                let point_id = match find_latest_committed_restore_point(&repo) {
+                    Ok(Some(id)) => id,
+                    Ok(None) => {
+                        let msg = "No COMMITTED restore points found in repository.";
+                        if json_output {
+                            let out = cli_output::JsonOutput::failure("restore", msg, 0);
+                            let code = cli_output::print_json_compact(&out);
+                            process::exit(code as i32);
+                        }
+                        eprintln!("{}", msg);
+                        process::exit(ExitCode::RestoreFailure as i32);
+                    }
+                    Err(e) => {
+                        let msg1 = format!("Failed to query restore points: {}", e);
+                        if json_output {
+                            let out = cli_output::JsonOutput::failure("restore", msg1.as_str(), 0);
+                            let code = cli_output::print_json_compact(&out);
+                            process::exit(code as i32);
+                        }
+                        eprintln!("{}", msg1);
+                        process::exit(ExitCode::GeneralFailure as i32);
+                    }
+                };
+                let reader =
+                    match nuwa_backup::repository::file_restore_reader::FileRestoreReader::open(
+                        &repo, &point_id,
+                    ) {
+                        Ok(r) => r,
+                        Err(e) => {
+                            let msg2 = format!("Cannot open restore reader: {}", e);
+                            if json_output {
+                                let out =
+                                    cli_output::JsonOutput::failure("restore", msg2.as_str(), 0);
+                                let code = cli_output::print_json_compact(&out);
+                                process::exit(code as i32);
+                            }
+                            eprintln!("{}", msg2);
+                            process::exit(ExitCode::GeneralFailure as i32);
+                        }
                     };
-                    let backup_id = src_info
-                        .as_ref()
-                        .map(|m| m.backup_id.clone())
-                        .unwrap_or_else(|| "unknown".to_string());
-                    let source_root = src_info
-                        .as_ref()
-                        .map(|m| m.source_root.clone())
-                        .unwrap_or_else(|| "unknown".to_string());
-                    record_operation_history(
-                        &backup_id,
-                        "restore",
-                        &source_root,
-                        &dest,
-                        None,
-                        r.restored_count,
-                        0,
-                        duration_ms,
-                        exit_code,
-                        status,
-                    );
-
-                    if json_output {
-                        let mut out = cli_output::JsonOutput::success(
-                            "restore",
-                            "Restore completed",
-                            duration_ms,
-                        );
-                        out.restored_count = Some(r.restored_count);
-                        out.skipped_count = Some(r.skipped_count);
-                        out.checksum_failures = Some(r.checksum_failures);
-                        out.backup_id = Some(backup_id);
-                        let code = cli_output::print_json_compact(&out);
-                        process::exit(code as i32);
+                match reader.restore_all(&dest, overwrite) {
+                    Ok(outcome) => {
+                        let duration_ms = start.elapsed().as_millis() as u64;
+                        let (summary_r, status_r) = match &outcome {
+                            nuwa_backup::repository::file_restore_reader::RestoreOutcome::Complete(s) => (s, "complete"),
+                            nuwa_backup::repository::file_restore_reader::RestoreOutcome::Partial(s) => (s, "partial"),
+                        };
+                        if json_output {
+                            let msg3 = format!(
+                                r#"{{"restore_point_id":"{}","files_restored":{},"directories_restored":{},"total_bytes_restored":{},"status":"{}"}}"#,
+                                summary_r.point_id,
+                                summary_r.files_restored,
+                                summary_r.directories_restored,
+                                summary_r.total_bytes_restored,
+                                status_r
+                            );
+                            let out =
+                                cli_output::JsonOutput::success("restore", &msg3, duration_ms);
+                            let code = cli_output::print_json_compact(&out);
+                            process::exit(code as i32);
+                        }
+                        println!("[OK] Restore completed.");
+                        println!("  Restore Point: {}", summary_r.point_id);
+                        println!("  Files restored: {}", summary_r.files_restored);
+                        println!("  Directories restored: {}", summary_r.directories_restored);
+                        println!("  Total bytes: {}", summary_r.total_bytes_restored);
+                        if summary_r.failed_files.is_empty() {
+                            ExitCode::Success
+                        } else {
+                            println!("  Failed files: {}", summary_r.failed_files.len());
+                            ExitCode::RestoreFailure
+                        }
                     }
-
-                    if r.checksum_failures > 0 {
-                        eprintln!("[ERROR] Checksum validation failed");
-                    } else {
-                        println!("[OK] Restore completed!");
+                    Err(e) => {
+                        let duration_ms2 = start.elapsed().as_millis() as u64;
+                        let msg4 = format!("Restore failed: {}", e);
+                        if json_output {
+                            let out = cli_output::JsonOutput::failure(
+                                "restore",
+                                msg4.as_str(),
+                                duration_ms2,
+                            );
+                            let code = cli_output::print_json_compact(&out);
+                            process::exit(code as i32);
+                        }
+                        eprintln!("[ERROR] {}", msg4);
+                        ExitCode::GeneralFailure
                     }
-                    cli_output::print_restore_summary(
-                        r.restored_count,
-                        r.skipped_count,
-                        r.checksum_failures,
-                        duration_ms,
-                    );
-                    if r.checksum_failures > 0 {
-                        ExitCode::RestoreFailure
-                    } else {
-                        ExitCode::Success
-                    }
-                }
-                Err(e) => {
-                    let error_msg = e.to_string();
-                    let backup_id = src_info
-                        .as_ref()
-                        .map(|m| m.backup_id.clone())
-                        .unwrap_or_else(|| "unknown".to_string());
-                    let source_root = src_info
-                        .as_ref()
-                        .map(|m| m.source_root.clone())
-                        .unwrap_or_else(|| "unknown".to_string());
-                    record_operation_history(
-                        &backup_id,
-                        "restore",
-                        &source_root,
-                        &dest,
-                        None,
-                        0,
-                        0,
-                        duration_ms,
-                        ExitCode::from(&e) as i32,
-                        "failure",
-                    );
-
-                    if json_output {
-                        let out =
-                            cli_output::JsonOutput::failure("restore", &error_msg, duration_ms);
-                        let code = cli_output::print_json_compact(&out);
-                        process::exit(code as i32);
-                    }
-
-                    eprintln!("[ERROR] Restore failed: {}", error_msg);
-                    ExitCode::from(&e)
                 }
             }
-        }
-        Command::Verify {
-            backup,
-            json_output,
-        } => {
-            let start = std::time::Instant::now();
-            // Validate backup path
-            if let Err(e) = nuwa_backup::path_support::validate_repository_path(&backup) {
-                if json_output {
-                    let out = cli_output::JsonOutput::failure("verify", &e.to_string(), 0);
-                    let code = cli_output::print_json_compact(&out);
-                    process::exit(code as i32);
-                }
-                eprintln!("{}", e);
-                process::exit(ExitCode::from(&e) as i32);
-            }
-            let src_info = nuwa_backup::storage::read_manifest(&backup).ok();
-            let result = nuwa_backup::verify::execute_verify(&backup);
-            let duration_ms = start.elapsed().as_millis() as u64;
-            match result {
-                Ok(r) => {
-                    if json_output {
-                        let mut out = cli_output::JsonOutput::success(
-                            "verify",
-                            "Verification passed",
-                            duration_ms,
-                        );
-                        out.total_bytes = None;
-                        out.passed = Some(r.passed);
-                        out.failed = Some(r.failed);
-                        out.inaccessible = Some(r.inaccessible);
-                        out.file_count = Some(r.total_files);
-                        let bid = src_info
-                            .as_ref()
-                            .map(|m| m.backup_id.clone())
-                            .unwrap_or_default();
-                        out.backup_id = Some(bid);
-                        let code = cli_output::print_json_compact(&out);
-                        process::exit(code as i32);
-                    }
-                    cli_output::print_verify_summary(
-                        r.total_files,
-                        r.passed,
-                        r.failed,
-                        r.inaccessible,
-                    );
-                    ExitCode::Success
-                }
-                Err(e) => {
-                    let error_msg = e.to_string();
-                    if json_output {
-                        let out =
-                            cli_output::JsonOutput::failure("verify", &error_msg, duration_ms);
-                        let code = cli_output::print_json_compact(&out);
-                        process::exit(code as i32);
-                    }
-                    eprintln!("[ERROR] Verification failed: {}", error_msg);
-                    ExitCode::from(&e)
-                }
-            }
-        }
-        Command::List { dest, json_output } => {
-            // Validate repository path
-            if let Err(e) = nuwa_backup::path_support::validate_repository_path(&dest) {
-                if json_output {
-                    let out = cli_output::JsonOutput::failure("list", &e.to_string(), 0);
-                    let code = cli_output::print_json_compact(&out);
-                    process::exit(code as i32);
-                }
-                eprintln!("{}", e);
-                process::exit(ExitCode::from(&e) as i32);
-            }
-            match nuwa_backup::list::execute_list(&dest) {
-                Ok(s) => {
-                    if json_output {
-                        let mut out = cli_output::JsonOutput::success("list", "List completed", 0);
-                        let points: Vec<cli_output::BackupPointJson> =
-                            s.iter().map(|bp| bp.into()).collect();
-                        out.backup_points = Some(points);
-                        let code = cli_output::print_json_compact(&out);
-                        process::exit(code as i32);
-                    }
-                    nuwa_backup::list::print_list(&s);
-                    ExitCode::Success
-                }
-                Err(e) => {
-                    let error_msg = e.to_string();
-                    if json_output {
-                        let out = cli_output::JsonOutput::failure("list", &error_msg, 0);
-                        let code = cli_output::print_json_compact(&out);
-                        process::exit(code as i32);
-                    }
-                    eprintln!("[ERROR] List failed: {}", error_msg);
-                    ExitCode::from(&e)
-                }
+            #[cfg(not(feature = "repository"))]
+            {
+                eprintln!(
+                    "Error: Restore requires repository feature. Build with --features repository."
+                );
+                process::exit(ExitCode::GeneralFailure as i32);
             }
         }
         Command::History {
             dest,
             limit,
             operation,
-            rebuild,
             json_output,
         } => {
             let start = std::time::Instant::now();
@@ -420,19 +211,22 @@ fn main() {
                 process::exit(ExitCode::from(&e) as i32);
             }
             let db_path = nuwa_backup::history::HistoryDb::history_db_path(&dest);
-            if rebuild {
-                match nuwa_backup::history::HistoryDb::rebuild_from_manifest(&dest) {
-                    Ok(count) => {
+            match nuwa_backup::history::HistoryDb::open_or_create(&db_path) {
+                Ok(db) => match db.query_history(limit, operation.as_deref()) {
+                    Ok(records) => {
                         if json_output {
-                            let out = cli_output::JsonOutput::success(
+                            let mut out = cli_output::JsonOutput::success(
                                 "history",
-                                &format!("Rebuilt. {} records imported.", count),
+                                &format!("{} records", records.len()),
                                 start.elapsed().as_millis() as u64,
                             );
+                            let entries: Vec<cli_output::HistoryEntryJson> =
+                                records.iter().map(|r| r.into()).collect();
+                            out.records = Some(entries);
                             let code = cli_output::print_json_compact(&out);
                             process::exit(code as i32);
                         }
-                        println!("[OK] History rebuilt. {} records imported.", count);
+                        nuwa_backup::history::print_history(&records);
                         ExitCode::Success
                     }
                     Err(e) => {
@@ -445,118 +239,21 @@ fn main() {
                             let code = cli_output::print_json_compact(&out);
                             process::exit(code as i32);
                         }
-                        eprintln!("[ERROR] History rebuild failed: {}", e);
+                        eprintln!("[ERROR] History query failed: {}", e);
                         ExitCode::from(&e)
                     }
-                }
-            } else {
-                match nuwa_backup::history::HistoryDb::open_or_create(&db_path) {
-                    Ok(db) => match db.query_history(limit, operation.as_deref()) {
-                        Ok(records) => {
-                            if json_output {
-                                let mut out = cli_output::JsonOutput::success(
-                                    "history",
-                                    &format!("{} records", records.len()),
-                                    start.elapsed().as_millis() as u64,
-                                );
-                                let entries: Vec<cli_output::HistoryEntryJson> =
-                                    records.iter().map(|r| r.into()).collect();
-                                out.records = Some(entries);
-                                let code = cli_output::print_json_compact(&out);
-                                process::exit(code as i32);
-                            }
-                            nuwa_backup::history::print_history(&records);
-                            ExitCode::Success
-                        }
-                        Err(e) => {
-                            if json_output {
-                                let out = cli_output::JsonOutput::failure(
-                                    "history",
-                                    &e.to_string(),
-                                    start.elapsed().as_millis() as u64,
-                                );
-                                let code = cli_output::print_json_compact(&out);
-                                process::exit(code as i32);
-                            }
-                            eprintln!("[ERROR] History query failed: {}", e);
-                            ExitCode::from(&e)
-                        }
-                    },
-                    Err(e) => {
-                        if json_output {
-                            let out = cli_output::JsonOutput::failure(
-                                "history",
-                                &e.to_string(),
-                                start.elapsed().as_millis() as u64,
-                            );
-                            let code = cli_output::print_json_compact(&out);
-                            process::exit(code as i32);
-                        }
-                        eprintln!("[ERROR] Cannot open history database: {}", e);
-                        ExitCode::from(&e)
-                    }
-                }
-            }
-        }
-        Command::Prune {
-            dest,
-            keep_count,
-            keep_days,
-            dry_run,
-            json_output,
-        } => {
-            let start = std::time::Instant::now();
-            // Validate repository path
-            if let Err(e) = nuwa_backup::path_support::validate_repository_path(&dest) {
-                if json_output {
-                    let out = cli_output::JsonOutput::failure("prune", &e.to_string(), 0);
-                    let code = cli_output::print_json_compact(&out);
-                    process::exit(code as i32);
-                }
-                eprintln!("{}", e);
-                process::exit(ExitCode::from(&e) as i32);
-            }
-            match nuwa_backup::prune::execute_prune(&dest, keep_count, keep_days, dry_run) {
-                Ok(result) => {
-                    let duration_ms = start.elapsed().as_millis() as u64;
-                    if json_output {
-                        let mut out = if dry_run {
-                            cli_output::JsonOutput::success(
-                                "prune",
-                                "Dry-run completed (no files deleted)",
-                                duration_ms,
-                            )
-                        } else {
-                            cli_output::JsonOutput::success("prune", "Prune completed", duration_ms)
-                        };
-                        out.dry_run = Some(dry_run);
-                        out.deleted_count = Some(result.deleted_count as u64);
-                        out.kept_count = Some(result.kept_count as u64);
-                        out.damaged_count = Some(result.damaged_count as u64);
-                        if !result.deleted_backup_ids.is_empty() {
-                            out.deleted_backup_ids = Some(result.deleted_backup_ids.clone());
-                        }
-                        if !result.kept_backup_ids.is_empty() {
-                            out.kept_backup_ids = Some(result.kept_backup_ids.clone());
-                        }
-                        if !result.warnings.is_empty() {
-                            out.warnings = Some(result.warnings.clone());
-                        }
-                        let code = cli_output::print_json_compact(&out);
-                        process::exit(code as i32);
-                    }
-                    nuwa_backup::prune::print_prune_result(&result);
-                    ExitCode::Success
-                }
+                },
                 Err(e) => {
-                    let duration_ms = start.elapsed().as_millis() as u64;
                     if json_output {
-                        let out =
-                            cli_output::JsonOutput::failure("prune", &e.to_string(), duration_ms);
+                        let out = cli_output::JsonOutput::failure(
+                            "history",
+                            &e.to_string(),
+                            start.elapsed().as_millis() as u64,
+                        );
                         let code = cli_output::print_json_compact(&out);
                         process::exit(code as i32);
                     }
-                    eprintln!("{}", e);
+                    eprintln!("[ERROR] Cannot open history database: {}", e);
                     ExitCode::from(&e)
                 }
             }
@@ -701,78 +398,19 @@ fn execute_repo_backup(
         }
     }
 }
-fn resolve_backup_params(
-    source: Option<std::path::PathBuf>,
-    dest: Option<std::path::PathBuf>,
-    compress: bool,
-    job: Option<&str>,
-) -> Result<(std::path::PathBuf, std::path::PathBuf, bool), nuwa_backup::errors::NuwaError> {
-    if let Some(job_name) = job {
-        let config = nuwa_backup::config::Config::load()?;
-        let (_, job_cfg) = config.find_job(Some(job_name))?;
-        return Ok((
-            job_cfg.source.clone(),
-            job_cfg.dest.clone(),
-            job_cfg.compress,
-        ));
-    }
-    if source.is_none() && dest.is_none() {
-        if let Ok(config) = nuwa_backup::config::Config::load() {
-            if let Ok((_, job_cfg)) = config.find_job(None) {
-                return Ok((
-                    job_cfg.source.clone(),
-                    job_cfg.dest.clone(),
-                    job_cfg.compress,
-                ));
-            }
-        }
-    }
-    let src = source.ok_or_else(|| nuwa_backup::errors::NuwaError::InvalidArgument {
-        detail: "Missing --source argument".to_string(),
-        suggestion: "Use --source [path] or --job [name] to load from config".to_string(),
-    })?;
-    let dst = dest.ok_or_else(|| nuwa_backup::errors::NuwaError::InvalidArgument {
-        detail: "Missing --dest argument".to_string(),
-        suggestion: "Use --dest [path] or --job [name] to load from config".to_string(),
-    })?;
-    Ok((src, dst, compress))
-}
-
-#[allow(clippy::too_many_arguments)]
-fn record_operation_history(
-    backup_id: &str,
-    operation: &str,
-    source_root: &str,
-    dest_path: &std::path::Path,
-    job_name: Option<&str>,
-    file_count: u64,
-    total_bytes: u64,
-    duration_ms: u64,
-    exit_code: i32,
-    status: &str,
-) {
-    let db_path = nuwa_backup::history::HistoryDb::history_db_path(dest_path);
-    match nuwa_backup::history::HistoryDb::open_or_create(&db_path) {
-        Ok(db) => {
-            let record = nuwa_backup::history::OperationRecord {
-                backup_id: backup_id.to_string(),
-                operation: operation.to_string(),
-                timestamp: chrono::Utc::now().to_rfc3339(),
-                source_root: source_root.to_string(),
-                dest_path: dest_path.to_string_lossy().to_string(),
-                job_name: job_name.map(|s| s.to_string()),
-                file_count,
-                total_bytes,
-                duration_ms,
-                exit_code,
-                status: status.to_string(),
-            };
-            if let Err(e) = db.record_operation(&record) {
-                eprintln!("  [WARNING] Failed to record operation history: {}", e);
-            }
-        }
-        Err(e) => {
-            eprintln!("  [WARNING] Cannot open history database: {}", e);
-        }
+#[cfg(feature = "repository")]
+fn find_latest_committed_restore_point(
+    repo: &nuwa_backup::repository::RepoHandle,
+) -> Result<Option<String>, Box<dyn std::error::Error>> {
+    let conn = repo.repo_db()?;
+    let result = conn.query_row(
+        "SELECT point_id FROM restore_points WHERE status = 'COMMITTED' ORDER BY created_at DESC LIMIT 1",
+        [],
+        |row| row.get::<_, String>(0),
+    );
+    match result {
+        Ok(id) => Ok(Some(id)),
+        Err(rusqlite::Error::QueryReturnedNoRows) => Ok(None),
+        Err(e) => Err(e.into()),
     }
 }

@@ -1,13 +1,13 @@
 // ============================================================================
-// backup_service.rs -- Backup domain service
+// backup_service.rs -- Backup domain service (Repository-only)
 //
 // Responsibilities:
 //   - List all configured backup jobs with derived status
-//   - Execute a backup for a given job through the Core Engine
+//   - Execute a backup for a given job through Repository Engine
 //   - Record backup results in the history database
 //
 // This service is the single entry point for all backup operations.
-// It orchestrates config reading, core execution, and history recording.
+// P-07: Flat-file storage has been removed. All backups use Repository Engine.
 // ============================================================================
 
 use std::path::Path;
@@ -15,6 +15,7 @@ use std::time::Instant;
 
 use crate::app::error::AppError;
 use crate::app::models::backup::{BackupJobStatus, BackupJobView, BackupResult};
+use crate::app::services::repo_registry::RepoRegistry;
 use crate::config::{Config, JobConfig};
 use crate::history::{HistoryDb, OperationRecord};
 
@@ -23,13 +24,9 @@ use crate::history::{HistoryDb, OperationRecord};
 // ---------------------------------------------------------------------------
 
 /// List all configured backup jobs with derived status.
-///
-/// Each job's status is derived from its configuration validity and
-/// the last recorded backup operation in the history database.
 pub fn list_jobs() -> Result<Vec<BackupJobView>, AppError> {
     let config = match Config::load() {
         Ok(c) => c,
-        // If no config file exists, return empty list (clean first-time experience)
         Err(_) => return Ok(Vec::new()),
     };
 
@@ -55,12 +52,8 @@ pub fn get_job_detail(name: &str) -> Result<BackupJobView, AppError> {
 
 /// Execute a backup for the given job name.
 ///
-/// Flow:
-///   1. Load config and find the job
-///   2. Validate source and destination paths
-///   3. Call core backup::execute_backup()
-///   4. Record the result in history
-///   5. Return BackupResult
+/// P-07: Repository-only. Jobs must have storage_type="repository"
+/// and a valid repository_id.
 pub fn run_backup(job_name: &str) -> Result<BackupResult, AppError> {
     let config = Config::load().map_err(AppError::from)?;
     let job_cfg = config
@@ -76,45 +69,21 @@ pub fn run_backup(job_name: &str) -> Result<BackupResult, AppError> {
         )));
     }
 
-    let start = Instant::now();
+    // Repository-only: use Repository Engine for backup
+    let repo_id = job_cfg.repository_id.as_deref().ok_or_else(|| {
+        AppError::config(format!(
+            "Job '{}' has no repository_id. All backups now require Repository storage.",
+            job_name
+        ))
+    })?;
 
-    // Execute the backup via core engine
-    let backup_id = crate::backup::execute_backup(&job_cfg.source, &job_cfg.dest, job_cfg.compress)
-        .map_err(|e| {
-            AppError::internal(format!("Backup failed: {}", e)).with_detail(e.to_string())
-        })?;
-
-    let duration_ms = start.elapsed().as_millis() as u64;
-
-    // Record in history
-    let history_result = record_backup_in_history(
-        &backup_id,
+    run_repo_backup(
         job_name,
         &job_cfg.source,
+        repo_id,
         &job_cfg.dest,
-        0, // file_count — unknown from execute_backup return
-        0, // total_bytes — unknown from execute_backup return
-        duration_ms,
-        "success",
-    );
-
-    if let Err(e) = history_result {
-        eprintln!("Warning: failed to record backup history: {}", e);
-    }
-
-    let timestamp = chrono::Local::now()
-        .format("%Y-%m-%dT%H:%M:%S%.3fZ")
-        .to_string();
-
-    Ok(BackupResult {
-        backup_id,
-        timestamp,
-        file_count: 0,
-        total_bytes: 0,
-        duration_ms,
-        status: "success".into(),
-        error: None,
-    })
+        job_cfg.compress,
+    )
 }
 
 /// Run a backup without recording history (for testing/validation).
@@ -146,6 +115,99 @@ pub fn run_backup_dry(job_name: &str) -> Result<BackupResult, AppError> {
 }
 
 // ---------------------------------------------------------------------------
+// Repository backup (Repository Engine only, P-07)
+// ---------------------------------------------------------------------------
+
+/// Execute a backup to a Repository engine.
+///
+/// Lifecycle:
+///   1. Resolve repo path from RepoRegistry
+///   2. Open repo via open_repo()
+///   3. Register job in repo.db
+///   4. Create RepositoryBackupWriter, begin transaction
+///   5. backup_directory() — walk and write all files
+///   6. finalize() — complete all phases and commit
+///   7. Record history with accurate stats
+fn run_repo_backup(
+    job_name: &str,
+    source: &Path,
+    repo_id: &str,
+    dest: &Path,
+    compress: bool,
+) -> Result<BackupResult, AppError> {
+    use crate::repository::{open_repo, RepositoryBackupWriter};
+
+    // 1-2. Resolve and open repository
+    let registry = RepoRegistry::load();
+    let repo_path = registry.resolve_path(repo_id)?;
+
+    let repo = open_repo(&repo_path)
+        .map_err(|e| AppError::internal(format!("Cannot open repository: {}", e)))?;
+
+    let start = Instant::now();
+
+    // 3. Register job in repo.db (idempotent)
+    {
+        let conn = repo
+            .repo_db()
+            .map_err(|e| AppError::internal(format!("Cannot open repo database: {}", e)))?;
+        let _ = conn.execute(
+            "INSERT OR IGNORE INTO backup_jobs (job_id, job_name, source_type, created_at, status) VALUES (?1, ?2, 0, datetime('now'), 'active')",
+            rusqlite::params![job_name, job_name],
+        );
+    }
+
+    // 4-6. Backup pipeline
+    let mut writer = RepositoryBackupWriter::new(&repo, job_name, compress)
+        .map_err(|e| AppError::internal(format!("Cannot create backup writer: {}", e)))?;
+
+    writer
+        .begin()
+        .map_err(|e| AppError::internal(format!("Cannot begin backup transaction: {}", e)))?;
+
+    if let Err(e) = writer.backup_directory(source) {
+        let _ = writer.fail();
+        return Err(AppError::internal(format!("Backup failed: {}", e)));
+    }
+
+    let repo_result = writer
+        .finalize()
+        .map_err(|e| AppError::internal(format!("Backup finalize failed: {}", e)))?;
+
+    let duration_ms = start.elapsed().as_millis() as u64;
+
+    let backup_id = repo_result.point_id;
+    let file_count = repo_result.file_count;
+    let total_bytes = repo_result.total_raw_bytes;
+
+    // 7. Record history
+    let _ = record_backup_in_history(
+        &backup_id,
+        job_name,
+        source,
+        dest,
+        file_count,
+        total_bytes,
+        duration_ms,
+        "success",
+    );
+
+    let timestamp = chrono::Local::now()
+        .format("%Y-%m-%dT%H:%M:%S%.3fZ")
+        .to_string();
+
+    Ok(BackupResult {
+        backup_id,
+        timestamp,
+        file_count,
+        total_bytes,
+        duration_ms,
+        status: "success".into(),
+        error: None,
+    })
+}
+
+// ---------------------------------------------------------------------------
 // Private helpers
 // ---------------------------------------------------------------------------
 
@@ -161,7 +223,6 @@ fn build_job_view(name: &str, cfg: &JobConfig) -> BackupJobView {
         None => "Keep all".into(),
     };
 
-    // Query history for last backup of this job
     let (last_time, last_status, last_files, last_bytes) =
         query_last_backup_for_job(name, &cfg.dest);
 
@@ -197,7 +258,6 @@ fn query_last_backup_for_job(
         Err(_) => return (None, None, 0, 0),
     };
 
-    // Find the most recent backup for this job
     for r in &records {
         if r.job_name.as_deref() == Some(job_name) {
             return (
@@ -214,12 +274,10 @@ fn query_last_backup_for_job(
 
 /// Derive the job's display status from config validity and last backup.
 fn derive_job_status(cfg: &JobConfig, last_status: &Option<String>) -> BackupJobStatus {
-    // Check for misconfiguration
     if !cfg.source.exists() {
         return BackupJobStatus::Misconfigured;
     }
 
-    // Check parent directory of dest exists
     if let Some(parent) = cfg.dest.parent() {
         if !parent.exists() {
             return BackupJobStatus::Misconfigured;

@@ -1,4 +1,4 @@
-// ============================================================================
+﻿// ============================================================================
 // Backup.tsx -- Backup Jobs page (three-column layout)
 //
 // Data flow:
@@ -105,7 +105,7 @@ function PlanForm({ initial, onSave, onCancel, saving, error }: PlanFormProps) {
   const [keepCount, setKeepCount] = useState(initial?.retention_keep_count?.toString() ?? "");
   const [keepDays, setKeepDays] = useState(initial?.retention_keep_days?.toString() ?? "");
   const [scheduleId, setScheduleId] = useState<string | null>(initial?.schedule_id ?? null);
-  const [storageType, setStorageType] = useState<string | null>(initial?.storage_type ?? null);
+  const [storageType, setStorageType] = useState<string | null>(initial?.storage_type ?? "repository");
   const [repositoryId, setRepositoryId] = useState<string | null>(initial?.repository_id ?? null);
   const [repos, setRepos] = useState<RepoInfoResponse[]>([]);
   const [availableSchedules, setAvailableSchedules] = useState<ScheduleProfileView[]>([]);
@@ -113,7 +113,7 @@ function PlanForm({ initial, onSave, onCancel, saving, error }: PlanFormProps) {
 
   useEffect(() => { listSchedules().then((s) => setAvailableSchedules(s)).catch(() => {}); }, []);
   useEffect(() => { listRepos().then((r) => setRepos(r)).catch(() => {}); }, []);
-  useEffect(() => { setStorageType(initial?.storage_type ?? null); setRepositoryId(initial?.repository_id ?? null); }, [initial]);
+  useEffect(() => { setStorageType(initial?.storage_type ?? "repository"); setRepositoryId(initial?.repository_id ?? null); }, [initial]);
 
   const handleSubmit = async () => {
     setFormError(null);
@@ -145,11 +145,10 @@ function PlanForm({ initial, onSave, onCancel, saving, error }: PlanFormProps) {
         <div><label style={labelStyle}>Source Path</label><PathInput value={source} onChange={setSource} placeholder="C:\\Users\\YourName\\Documents" disabled={saving} /></div>
         <div><label style={labelStyle}>Destination Path</label><PathInput value={dest} onChange={setDest} placeholder="D:\\Backups" disabled={saving} /></div>
         <div><label style={labelStyle}>Storage Type</label>
-          <select style={inputStyle} value={storageType || ""} onChange={(e: any) => setStorageType(e.target.value || null)} disabled={saving}>
-            <option value="">Flat File (legacy)</option>
-            <option value="repository">Repository (enterprise)</option>
+          <select style={inputStyle} value="repository" disabled={saving}>
+            <option value="repository">Repository</option>
           </select></div>
-        {storageType === "repository" && (
+        
           <div><label style={labelStyle}>Repository</label>
             <select style={inputStyle} value={repositoryId || ""} onChange={(e: any) => setRepositoryId(e.target.value || null)} disabled={saving}>
               <option value="">-- Select Repository --</option>
@@ -159,7 +158,7 @@ function PlanForm({ initial, onSave, onCancel, saving, error }: PlanFormProps) {
               <p style={{ fontSize: theme.font.sizeXs, color: theme.colors.warning, marginTop: "4px" }}>
                 No repositories available. Create one in Settings first.
               </p>
-            )}
+        
           </div>
         )}
 
@@ -414,3 +413,4 @@ export default function Backup() {
     </div>
   );
 }
+

@@ -75,7 +75,7 @@ File System / SQLite
 
 **Phase S GUI Integration (T2.5-05):**
 - Repository Management in Settings (create/list/verify)
-- RestoreProvider trait with FlatFileRestoreProvider + RepositoryRestoreProvider dispatch
+- RestoreProvider trait with RepositoryRestoreProvider (FlatFileRestoreProvider removed in P-07)
 - Backup Plan extended: storage_type + repository_id fields on JobConfig
 - RepoRegistry: JSON-based repository registration (name/UUID/path)
 - FT-01~FT-05 automated integration tests: 5/5 PASS
@@ -379,7 +379,7 @@ src/
   list.rs          # Backup point listing
   manifest.rs      # JSON manifest model (serde)
   checksum.rs      # SHA-256 helpers
-  storage.rs       # Flat-file storage layout and atomic writes
+  storage.rs       # Flat-file storage layout and atomic writes (deleted in P-07)
   errors.rs        # Error types and exit code mapping
   diskspace.rs     # Win32 GetDiskFreeSpaceExW FFI
   lib.rs           # Module exports

@@ -30,16 +30,6 @@ pub enum Command {
         /// JSON output mode
         json_output: bool,
     },
-    Verify {
-        backup: PathBuf,
-        /// JSON output mode
-        json_output: bool,
-    },
-    List {
-        dest: PathBuf,
-        /// JSON output mode
-        json_output: bool,
-    },
     History {
         /// Backup destination root directory
         dest: PathBuf,
@@ -47,20 +37,6 @@ pub enum Command {
         limit: u32,
         /// Optional operation type filter (backup / restore / verify)
         operation: Option<String>,
-        /// Rebuild history from manifest
-        rebuild: bool,
-        /// JSON output mode
-        json_output: bool,
-    },
-    Prune {
-        /// Backup destination root directory
-        dest: PathBuf,
-        /// Keep last N valid backup points
-        keep_count: Option<u32>,
-        /// Keep backup points from last N days
-        keep_days: Option<u64>,
-        /// Dry-run mode (report only, no deletion)
-        dry_run: bool,
         /// JSON output mode
         json_output: bool,
     },
@@ -101,9 +77,6 @@ impl Command {
             "init" => Self::parse_init(&args[2..]),
             "backup" => Self::parse_backup(&args[2..]),
             "restore" => Self::parse_restore(&args[2..]),
-            "verify" => Self::parse_verify(&args[2..]),
-            "list" => Self::parse_list(&args[2..]),
-            "prune" => Self::parse_prune(&args[2..]),
             "schedule" => Self::parse_schedule(&args[2..]),
             #[cfg(feature = "repository")]
             "repo" => Self::parse_repo(&args[2..]),
@@ -260,67 +233,10 @@ impl Command {
         })
     }
 
-    fn parse_verify(args: &[String]) -> Result<Self, NuwaError> {
-        let mut backup = None;
-        let mut json_output = false;
-        let mut i = 0;
-        while i < args.len() {
-            match args[i].as_str() {
-                "--backup" => {
-                    i += 1;
-                    backup = Some(PathBuf::from(get_string_arg(args, i, "--backup")?));
-                }
-                "--json" => {
-                    json_output = true;
-                }
-                _ => {
-                    return Err(NuwaError::InvalidArgument {
-                        detail: format!("Unknown argument '{}'", args[i]),
-                        suggestion: "Usage: nuwa verify --backup <backup_dir> [--json]".to_string(),
-                    })
-                }
-            }
-            i += 1;
-        }
-        Ok(Command::Verify {
-            backup: backup.ok_or_else(|| missing_param("--backup"))?,
-            json_output,
-        })
-    }
-
-    fn parse_list(args: &[String]) -> Result<Self, NuwaError> {
-        let mut dest = None;
-        let mut json_output = false;
-        let mut i = 0;
-        while i < args.len() {
-            match args[i].as_str() {
-                "--dest" => {
-                    i += 1;
-                    dest = Some(PathBuf::from(get_string_arg(args, i, "--dest")?));
-                }
-                "--json" => {
-                    json_output = true;
-                }
-                _ => {
-                    return Err(NuwaError::InvalidArgument {
-                        detail: format!("Unknown argument '{}'", args[i]),
-                        suggestion: "Usage: nuwa list --dest <backup_root> [--json]".to_string(),
-                    })
-                }
-            }
-            i += 1;
-        }
-        Ok(Command::List {
-            dest: dest.ok_or_else(|| missing_param("--dest"))?,
-            json_output,
-        })
-    }
-
     fn parse_history(args: &[String]) -> Result<Self, NuwaError> {
         let mut dest = None;
         let mut limit: u32 = 10;
         let mut operation: Option<String> = None;
-        let mut rebuild = false;
         let mut json_output = false;
         let mut i = 0;
 
@@ -350,16 +266,13 @@ impl Command {
                     }
                     operation = Some(lower);
                 }
-                "--rebuild" => {
-                    rebuild = true;
-                }
                 "--json" => {
                     json_output = true;
                 }
                 _ => {
                     return Err(NuwaError::InvalidArgument {
                         detail: format!("Unknown argument '{}'", args[i]),
-                        suggestion: "Usage: nuwa history --dest <path> [--limit N] [--operation backup|restore|verify] [--rebuild] [--json]"
+                        suggestion: "Usage: nuwa history --dest <path> [--limit N] [--operation backup|restore|verify] [--json]"
                             .to_string(),
                     })
                 }
@@ -376,89 +289,6 @@ impl Command {
             dest: dest_path,
             limit,
             operation,
-            rebuild,
-            json_output,
-        })
-    }
-
-    fn parse_prune(args: &[String]) -> Result<Self, NuwaError> {
-        let mut dest: Option<PathBuf> = None;
-        let mut keep_count: Option<u32> = None;
-        let mut keep_days: Option<u64> = None;
-        let mut dry_run = false;
-        let mut json_output = false;
-        let mut i = 0;
-
-        while i < args.len() {
-            match args[i].as_str() {
-                "--dest" => {
-                    i += 1;
-                    dest = Some(PathBuf::from(get_string_arg(args, i, "--dest")?));
-                }
-                "--keep-count" => {
-                    i += 1;
-                    let val = get_string_arg(args, i, "--keep-count")?;
-                    keep_count = Some(val.parse::<u32>().map_err(|_| {
-                        NuwaError::InvalidArgument {
-                            detail: format!(
-                                "--keep-count must be a positive integer, got '{}'",
-                                val
-                            ),
-                            suggestion: "Usage: nuwa prune --dest <path> --keep-count N"
-                                .to_string(),
-                        }
-                    })?);
-                }
-                "--keep-days" => {
-                    i += 1;
-                    let val = get_string_arg(args, i, "--keep-days")?;
-                    keep_days = Some(val.parse::<u64>().map_err(|_| {
-                        NuwaError::InvalidArgument {
-                            detail: format!(
-                                "--keep-days must be a positive integer, got '{}'",
-                                val
-                            ),
-                            suggestion: "Usage: nuwa prune --dest <path> --keep-days N"
-                                .to_string(),
-                        }
-                    })?);
-                }
-                "--dry-run" => {
-                    dry_run = true;
-                }
-                "--json" => {
-                    json_output = true;
-                }
-                _ => {
-                    return Err(NuwaError::InvalidArgument {
-                        detail: format!("Unknown argument '{}'", args[i]),
-                        suggestion: "Usage: nuwa prune --dest <path> [--keep-count N] [--keep-days N] [--dry-run] [--json]"
-                            .to_string(),
-                    })
-                }
-            }
-            i += 1;
-        }
-
-        let dest_path = dest.ok_or_else(|| NuwaError::InvalidArgument {
-            detail: "Missing --dest argument".to_string(),
-            suggestion: "Usage: nuwa prune --dest <backup_root>".to_string(),
-        })?;
-
-        if keep_count.is_none() && keep_days.is_none() {
-            return Err(NuwaError::InvalidArgument {
-                detail: "Missing --keep-count or --keep-days".to_string(),
-                suggestion:
-                    "Specify at least one retention policy: --keep-count N or --keep-days N"
-                        .to_string(),
-            });
-        }
-
-        Ok(Command::Prune {
-            dest: dest_path,
-            keep_count,
-            keep_days,
-            dry_run,
             json_output,
         })
     }
@@ -668,7 +498,7 @@ impl Command {
     }
 
     fn usage() -> String {
-        "Usage: nuwa <subcommand> [options]\n  Subcommands: init, backup, restore, verify, list, history, prune, schedule, repo\n  nuwa --help for detailed help".to_string()
+        "Usage: nuwa <subcommand> [options]\n  Subcommands: init, backup, restore, history, schedule, repo\n  nuwa --help for detailed help".to_string()
     }
 
     fn usage_full() -> String {
@@ -681,10 +511,7 @@ Subcommands:
   init      Initialize config file
   backup    Full backup
   restore   Restore
-  verify    Verify
-  list      List backup points
   history   Operation history
-  prune     Prune old backup points by retention policy
   schedule  Manage Windows Task Scheduler scheduled tasks
 
 Global option (all commands):
@@ -717,26 +544,10 @@ restore options:
   --overwrite       Overwrite existing files (optional)
   --json            Output in JSON format
 
-verify options:
-  --backup <path>   Backup directory (required)
-  --json            Output in JSON format
-
-list options:
-  --dest <path>     Backup root directory (required)
-  --json            Output in JSON format
-
 history options:
   --dest <path>           Backup root directory (required)
   --limit N               Show last N records (optional, default 10)
   --operation <type>      Filter by operation: backup / restore / verify (optional)
-  --rebuild               Rebuild history database from manifests (optional)
-  --json                  Output in JSON format
-
-prune options:
-  --dest <path>           Backup root directory (required)
-  --keep-count N          Keep last N valid backup points (optional)
-  --keep-days N           Keep backup points from last N days (optional)
-  --dry-run               Preview what would be deleted (safe, no deletion)
   --json                  Output in JSON format
 
 schedule subcommands:

@@ -10,7 +10,6 @@
 //   Wave 2: S-04 block_map, S-05 catalog
 //   Wave 3: S-06 chain, S-07 transaction/crash_consistency
 //   Wave 4: S-08 verify, S-09 retention, S-13 recovery
-//   Wave 5: S-10 legacy (partial)
 //
 // Key principles:
 // - Repository Engine does NOT know data source types
@@ -28,8 +27,10 @@ pub mod catalog;
 pub mod chunk_engine;
 pub mod cli;
 pub mod error;
-pub mod legacy;
+pub mod file_restore_reader;
+
 pub mod metadata;
+pub mod path_security;
 pub mod recovery;
 pub mod repo_manager;
 pub mod retention;
@@ -46,7 +47,7 @@ pub use catalog::engine::{CatalogEngine, FileEntry, FileExtent};
 pub use catalog::sqlite_catalog::SqliteCatalog;
 pub use chunk_engine::{ChunkEngine, ChunkPolicy, ChunkResult, FixedChunkPolicy};
 pub use error::RepositoryError;
-pub use legacy::adapter::{FlatFileAdapter, LegacyAdapter, LegacyRestorePoint, RestoreResult};
+
 pub use recovery::integrity_check::{
     check_integrity, CheckDetail, CheckResult, CheckStatus, IntegrityReport, IntegritySummary,
 };

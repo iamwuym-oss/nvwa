@@ -5,7 +5,7 @@
 // 1. Create and maintain SQLite history database (.nuwa_history.db)
 // 2. Record backup / restore / verify operation history
 // 3. Query history records by conditions
-// 4. Rebuild history index from manifests
+// 3. Query history records by conditions
 //
 // Authority relationship (strictly enforced):
 //   manifest.json  鈫?Sole authoritative credential for each backup point (irreplaceable)
@@ -179,144 +179,6 @@ impl HistoryDb {
     /// Scans <dest> for all backup point directories, reads manifest.json from each,
     /// and writes valid backup points into the SQLite history database.
     ///
-    /// Backup points with corrupted manifests will NOT be recorded as successful history.
-    /// If a record already exists in SQLite, it will not be duplicated (deduplicated by backup_id).
-    pub fn rebuild_from_manifest(dest_root: &Path) -> Result<u32, NuwaError> {
-        if !dest_root.exists() {
-            return Err(NuwaError::InvalidArgument {
-                detail: format!(
-                    "Backup destination path does not exist '{}'",
-                    dest_root.display()
-                ),
-                suggestion: "Please verify the backup destination path".to_string(),
-            });
-        }
-
-        // Build history database path
-        let db_path = Self::history_db_path(dest_root);
-
-        // Delete old .nuwa_history.db (rebuild mode)
-        if db_path.exists() {
-            std::fs::remove_file(&db_path).map_err(|e| NuwaError::Io {
-                source: Some(e),
-                path: Some(db_path.clone()),
-                detail: format!("Cannot delete old history database '{}'", db_path.display()),
-                suggestion: "Check file permissions".to_string(),
-            })?;
-        }
-
-        // Create new database
-        let db = Self::open_or_create(&db_path)?;
-
-        // Scan destination directory for backup point directories
-        let entries = std::fs::read_dir(dest_root).map_err(|e| NuwaError::Io {
-            source: Some(e),
-            path: Some(dest_root.to_path_buf()),
-            detail: "Failed to read directory entries".to_string(),
-            suggestion: "Check directory permissions".to_string(),
-        })?;
-
-        let mut imported_count = 0u32;
-
-        for entry in entries {
-            let entry = entry.map_err(|e| NuwaError::Io {
-                source: Some(e),
-                path: Some(dest_root.to_path_buf()),
-                detail: "Failed to read directory entry".to_string(),
-                suggestion: "Check directory permissions".to_string(),
-            })?;
-
-            let dir_path = entry.path();
-            if !dir_path.is_dir() {
-                continue;
-            }
-
-            // Skip hidden directories (like .nuwa_history.db itself)
-            let dir_name = dir_path.file_name().unwrap_or_default().to_string_lossy();
-            if dir_name.starts_with('.') {
-                continue;
-            }
-
-            let manifest_path = dir_path.join("manifest.json");
-            if !manifest_path.exists() {
-                continue;
-            }
-
-            // Read manifest.json
-            let content = match std::fs::read_to_string(&manifest_path) {
-                Ok(c) => c,
-                Err(_) => continue, // Cannot read manifest -- skip this backup point
-            };
-
-            let manifest: serde_json::Value = match serde_json::from_str(&content) {
-                Ok(v) => v,
-                Err(_) => continue, // Corrupted manifest -- do not record as valid history
-            };
-
-            let backup_id = manifest
-                .get("backup_id")
-                .and_then(|v| v.as_str())
-                .unwrap_or("unknown");
-            let created_at = manifest
-                .get("created_at")
-                .and_then(|v| v.as_str())
-                .unwrap_or("");
-            let source_root = manifest
-                .get("source_root")
-                .and_then(|v| v.as_str())
-                .unwrap_or("");
-            let file_count = manifest
-                .get("summary")
-                .and_then(|s| s.get("file_count"))
-                .and_then(|v| v.as_u64())
-                .unwrap_or(0);
-            let total_bytes = manifest
-                .get("summary")
-                .and_then(|s| s.get("total_bytes"))
-                .and_then(|v| v.as_u64())
-                .unwrap_or(0);
-
-            // Record as backup operation
-            // Check if backup_id already exists
-            if db.check_exists(backup_id).unwrap_or(false) {
-                continue; // Already exists -- skip duplicate
-            }
-
-            let record = OperationRecord {
-                backup_id: backup_id.to_string(),
-                operation: "backup".to_string(),
-                timestamp: created_at.to_string(),
-                source_root: source_root.to_string(),
-                dest_path: dest_root.to_string_lossy().to_string(),
-                job_name: None,
-                file_count,
-                total_bytes,
-                duration_ms: 0, // Original duration is unknown during rebuild
-                exit_code: 0,
-                status: "success".to_string(),
-            };
-
-            if db.record_operation(&record).is_ok() {
-                imported_count += 1;
-            }
-        }
-
-        Ok(imported_count)
-    }
-
-    /// Check if a backup_id already exists (for rebuild deduplication)
-    fn check_exists(&self, backup_id: &str) -> Result<bool, NuwaError> {
-        let conn = Self::open_connection(&self.db_path)?;
-        let mut stmt = conn
-            .prepare("SELECT COUNT(*) FROM operations WHERE backup_id = ?1")
-            .map_err(|e| Self::db_error(&self.db_path, e))?;
-        let count: i64 = stmt
-            .query_row(rusqlite::params![backup_id], |row| row.get(0))
-            .map_err(|e| Self::db_error(&self.db_path, e))?;
-        Ok(count > 0)
-    }
-
-    /// Get total number of history records
     pub fn count(&self) -> Result<u32, NuwaError> {
         let conn = Self::open_connection(&self.db_path)?;
         let mut stmt = conn
@@ -349,7 +211,7 @@ impl HistoryDb {
     fn db_error(db_path: &Path, e: rusqlite::Error) -> NuwaError {
         NuwaError::General {
             detail: format!("History database operation failed '{}': {}", db_path.display(), e),
-            suggestion: "If the problem persists, try deleting .nuwa_history.db and running 'nuwa history --rebuild' to recreate it".to_string(),
+            suggestion: "If the problem persists, try deleting .nuwa_history.db; it will be recreated automatically on the next backup or restore operation".to_string(),
         }
     }
 
@@ -569,119 +431,5 @@ mod tests {
         let restores = db.query_history(10, Some("restore")).unwrap();
         assert_eq!(restores.len(), 1);
         cleanup(db_path.parent().unwrap());
-    }
-
-    #[test]
-    fn test_rebuild_from_manifest() {
-        let dest_dir = unique_test_dir();
-
-        for i in 0..3 {
-            let backup_dir_name = format!("20260705_10000{}_Test", i);
-            let backup_dir = dest_dir.join(&backup_dir_name);
-            fs::create_dir_all(&backup_dir).unwrap();
-
-            let manifest = serde_json::json!({
-                "schema_version": "1.0",
-                "backup_id": format!("rebuild-uuid-{:04}", i),
-                "created_at": format!("2026-07-05T10:00:0{}+08:00", i),
-                "source_root": "C:\\Users\\Test",
-                "storage_format": "flat-file",
-                "compression": { "enabled": false, "algorithm": null },
-                "files": [],
-                "directories": [],
-                "summary": { "file_count": 10, "directory_count": 2, "total_bytes": 102400 }
-            });
-            fs::write(
-                backup_dir.join("manifest.json"),
-                serde_json::to_string_pretty(&manifest).unwrap(),
-            )
-            .unwrap();
-        }
-
-        let count = HistoryDb::rebuild_from_manifest(&dest_dir).unwrap();
-        assert_eq!(count, 3);
-
-        let db_path = dest_dir.join(".nuwa_history.db");
-        let db = HistoryDb::open_or_create(&db_path).unwrap();
-        assert_eq!(db.count().unwrap(), 3);
-
-        let count2 = HistoryDb::rebuild_from_manifest(&dest_dir).unwrap();
-        assert_eq!(count2, 3); // Rebuild deletes old DB and rescans
-
-        drop(db);
-        let _ = fs::remove_dir_all(&dest_dir);
-    }
-
-    #[test]
-    fn test_rebuild_skips_corrupted_manifest() {
-        let dest_dir = unique_test_dir();
-
-        let valid_dir = dest_dir.join("20260705_100000_Valid");
-        fs::create_dir_all(&valid_dir).unwrap();
-        let manifest = serde_json::json!({
-            "schema_version": "1.0",
-            "backup_id": "valid-uuid-0001",
-            "created_at": "2026-07-05T10:00:00+08:00",
-            "source_root": "C:\\Users\\Test",
-            "storage_format": "flat-file",
-            "compression": { "enabled": false, "algorithm": null },
-            "files": [],
-            "directories": [],
-            "summary": { "file_count": 10, "directory_count": 2, "total_bytes": 102400 }
-        });
-        fs::write(
-            valid_dir.join("manifest.json"),
-            serde_json::to_string_pretty(&manifest).unwrap(),
-        )
-        .unwrap();
-
-        let corrupt_dir = dest_dir.join("20260705_100001_Corrupt");
-        fs::create_dir_all(&corrupt_dir).unwrap();
-        fs::write(corrupt_dir.join("manifest.json"), "This is not valid JSON").unwrap();
-
-        let count = HistoryDb::rebuild_from_manifest(&dest_dir).unwrap();
-        assert_eq!(count, 1);
-
-        let _ = fs::remove_dir_all(&dest_dir);
-    }
-
-    #[test]
-    fn test_delete_and_rebuild() {
-        let dest_dir = unique_test_dir();
-
-        let backup_dir = dest_dir.join("20260705_100000_Test");
-        fs::create_dir_all(&backup_dir).unwrap();
-        let manifest = serde_json::json!({
-            "schema_version": "1.0",
-            "backup_id": "rebuild-test-uuid-0001",
-            "created_at": "2026-07-05T10:00:00+08:00",
-            "source_root": "C:\\Users\\Test",
-            "storage_format": "flat-file",
-            "compression": { "enabled": false, "algorithm": null },
-            "files": [],
-            "directories": [],
-            "summary": { "file_count": 10, "directory_count": 2, "total_bytes": 102400 }
-        });
-        fs::write(
-            backup_dir.join("manifest.json"),
-            serde_json::to_string_pretty(&manifest).unwrap(),
-        )
-        .unwrap();
-
-        let count = HistoryDb::rebuild_from_manifest(&dest_dir).unwrap();
-        assert_eq!(count, 1);
-
-        let db_path = dest_dir.join(".nuwa_history.db");
-        assert!(db_path.exists());
-        fs::remove_file(&db_path).unwrap();
-
-        let count2 = HistoryDb::rebuild_from_manifest(&dest_dir).unwrap();
-        assert_eq!(count2, 1);
-
-        let db = HistoryDb::open_or_create(&db_path).unwrap();
-        assert_eq!(db.count().unwrap(), 1);
-
-        drop(db);
-        let _ = fs::remove_dir_all(&dest_dir);
     }
 }

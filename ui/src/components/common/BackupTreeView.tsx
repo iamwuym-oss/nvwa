@@ -1,4 +1,4 @@
-// ============================================================================
+﻿// ============================================================================
 // BackupTreeView.tsx -- Tree view for browsing backup file contents
 //
 // Converts a flat list of RestoreFileEntry items (from get_restore_preview)
@@ -29,7 +29,7 @@ export interface FileTreeNode {
 }
 
 // ---------------------------------------------------------------------------
-// Build tree from flat file list
+// Build tree from restore point file list
 // ---------------------------------------------------------------------------
 
 function buildTree(files: RestoreFileEntry[]): FileTreeNode[] {
@@ -193,10 +193,10 @@ function TreeNode({ node, depth, selectedPath, onSelect }: TreeNodeProps) {
       >
         {/* Toggle */}
         <span style={toggleIcon} onClick={handleToggle}>
-          {hasChildren ? (expanded ? "▼" : "▶") : ""}
+          {hasChildren ? (expanded ? "鈻? : "鈻?) : ""}
         </span>
         {/* Icon */}
-        <span style={fileIcon}>{node.isDirectory ? (expanded ? "📂" : "📁") : "📄"}</span>
+        <span style={fileIcon}>{node.isDirectory ? (expanded ? "馃搨" : "馃搧") : "馃搫"}</span>
         {/* Name */}
         <span style={nameStyle} title={node.path}>{node.name}</span>
         {/* Size / Meta */}

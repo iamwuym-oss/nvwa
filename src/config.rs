@@ -1,4 +1,4 @@
-// ============================================================================
+﻿// ============================================================================
 // config.rs -- TOML config file read/write module
 //
 // Responsibilities:
@@ -44,7 +44,7 @@ pub struct JobConfig {
     /// Reference to a ScheduleProfileConfig id (None means manual only)
     #[serde(default)]
     pub schedule_id: Option<String>,
-    /// Storage type: "flat-file" (default) or "repository"
+    /// Storage type (reserved for future backends; all backups use repository)
     #[serde(default)]
     pub storage_type: Option<String>,
     /// Repository UUID (when storage_type = "repository")
