@@ -1,4 +1,9 @@
-﻿[package]
+﻿[workspace]
+resolver = "2"
+members = ["crates/*", "."]
+exclude = ["src-tauri"]
+
+[package]
 name = "nuwa-backup"
 version = "0.1.0"
 edition = "2021"

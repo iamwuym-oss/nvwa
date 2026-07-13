@@ -1,4 +1,4 @@
-# Nüwa NWB Test Result and Acceptance Record v1.0
+﻿# Nüwa NWB Test Result and Acceptance Record v1.0
 
 **记录状态：** INITIAL / NOT_RUN  
 **说明：** 本文件是实际测试结果的唯一汇总模板。当前没有执行产品测试，因此不得把预期结果写为PASS。
@@ -9,17 +9,17 @@
 
 | 字段 | 实际值 |
 |---|---|
-| 产品版本 | `NOT_SET` |
-| NWB Format版本 | `0.x DRAFT` |
-| Git提交 | `NOT_SET` |
-| 分支/Tag | `NOT_SET` |
-| 构建ID | `NOT_SET` |
-| Rust/编译器版本 | `NOT_SET` |
-| 依赖锁文件SHA-256 | `NOT_SET` |
+| 产品版本 | `0.1.0-dev` |
+| NWB Format版本 | `0.x DRAFT`（IMP-000 工程基线就绪） |
+| Git提交 | `ad6695b` + IMP-000未提交修改 |
+| 分支 | `codex/nwb-storage-engine` |
+| 构建ID | `IMP-000-EVD-001` |
+| Rust版本 | `rustc 1.96.1 (31fca3adb 2026-06-26)` |
+| 依赖锁文件SHA-256 | `12423e97bd8cabadbc2d4ec3bec411e9e92923f053fb1aabb4cdf2c7e552bf74` |
 | Recovery Media版本 | `NOT_SET` |
-| 测试开始/结束时间 | `NOT_RUN` |
-| 测试负责人 | `NOT_ASSIGNED` |
-| 复核人 | `NOT_ASSIGNED` |
+| 测试开始/结束时间 | `2026-07-13` |
+| 测试负责人 | `nwb_validation_engineer` |
+| 复核人 | `nwb_code_reviewer` |
 
 ## 2. 测试环境记录
 
@@ -33,7 +33,8 @@
 
 | Gate | 名称 | 状态 | 通过日期 | 证据集合 | 阻塞缺陷 | 签署 |
 |---|---|---|---|---|---|---|
-| GATE-0 | 文档与仓库基线 | NOT_RUN | — | — | — | — |
+| GATE-0 | 文档与仓库基线 | IN_PROGRESS | — | IMP-000_EVD | — | — |
+| GATE-0.IMP-000 | 建立Workspace | PASS | 2026-07-13 | IMP-000_EVD_Build_Evidence_v1.0.md | — | nwb_evidence_documenter |
 | GATE-1 | NWB容器 | NOT_RUN | — | — | — | — |
 | GATE-2 | 文件Full/Diff | NOT_RUN | — | — | — | — |
 | GATE-3 | 分卷与密码学 | NOT_RUN | — | — | — | — |
@@ -181,4 +182,5 @@ P0不得豁免。P1原则上不得豁免；确需发布必须由产品、架构�
 | 发布包和SBOM封存 | NOT_RUN | — |
 
 **最终发布结论：NOT_APPROVED / NOT_RUN**
+
 
