@@ -47,14 +47,6 @@ pub fn run() {
     tauri::Builder::default()
         .manage(AppState::default())
         .invoke_handler(tauri::generate_handler![
-        commands::schedule::list_schedules,
-        commands::schedule::get_schedule,
-        commands::schedule::create_schedule,
-        commands::schedule::update_schedule,
-        commands::schedule::delete_schedule,
-        commands::schedule::enable_schedule,
-        commands::schedule::disable_schedule,
-
             get_version,
             commands::dashboard::get_dashboard_overview,
             commands::backup::list_backup_jobs,
@@ -73,12 +65,14 @@ pub fn run() {
             commands::file_browser::list_directory,
             commands::history::query_history,
             commands::history::list_history_operation_types,
-            commands::repo::create_repo,
-            commands::repo::list_repos,
-            commands::repo::get_repo_info,
-            commands::repo::verify_repo,
+            commands::schedule::list_schedules,
+            commands::schedule::get_schedule,
+            commands::schedule::create_schedule,
+            commands::schedule::update_schedule,
+            commands::schedule::delete_schedule,
+            commands::schedule::enable_schedule,
+            commands::schedule::disable_schedule,
         ])
         .run(tauri::generate_context!())
         .expect("error while running Nuwa Backup GUI");
 }
-

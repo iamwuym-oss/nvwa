@@ -1,4 +1,4 @@
-# HANDOFF-001 — Nüwa Backup 项目交接文档
+﻿# HANDOFF-001 — Nüwa Backup 项目交接文档
 
 > **创建日期:** 2026-07-12
 > **提交:** `f795785` (codex/p-08-full-regression-and-cleanup)
@@ -135,7 +135,7 @@ tests/                        # 集成测试
 | `cargo fmt --check` | ✅ PASS |
 | `cargo clippy --all-targets --features repository -- -D warnings` | ✅ PASS |
 | `cargo build --features repository` | ✅ PASS |
-| `cargo test --features repository` | ✅ **370 passed, 0 failed** |
+| `cargo test --features repository` | ✅ **365 passed, 0 failed** |
 
 ### 4.5 构建方式
 
@@ -233,9 +233,36 @@ format!(r#"{{"key":"{}","count":{}}}"#, value, count)
 
 `backup_restore_tests.rs` 和 `gui_integration_tests.rs` 已删除。当前只有 7 个集成测试文件和 lib 单元测试。
 
+## 7. 文档修复日志（2026-07-12）
+
+本次 handoff 创建后又进行了一轮文档 gap 修复，找出了文档与项目实际代码之间的脱节并修复。
+
+### 7.1 修复清单
+
+| 类型 | 文件 | 修复内容 |
+|:----:|------|---------|
+| 过时架构 | \`docs/project/03_Nuwa_Architecture_Design.md\` | §1.1/§1.2/§8/§9/§11.2/§12.2/§13.2/§15/Appendix A — 共 11 处 egui+daemon+ZeroMQ 引用更新为 Tauri 2.0 + React 现状 |
+| 过时引用 | \`docs/project/04_Functional_Specification.md\` | Linux 桌面版 "egui UI" → "Tauri 2.0 + React" |
+| 编码损坏 | \`docs/project/02_Development_Plan.md\` | GB2312 → UTF-8 with BOM（解决中文乱码） |
+
+### 7.2 修复原则
+
+- **Phase 1 冻结基线文档**（Technical_Baseline、Code_Map、Final_Acceptance）保持不变——它们是 Phase 1 时期的历史记录，flat-file 引用在当时的上下文中是正确的
+- **Phase 0 边界文档**（00_Codex_Working_Guardrails.md、09_MVP_Boundary_and_Risk_Correction.md）保留 egui 引用作为历史记录——这些是 MVP 定界时期的产物，egui 在当时是正确的技术名称
+- **AGENTS.md** 已在之前更新至 v5.4，正确反映 Phase P Complete 状态
+
+### 7.3 验证
+
+| 门禁 | 结果 |
+|------|------|
+| \`cargo build --features repository\` | ✅ PASS |
+| \`cargo test --features repository\` | ✅ **365 passed, 0 failed** |
+| \`cargo fmt --check\` | ✅ PASS |
+| \`cargo clippy --all-targets --features repository -- -D warnings\` | ✅ PASS |
+
 ---
 
-## 7. 下一步计划
+## 8. 下一步计划
 
 ### 短期（用户批准后可立即开始）
 
@@ -260,7 +287,7 @@ format!(r#"{{"key":"{}","count":{}}}"#, value, count)
 
 ---
 
-## 8. 新会话启动清单
+## 9. 新会话启动清单
 
 当新会话开始时，必须按顺序执行：
 
@@ -285,7 +312,7 @@ format!(r#"{{"key":"{}","count":{}}}"#, value, count)
 
 ---
 
-## 9. 关键文档索引
+## 10. 关键文档索引
 
 | 文档 | 路径 | 作用 |
 |------|------|------|

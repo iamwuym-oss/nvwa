@@ -7,47 +7,29 @@ use std::path::PathBuf;
 
 pub enum Command {
     Init {
-        /// Optional explicit config file path
         config_path: Option<PathBuf>,
     },
     Backup {
         source: Option<PathBuf>,
         dest: Option<PathBuf>,
         compress: bool,
-        /// Optional job name, mutually exclusive with source/dest
         job: Option<String>,
-
-        /// Repository path (P-01, mutually exclusive with --dest/--job)
-        #[cfg(feature = "repository")]
-        repo: Option<PathBuf>,
-        /// JSON output mode
         json_output: bool,
     },
     Restore {
         backup: PathBuf,
         dest: PathBuf,
         overwrite: bool,
-        /// JSON output mode
         json_output: bool,
     },
     History {
-        /// Backup destination root directory
         dest: PathBuf,
-        /// Maximum number of records to return (default 10)
         limit: u32,
-        /// Optional operation type filter (backup / restore / verify)
         operation: Option<String>,
-        /// JSON output mode
         json_output: bool,
     },
     Schedule {
-        /// Subcommand: create, list, delete
         subcommand: ScheduleSubcommand,
-    },
-    /// Repository management (Phase S)
-    #[cfg(feature = "repository")]
-    Repo {
-        subcommand: crate::repository::cli::commands::RepoSubcommand,
     },
 }
 
@@ -78,8 +60,6 @@ impl Command {
             "backup" => Self::parse_backup(&args[2..]),
             "restore" => Self::parse_restore(&args[2..]),
             "schedule" => Self::parse_schedule(&args[2..]),
-            #[cfg(feature = "repository")]
-            "repo" => Self::parse_repo(&args[2..]),
             "history" => Self::parse_history(&args[2..]),
             "--help" | "-h" => {
                 println!("{}", Self::usage_full());
@@ -147,48 +127,19 @@ impl Command {
                 _ => {
                     return Err(NuwaError::InvalidArgument {
                         detail: format!("Unknown argument '{}'", args[i]),
-                        suggestion: "Usage: nuwa backup --job <name>  or  nuwa backup --source <path> --dest <path> [--compress] [--json]"
-                            .to_string(),
+                        suggestion:
+                            "Usage: nuwa backup --source <path> --dest <path> [--compress] [--json]"
+                                .to_string(),
                     })
                 }
             }
             i += 1;
         }
-
-        let has_job = job.is_some();
-        let has_source_dest = source.is_some() || dest.is_some();
-
-        if has_job && has_source_dest {
-            return Err(NuwaError::InvalidArgument {
-                detail: "--job cannot be used together with --source/--dest".to_string(),
-                suggestion: "Choose one mode:\n  nuwa backup --job <name>   (use config file)\n  nuwa backup --source <path> --dest <path>  (legacy mode)".to_string(),
-            });
-        }
-
-        if !has_job && !has_source_dest {
-            match crate::config::try_load_job_with_default_fallback(None) {
-                Ok((name, job_cfg)) => {
-                    source = Some(job_cfg.source.clone());
-                    dest = Some(job_cfg.dest.clone());
-                    compress = job_cfg.compress;
-                    job = Some(name.to_string());
-                }
-                Err(_) => {
-                    return Err(NuwaError::InvalidArgument {
-                        detail: "Missing required arguments".to_string(),
-                        suggestion: "Usage:\n  nuwa backup --job <name>   (use config file)\n  nuwa backup --source <path> --dest <path>  (legacy mode)\n\nOr run 'nuwa init' first to create a config file.".to_string(),
-                    })
-                }
-            }
-        }
-
         Ok(Command::Backup {
             source,
             dest,
             compress,
             job,
-            #[cfg(feature = "repository")]
-            repo: None,
             json_output,
         })
     }
@@ -199,6 +150,7 @@ impl Command {
         let mut overwrite = false;
         let mut json_output = false;
         let mut i = 0;
+
         while i < args.len() {
             match args[i].as_str() {
                 "--backup" => {
@@ -215,19 +167,22 @@ impl Command {
                 "--json" => {
                     json_output = true;
                 }
-                _ => {
-                    return Err(NuwaError::InvalidArgument {
-                        detail: format!("Unknown argument '{}'", args[i]),
-                        suggestion: "Usage: nuwa restore --backup <backup_dir> --dest <target_path> [--overwrite] [--json]"
+                _ => return Err(NuwaError::InvalidArgument {
+                    detail: format!("Unknown argument '{}'", args[i]),
+                    suggestion:
+                        "Usage: nuwa restore --backup <path> --dest <path> [--overwrite] [--json]"
                             .to_string(),
-                    })
-                }
+                }),
             }
             i += 1;
         }
+
+        let backup_path = backup.ok_or_else(|| missing_param("backup"))?;
+        let dest_path = dest.ok_or_else(|| missing_param("dest"))?;
+
         Ok(Command::Restore {
-            backup: backup.ok_or_else(|| missing_param("--backup"))?,
-            dest: dest.ok_or_else(|| missing_param("--dest"))?,
+            backup: backup_path,
+            dest: dest_path,
             overwrite,
             json_output,
         })
@@ -235,11 +190,10 @@ impl Command {
 
     fn parse_history(args: &[String]) -> Result<Self, NuwaError> {
         let mut dest = None;
-        let mut limit: u32 = 10;
-        let mut operation: Option<String> = None;
+        let mut limit = 10u32;
+        let mut operation = None;
         let mut json_output = false;
         let mut i = 0;
-
         while i < args.len() {
             match args[i].as_str() {
                 "--dest" => {
@@ -249,22 +203,11 @@ impl Command {
                 "--limit" => {
                     i += 1;
                     let val = get_string_arg(args, i, "--limit")?;
-                    limit = val.parse::<u32>().map_err(|_| NuwaError::InvalidArgument {
-                        detail: format!("--limit must be a positive integer, got '{}'", val),
-                        suggestion: "Usage: nuwa history --dest <path> --limit N".to_string(),
-                    })?;
+                    limit = val.parse().unwrap_or(10);
                 }
                 "--operation" => {
                     i += 1;
-                    let op = get_string_arg(args, i, "--operation")?;
-                    let lower = op.to_lowercase();
-                    if lower != "backup" && lower != "restore" && lower != "verify" {
-                        return Err(NuwaError::InvalidArgument {
-                            detail: format!("Unsupported operation type '{}'", op),
-                            suggestion: "Supported operations: backup, restore, verify".to_string(),
-                        });
-                    }
-                    operation = Some(lower);
+                    operation = Some(get_string_arg(args, i, "--operation")?);
                 }
                 "--json" => {
                     json_output = true;
@@ -279,12 +222,7 @@ impl Command {
             }
             i += 1;
         }
-
-        let dest_path = dest.ok_or_else(|| NuwaError::InvalidArgument {
-            detail: "Missing --dest argument".to_string(),
-            suggestion: "Usage: nuwa history --dest <backup_root>".to_string(),
-        })?;
-
+        let dest_path = dest.ok_or_else(|| missing_param("dest"))?;
         Ok(Command::History {
             dest: dest_path,
             limit,
@@ -297,10 +235,9 @@ impl Command {
         if args.is_empty() {
             return Err(NuwaError::InvalidArgument {
                 detail: "Missing schedule subcommand".to_string(),
-                suggestion: "Usage: nuwa schedule create|list|delete".to_string(),
+                suggestion: "Usage: nuwa schedule create/list/delete [options]".to_string(),
             });
         }
-
         match args[0].to_lowercase().as_str() {
             "create" => Self::parse_schedule_create(&args[1..]),
             "list" => Ok(Command::Schedule {
@@ -309,152 +246,92 @@ impl Command {
             "delete" => Self::parse_schedule_delete(&args[1..]),
             _ => Err(NuwaError::InvalidArgument {
                 detail: format!("Unknown schedule subcommand '{}'", args[0]),
-                suggestion: "Usage: nuwa schedule create|list|delete".to_string(),
+                suggestion: "Usage: nuwa schedule create/list/delete".to_string(),
             }),
         }
     }
 
     fn parse_schedule_create(args: &[String]) -> Result<Self, NuwaError> {
-        let mut job_name: Option<String> = None;
-        let mut once = false;
-        let mut daily = false;
-        let mut weekly = false;
-        let mut monthly = false;
-        let mut on_logon = false;
-        let mut at: Option<String> = None;
-        let mut days: Option<String> = None;
-        let mut day: Option<u32> = None;
-        let mut delay: Option<u32> = None;
+        let mut jn: Option<String> = None;
+        let mut trigger: Option<crate::scheduler::ScheduleTrigger> = None;
         let mut i = 0;
 
         while i < args.len() {
             match args[i].as_str() {
                 "--job" => {
                     i += 1;
-                    job_name = Some(get_string_arg(args, i, "--job")?);
+                    jn = Some(get_string_arg(args, i, "--job")?);
                 }
                 "--once" => {
-                    once = true;
+                    i += 1;
+                    let at = get_string_arg(args, i, "--at")?;
+                    trigger = Some(crate::scheduler::ScheduleTrigger::Once { at });
                 }
                 "--daily" => {
-                    daily = true;
+                    i += 1;
+                    let at = get_string_arg(args, i, "--at")?;
+                    trigger = Some(crate::scheduler::ScheduleTrigger::Daily { at });
                 }
                 "--weekly" => {
-                    weekly = true;
+                    i += 1;
+                    let at = get_string_arg(args, i, "--at")?;
+                    i += 1;
+                    let days_str = get_string_arg(args, i, "--days")?;
+                    let days: Vec<String> =
+                        days_str.split(',').map(|s| s.trim().to_string()).collect();
+                    trigger = Some(crate::scheduler::ScheduleTrigger::Weekly { days, at });
                 }
                 "--monthly" => {
-                    monthly = true;
+                    i += 1;
+                    let at = get_string_arg(args, i, "--at")?;
+                    i += 1;
+                    let day_str = get_string_arg(args, i, "--day")?;
+                    let day: u32 = day_str.parse().map_err(|_| NuwaError::InvalidArgument {
+                        detail: format!("Invalid day: '{}'. Expected 1-31", day_str),
+                        suggestion: "Use --day 1 through --day 31".to_string(),
+                    })?;
+                    if !(1..=31).contains(&day) {
+                        return Err(NuwaError::InvalidArgument {
+                            detail: format!("Invalid day: '{}'. Day must be between 1 and 31", day),
+                            suggestion: "Use --day 1 through --day 31".to_string(),
+                        });
+                    }
+                    trigger = Some(crate::scheduler::ScheduleTrigger::Monthly { day, at });
                 }
                 "--on-logon" => {
-                    on_logon = true;
-                }
-                "--at" => {
-                    i += 1;
-                    at = Some(get_string_arg(args, i, "--at")?);
-                }
-                "--days" => {
-                    i += 1;
-                    days = Some(get_string_arg(args, i, "--days")?);
-                }
-                "--day" => {
-                    i += 1;
-                    let val = get_string_arg(args, i, "--day")?;
-                    day = Some(val.parse::<u32>().map_err(|_| {
-                        NuwaError::InvalidArgument {
-                            detail: format!("--day must be a positive integer, got '{}'", val),
-                            suggestion: "Example: --monthly --day 1 --at 02:00".to_string(),
-                        }
-                    })?);
-                }
-                "--delay" => {
-                    i += 1;
-                    let val = get_string_arg(args, i, "--delay")?;
-                    delay = Some(val.parse::<u32>().map_err(|_| {
-                        NuwaError::InvalidArgument {
-                            detail: format!("--delay must be a positive integer (seconds), got '{}'", val),
-                            suggestion: "Example: --on-logon --delay 300".to_string(),
-                        }
-                    })?);
+                    let mut delay = 0u32;
+                    if i + 2 < args.len() && args[i + 1] == "--delay" {
+                        i += 2;
+                        delay = get_string_arg(args, i, "--delay")?.parse().unwrap_or(0);
+                    }
+                    trigger = Some(crate::scheduler::ScheduleTrigger::OnLogon {
+                        delay_seconds: delay,
+                    });
                 }
                 _ => {
                     return Err(NuwaError::InvalidArgument {
                         detail: format!("Unknown argument '{}'", args[i]),
-                        suggestion: "Usage: nuwa schedule create --job <name> [--once|--daily|--weekly|--monthly|--on-logon] [options]".to_string(),
+                        suggestion: "See --help for schedule create options".to_string(),
                     })
                 }
             }
             i += 1;
         }
 
-        let jn = job_name.ok_or_else(|| NuwaError::InvalidArgument {
+        let job_name = jn.ok_or_else(|| NuwaError::InvalidArgument {
             detail: "Missing --job argument".to_string(),
-            suggestion: "Usage: nuwa schedule create --job <name> --daily --at 22:00".to_string(),
+            suggestion: "Usage: nuwa schedule create --job <name> --daily --at HH:MM".to_string(),
         })?;
-
-        // Determine trigger type (must specify exactly one)
-        let trigger_count = [once, daily, weekly, monthly, on_logon]
-            .iter()
-            .filter(|&&x| x)
-            .count();
-        if trigger_count != 1 {
-            return Err(NuwaError::InvalidArgument {
-                detail: "Must specify exactly one trigger type: --once, --daily, --weekly, --monthly, or --on-logon".to_string(),
-                suggestion: "Example: nuwa schedule create --job default --daily --at 22:00".to_string(),
-            });
-        }
-
-        let trigger = if once {
-            let at_val = at.ok_or_else(|| NuwaError::InvalidArgument {
-                detail: "--once requires --at".to_string(),
-                suggestion: "Example: --once --at \"2026-08-01 10:00\"".to_string(),
-            })?;
-            crate::scheduler::ScheduleTrigger::Once { at: at_val }
-        } else if daily {
-            let at_val = at.ok_or_else(|| NuwaError::InvalidArgument {
-                detail: "--daily requires --at".to_string(),
-                suggestion: "Example: --daily --at 22:00".to_string(),
-            })?;
-            crate::scheduler::ScheduleTrigger::Daily { at: at_val }
-        } else if weekly {
-            let at_val = at.ok_or_else(|| NuwaError::InvalidArgument {
-                detail: "--weekly requires --at".to_string(),
-                suggestion: "Example: --weekly --days Mon,Fri --at 03:00".to_string(),
-            })?;
-            let days_str = days.ok_or_else(|| NuwaError::InvalidArgument {
-                detail: "--weekly requires --days".to_string(),
-                suggestion: "Example: --weekly --days Mon,Fri --at 03:00".to_string(),
-            })?;
-            let days_vec: Vec<String> = days_str.split(',').map(|s| s.trim().to_string()).collect();
-            crate::scheduler::ScheduleTrigger::Weekly {
-                days: days_vec,
-                at: at_val,
-            }
-        } else if monthly {
-            let at_val = at.ok_or_else(|| NuwaError::InvalidArgument {
-                detail: "--monthly requires --at".to_string(),
-                suggestion: "Example: --monthly --day 1 --at 02:00".to_string(),
-            })?;
-            let day_val = day.ok_or_else(|| NuwaError::InvalidArgument {
-                detail: "--monthly requires --day".to_string(),
-                suggestion: "Example: --monthly --day 1 --at 02:00".to_string(),
-            })?;
-            crate::scheduler::ScheduleTrigger::Monthly {
-                day: day_val,
-                at: at_val,
-            }
-        } else if on_logon {
-            let delay_val = delay.unwrap_or(0);
-            crate::scheduler::ScheduleTrigger::OnLogon {
-                delay_seconds: delay_val,
-            }
-        } else {
-            unreachable!()
-        };
+        let tr = trigger.ok_or_else(|| NuwaError::InvalidArgument {
+            detail: "Missing trigger type (--once/--daily/--weekly/--monthly/--on-logon)"
+                .to_string(),
+            suggestion: "Specify one trigger type".to_string(),
+        })?;
 
         Ok(Command::Schedule {
             subcommand: ScheduleSubcommand::Create {
-                job_name: jn,
-                trigger,
+                job_name,
+                trigger: tr,
             },
         })
     }
@@ -490,15 +367,8 @@ impl Command {
         })
     }
 
-    /// Parse `nuwa repo <subcommand> [args]`
-    #[cfg(feature = "repository")]
-    fn parse_repo(args: &[String]) -> Result<Self, NuwaError> {
-        let sub = crate::repository::cli::commands::RepoSubcommand::parse(args)?;
-        Ok(Command::Repo { subcommand: sub })
-    }
-
     fn usage() -> String {
-        "Usage: nuwa <subcommand> [options]\n  Subcommands: init, backup, restore, history, schedule, repo\n  nuwa --help for detailed help".to_string()
+        "Usage: nuwa <subcommand> [options]\n  Subcommands: init, backup, restore, history, schedule\n  nuwa --help for detailed help".to_string()
     }
 
     fn usage_full() -> String {
@@ -520,26 +390,15 @@ Global option (all commands):
 init options:
   --config <path>   Specify config file path (optional)
 
-backup options (choose one mode):
-  Mode 1 - Use config file:
-  --job <name>      Run backup using a job defined in config
-
-  Mode 2 - Legacy mode:
+backup options:
   --source <path>   Source path
   --dest <path>     Destination path
   --compress        Enable compression (optional)
+  --job <name>      Run backup using a job defined in config
   --json            Output in JSON format
 
 restore options:
-
-    Mode 3 - Repository mode (requires --features repository):
-    --source <path>   Source path
-    --repo <path>     Repository path (required, use 'nuwa repo init' first)
-    --compress        Enable compression (optional)
-    --json            Output in JSON format
-
-  restore options:
-  --backup <path>   Backup directory (required)
+  --backup <path>   Backup path (required)
   --dest <path>     Restore target (required)
   --overwrite       Overwrite existing files (optional)
   --json            Output in JSON format

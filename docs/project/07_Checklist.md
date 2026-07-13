@@ -322,7 +322,7 @@ Phase 0        ✅ 已完成
 Phase 1        ✅ 已完成/冻结
 Phase 2        ✅ 已关闭（含已知限制）
 Phase 2.5      ✅ 已完成（CLOSED）
-Phase S        🔵 进行中（Wave 1 COMPLETE，Wave 2+ 待开发）
+Phase S        ❌ 已删除（2026-07-13 Repository Engine 架构被移除）
 Phase 3        🔵 规划中（T3-00 完成）
 Phase 3.5      ❌ 未授权
 Phase 4        ❌ 未授权

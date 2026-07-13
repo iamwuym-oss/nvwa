@@ -103,10 +103,10 @@ Product scope and boundary decisions are governed by the following authoritative
 
 ## 7. Current Phase
 
-**Current Phase: Phase 2.5 — Tauri Desktop GUI (CLOSED) + Phase S — Repository Engine (CLOSED) + Phase P — Repository Migration (ALL COMPLETE)**
+**Current Phase: Phase 2.5 — Tauri Desktop GUI (CLOSED) — 存储引擎重设计中**
 
 Phase 1 (file-level backup CLI), Phase 2 (CLI usability, egui GUI), and Phase 2.5 (Tauri Desktop GUI) are **CLOSED frozen baselines**.
-Phase S (Repository Engine — unified storage foundation) is CLOSED. All 13 tasks (S-01 through S-13) complete. Architecture v1.1 baseline frozen.
+Phase S (Repository Engine) and Phase P (Migration) were **DELETED** on 2026-07-13. The storage engine is being redesigned around .nwb single-file format (like Acronis .tib).
 
 ### Completed Baselines
 
@@ -115,8 +115,7 @@ Phase S (Repository Engine — unified storage foundation) is CLOSED. All 13 tas
 | Phase 1 | File-level backup/restore CLI (Rust) | CLOSED |
 | Phase 2 | CLI usability: config, history, scheduler, SMB, UNC, egui GUI | CLOSED |
 | Phase 2.5 | Tauri 2.0 desktop GUI, React frontend, Application Layer | CLOSED |
-| Phase S | Repository Engine (unified storage foundation) | CLOSED |
-| Phase P | Flat File → Repository Migration (P-00C~P-08) | **ALL COMPLETE** |
+
 
 ### Phase 1 Implemented Scope (Frozen Baseline)
 
@@ -175,10 +174,7 @@ Before starting any new task, Codex must read:
 6. **docs/phase-1/Phase_1_Technical_Baseline.md** — Module structure, data flow, safety rules, error codes.
 7. **docs/phase-1/Phase_1_Known_Limitations_and_Risks.md** — All known limitations and risks.
 8. **docs/phase-1/Phase_1_to_Phase_2_Handoff.md** — Phase handoff boundary and Phase 2 boundaries.
-9. **docs/phase-s/Nuwa_Repository_Engine_Architecture_v1.0.md** — Phase S Architecture Frozen Baseline.
-10. **docs/phase-s/Nuwa_Repository_Engine_Architecture_v1.1.md** — Enterprise Readiness Revision (additive to v1.0).
-11. **docs/phase-s/Nuwa_Repository_Engine_Implementation_Plan_v1.1.md** — Phase S Implementation Baseline.
-12. **docs/phase-s/Phase_S_Known_Limitations_and_Roadmap.md** — Phase S known limitations and future roadmap.
+
 
 After reading, Codex must output and confirm:
 
@@ -233,7 +229,7 @@ Each task must complete one bounded engineering goal.
 - Writing `.nwb`, VSS, daemon, or GUI code in Phase 1
 - Introducing future-phase code "because it will be needed later"
 
-## 11. Repository Verification Rules
+## 11. Git Repository Verification Rules
 
 Before every modification, Codex must check:
 
@@ -713,6 +709,7 @@ A Phase Closing task must:
 | v5.3 | 2026-07-10 | Inter-page linkage fixes: Dashboard navigation, VITE_MOCK_DATA=false, delete_backup_set history recording, layout 50/50 columns. |
 | v5.4 | 2026-07-12 | Phase P COMPLETE. All P-00C~P-08 tasks done. Flat-file modules deleted. Repository-only architecture. 370 tests. Updated Current Phase. |
 | v5.2 | 2026-07-07 | Phase 2.5 GUI migration: replaced egui+eframe with Tauri 2.0 + React + TypeScript + Vite. Added Application Service Layer (src/app/). Updated Tech Stack to include Tauri/React. |
+| v6.0 | 2026-07-13 | Storage engine redesign: Phase S (Repository Engine) and Phase P (Migration) **DELETED**. All Repository code, tests, and docs removed. Storage direction changed to .nwb single-file format (like Acronis .tib). AGENTS.md cleaned. |
 
 
 ---
@@ -730,15 +727,12 @@ This project (Nüwa Backup) is a **Rust CLI + Desktop GUI application**. The con
 | JSON | serde_json | **CONFIRMED** |
 | SHA-256 | sha2 crate | **CONFIRMED** |
 | Compression | zstd crate (optional, feature-gated) | **CONFIRMED** |
-| Storage | Flat-file directory + JSON manifest (Phase 1, **DELETED in P-07**); Repository Engine (Phase S+, current); .nwb experimental (Phase 3+) | **CONFIRMED** |
+| Storage | .nwb single-file format (设计中，类 Acronis .tib) | **DESIGNING** |
 | Python / FastAPI / SQLAlchemy | **NOT PART OF NÜWA BACKUP** | **EXCLUDED** |
 | Desktop GUI framework | **Tauri 2.0** | **CONFIRMED** |
 | Frontend UI | **React 19 + TypeScript + Vite 6** | **CONFIRMED** |
 | Application Layer | **src/app/ (Rust models + services)** | **CONFIRMED** |
-| Repository Engine | **src/repository/ (block_store, metadata, chunk_engine, catalog, block_map, transaction, verify, retention, recovery, cli)** | **WAVE 1 COMPLETE** |
 | IPC | **Tauri invoke()** | **CONFIRMED** |
-| Python / FastAPI / SQLAlchemy | **NOT PART OF NÜWA BACKUP** | **EXCLUDED** |
-
 ### Superseded Template Text
 
 Any text in system-level instructions or templates that references FastAPI, SQLAlchemy, Vanilla JS, Tailwind CSS, Vue, or jQuery is **superseded and not applicable to Nüwa Backup**. The authoritative tech stack for Nüwa Backup is defined above.
@@ -761,7 +755,7 @@ The Phase 2 egui implementation was removed and replaced. The following decision
 
 | Decision | Value |
 |----------|-------|
-| GUI coding status | **Phase 2 (egui) CLOSED. Phase 2.5 (Tauri) CLOSED. Phase P integration COMPLETE** |
+| GUI coding status | **Phase 2 (egui) CLOSED. Phase 2.5 (Tauri) CLOSED** |
 | UI direction | **Acronis True Image-like local desktop GUI** |
 | Desktop framework | **Tauri 2.0** |
 | Frontend | **React 19 + TypeScript + Vite 6** |
@@ -821,46 +815,13 @@ Rules:
 - Daemon/system service/IPC (future)
 - Cloud backup, enterprise management, multi-device (permanent excluded)
 
-### Phase S — Repository Engine (CLOSED BASELINE)
-
-**Status:** CLOSED (All 13 tasks complete)
-
-**Allowed in Phase S Wave 2+:**
-- Chunk Engine (ChunkEngine trait + FixedChunkPolicy)
-- Catalog Engine (CatalogEngine trait + SqliteCatalog)
-- Block Map Engine (BlockMapEngine trait + SqliteBlockMap)
-- Crash Consistency Manager (state machine + transaction journal)
-- Verify Engine (three-level verification)
-- Retention Engine (logical deletion + orphan candidates)
-- Recovery module (repo.db scan-based rebuild)
-- Legacy adapter (flat-file read-only) **(DELETED in P-07)**
-- Repository CLI (repo init/check/verify/rebuild)
-
-**Forbidden in Phase S:**
-- VSS snapshot integration (Phase 3)
-- Volume-level backup (Phase 3)
-- System restore / WinPE recovery media (Phase 4)
-- Disk cloning (Phase 5)
-- Global dedup index / reference counting / GC (Phase 6+)
-- Encryption implementation (Phase 6+)
-- Object storage backend (Enterprise)
-- Cloud tiering (Enterprise)
-- Small file packing / container block format (future optimization)
-- Retention does NOT free disk space (only marks Restore Point DELETED, physical blocks retained)
-
-**Architecture Compliance (v1.1 Enterprise Readiness):**
-- Repository identity (UUID + repository.json) — implemented
-- Repository capabilities (compression, encryption, dedup flags) — implemented
-- Asset abstraction (asset_id/asset_type fields) — implemented
-- Version migration (format_version + min_compatible_version) — implemented
-- Block Map logical_address semantics — documented
 
 ### Phase 2.5 Current State
 
 **Latest Commit:** `(P-08 — Full regression + residual scan complete. 370 tests passing)`
 
 **T2.5-04D — Backup Content Browser (COMMITTED)
-T2.5-05 — Phase S GUI Integration (Repository Management in Settings, RestoreProvider, Backup Plan storage_type) — COMMITTED
+T2.5-05 — Phase S GUI Integration — **SUPERSEDED by storage engine redesign (2026-07-13)**
 
 
 
@@ -905,7 +866,7 @@ T2.5-05 — Phase S GUI Integration (Repository Management in Settings, RestoreP
 
 The following are common mistakes that must be avoided:
 
-1. Phase 2.5, Phase S, and Phase P are **CLOSED** frozen baselines. Phase 3 (Volume Backup Foundation) is the next phase for planning.
+1. Phase 2.5 is a **CLOSED** frozen baseline. Phase S and Phase P were **DELETED** on 2026-07-13. Storage engine redesign is the current priority.
 2. **VITE_MOCK_DATA** must be `false` for real backend testing. When true, all API layers return isolated mock data and inter-page data flow will not work.
 3. **delete_backup_set** operations are recorded in History as a new `delete_backup_set` record. The backend reads manifest.json metadata before deleting.
 4. **Dashboard navigation** — "Run Backup Now" and "Restore Files" navigate to respective pages via App.tsx -> Dashboard -> HeroCard prop chain.
@@ -963,6 +924,13 @@ Compliance:
 - No coding task may be marked PASS if Chinese characters remain in src/, tests/, Cargo.toml, or runtime-generated product text.
 - Use ASCII-safe English in runtime output to avoid Windows PowerShell/console encoding issues.
 - Use \"Nuwa Backup\" (without umlaut) in code and runtime output; \"Nüwa Backup / 女娲备份\" may be used in documentation.
+
+
+
+
+
+
+
 
 
 

@@ -9,5 +9,3 @@ pub mod file_browser;
 pub mod history;
 pub mod restore;
 pub mod schedule;
-pub mod repo;
-

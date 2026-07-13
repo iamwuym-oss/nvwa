@@ -257,7 +257,7 @@ Phase 1 的具体范围和任务详见 `02_Development_Plan.md` 和 `09_MVP_Boun
 
 | 特性 | 说明 | 阶段 |
 |------|------|------|
-| Linux 桌面版 | CLI + egui UI | 🔵 Future (Phase 5+) |
+| Linux 桌面版 | CLI + Tauri 2.0 + React UI | 🔵 Future (Phase 5+) — Tauri 支持 Linux（WebKitGTK），无需 egui |
 | 麒麟 V10 | x86_64 + ARM64（飞腾）适配 | 🔵 Future (Phase 5+) |
 | 统信 UOS | x86_64 + ARM64（飞腾/鲲鹏）适配 | 🔵 Future (Phase 5+) |
 | LoongArch | 龙芯架构交叉编译支持 | 🔵 Future (Phase 5+) |

@@ -2,13 +2,11 @@
 name = "nuwa-backup"
 version = "0.1.0"
 edition = "2021"
-description = "Nuwa Backup - Phase 2: Usable file-level backup tool"
+description = "Nuwa Backup"
 
 [features]
 default = ["history"]
 history = ["rusqlite"]
-compress = ["zstd"]
-repository = ["rusqlite", "compress"]
 
 [dependencies]
 serde = { version = "1", features = ["derive"] }
@@ -18,16 +16,8 @@ sha2 = "0.10"
 uuid = { version = "1", features = ["v4"] }
 chrono = { version = "0.4", features = ["serde"] }
 rusqlite = { version = "0.31", features = ["bundled"], optional = true }
-zstd = { version = "0.13", optional = true }
 hex = "0.4"
 thiserror = "1"
 
-
-
-
 [dev-dependencies]
 tempfile = "3"
-
-[[test]]
-name = "repository_integration_tests"
-required-features = ["repository"]

@@ -1,4 +1,4 @@
-[package]
+﻿[package]
 name = "nuwa-tauri"
 version = "0.1.0"
 description = "Nuwa Backup - Desktop GUI (Tauri 2.0)"
@@ -12,7 +12,7 @@ crate-type = ["lib", "cdylib", "staticlib"]
 tauri-build = { version = "2", features = [] }
 
 [dependencies]
-nuwa-backup = { path = "..", features = ["repository"] }
+nuwa-backup = { path = "..", features = ["history"] }
 tauri = { version = "2", features = ["tray-icon"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
