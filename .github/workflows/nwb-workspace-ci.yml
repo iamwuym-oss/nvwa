@@ -1,0 +1,67 @@
+# SPDX-License-Identifier: MIT
+# NWB Workspace CI — IMP-000-REMEDIATION-1
+# Baseline: 61ce44e13530db6e24877849b0aabc86f1627061
+
+name: NWB Workspace CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: always
+  CARGO_INCREMENTAL: 0
+  RUST_BACKTRACE: 1
+
+jobs:
+  workspace:
+    name: workspace (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - windows-latest
+          - ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Install Rust toolchain
+        run: |
+          rustup toolchain install stable --no-self-update --profile minimal
+          rustup default stable
+          rustup component add rustfmt clippy
+
+      - name: Toolchain info
+        run: |
+          rustc -Vv
+          cargo -V
+          echo "active toolchain:"
+          rustup show active-toolchain
+
+      - name: Format check
+        run: cargo fmt --all -- --check
+
+      - name: Clippy
+        run: cargo clippy --workspace --all-targets --locked -- -D warnings
+
+      - name: Test
+        run: cargo test --workspace --locked
+
+      - name: Build (debug)
+        run: cargo build --workspace --locked
+
+      - name: Build (release)
+        run: cargo build --workspace --release --locked
