@@ -1,6 +1,6 @@
 # Nüwa Backup — Document Index
 
-**Last Updated:** 2026-07-15 (BASELINE-CONSISTENCY-001-A)
+**Last Updated:** 2026-07-15 (BASELINE-CONSISTENCY-001-B)
 
 ---
 
@@ -52,7 +52,7 @@ This index lists every Markdown file in the `docs/` hierarchy with its purpose a
 | Document | Authority | Purpose |
 |----------|-----------|---------|
 | `docs/project/DOCUMENT_INDEX.md` | AUTHORITATIVE | This file |
-| `docs/project/PROJECT_ENGINEERING_MEMORY.md` | STALE / PENDING_CORRECTION | Previously authoritative project state tracker. Known to contain outdated phase/status references; must be corrected in a dedicated work package before reuse |
+| `docs/project/PROJECT_ENGINEERING_MEMORY.md` | REFERENCE | Current cross-phase operational snapshot. Derived from authoritative contracts, evidence, and repository state; cannot override them |
 | `docs/project/PROPOSAL_FOR_NEW_PROJECT.md` | HISTORICAL | Original project proposal. Retained for traceability |
 | `docs/project/01_Product_Requirements_Document.md` | REFERENCE | Original PRD |
 | `docs/project/02_Development_Plan.md` | REFERENCE | Original task breakdown by phase |
@@ -166,8 +166,8 @@ This directory contains the **current storage engine implementation authority**.
 ### Key Constraints
 
 1. All new storage functionality must follow the NWB Storage Engine architecture: each successful Full or Differential backup produces an immutable, self-describing logical NWB archive. It must not depend on the superseded Repository architecture.
-2. `PROJECT_ENGINEERING_MEMORY.md` must be corrected in a dedicated work package before it can be reused as authoritative.
-3. `README.md` at repo root is **STALE / PENDING_CORRECTION** — its content does not reflect the current project status or NWB storage engine direction.
+
+2. `README.md` at repo root is **STALE / PENDING_CORRECTION** — its content does not reflect the current project status or NWB storage engine direction.
 
 ---
 
@@ -189,4 +189,5 @@ This directory contains the **current storage engine implementation authority**.
 - **Task:** BASELINE-CONSISTENCY-001-A
 - **Purpose:** Rebuild document index to reflect real filesystem state, correct authority levels, and current project status
 - **Previous version:** 2026-07-13 (contained NUL bytes, listed deleted documents, incorrect authority levels)
+- **Correction:** 001-B reclassified PEM to REFERENCE; removed stale PEM constraint
 - **Maintenance:** Update when documents are added, removed, reclassified, or when project gate status changes
