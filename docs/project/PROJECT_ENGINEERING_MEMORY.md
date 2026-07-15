@@ -39,7 +39,9 @@ Nüwa Backup is a **local-first, single-machine** backup and disaster recovery p
 
 ## 3. Current Product Baseline: NWB Storage Engine
 
-The current storage engine implementation authority is the **NWB Storage Engine** (crates/nwb-format).
+**Architecture authority:** The NWB Engineering Document Set (contract documents #1-7 per README S2) defines the current storage architecture.
+**Code baseline `518f9fe`:** Implements an initial **`crates/nwb-format` Registry** - the format-registration and type-system foundation.
+**Important:** `crates/nwb-format` is **not** a complete NWB Storage Engine. It is one component (the Registry) of the larger NWB architecture, which also requires Writer, Reader, Catalog, Chunk engine, Crypto, Verify/Salvage, and Provider abstractions.
 
 ### Key design properties
 
@@ -49,7 +51,10 @@ The current storage engine implementation authority is the **NWB Storage Engine*
 
 ### Code reality
 
-- `crates/nwb-format` exists and contains the format registry, chunk type definitions, header enums, and a test suite
+- `crates/nwb-format` exists and contains the format registry, RecordType identifiers, feature-bit constants, header enums
+- registry TOML files
+- registry tests
+- No generic Chunk structure, Chunk codec, or complete archive format implementation exists
 - The following have **not yet been implemented** as a complete closed loop:
   - NWB Writer
   - NWB Reader / Restore Reader
@@ -86,7 +91,7 @@ The old Phase 3–6 roadmap (NTFS volume image, VSS, system recovery, BMR, disk 
 
 | Gate | Purpose | Status |
 |------|---------|--------|
-| GATE-0 | Foundation: Workspace, Format Registry, Provider SDK, Verification | IN_PROGRESS |
+| GATE-0 | Engineering and contract baseline: workspace/CI, registry, traceability, errors/logging, fixtures, and draft version policy | IN_PROGRESS |
 
 ### Implementation Package Status
 
@@ -95,7 +100,8 @@ The old Phase 3–6 roadmap (NTFS volume image, VSS, system recovery, BMR, disk 
 | IMP-000 | Workspace (build, CI, scaffolding) | Evidence remediation pending |
 | IMP-001 | Format Registry (nwb-format crate) | Implementation/evidence remediation pending |
 | IMP-002 | Requirements–Test Traceability Matrix | NOT_RUN / not authorized |
-| IMP-003 through IMP-009 | Planned for GATE-0 scope | NOT_STARTED / FORBIDDEN until GATE-0 closes |
+| IMP-003 through IMP-005 | Defined remaining GATE-0 work packages | NOT_RUN - execute per dependency and authorization |
+| IMP-006 through IMP-009 | Not defined in current implementation plan | NOT_STARTED - must not start until defined |
 | IMP-100 and later | Post-GATE-0 work | FORBIDDEN |
 
 All evidence, test results, and EVD documents for IMP-000 and IMP-001 are currently classified as **STALE / PENDING_CORRECTION** in the document index. No IMP-000 or IMP-001 closure claim is supported by current verified evidence.
@@ -124,7 +130,7 @@ Static source audit reveals approximately 130 Rust `#[test]` / `#[tokio::test]` 
 
 The frontend `pnpm build` is **known to fail** at this baseline:
 
-- `ui/src/components/BackupTreeView.tsx` contains garbled characters that break syntax
+- `ui/src/components/common/BackupTreeView.tsx` contains garbled characters that break syntax
 - `ui/src/pages/Backup.tsx` contains JSX structural errors
 
 These are pre-existing defects, not introduced by this work package.
@@ -154,4 +160,7 @@ These are pre-existing defects, not introduced by this work package.
 6. Re-accept IMP-000 and IMP-001 with current verified evidence
 7. Plan and authorize IMP-002 (Requirements–Test Traceability Matrix)
 
-IMP-002 and all later packages must not start before GATE-0 foundational evidence is closed.
+- IMP-002 remains NOT_RUN, waiting for explicit authorization
+- IMP-003-005 within GATE-0, execute per dependency and authorization
+- IMP-006-009 not defined and must not start until defined
+- Only IMP-100 and later must wait for GATE-0 closure
