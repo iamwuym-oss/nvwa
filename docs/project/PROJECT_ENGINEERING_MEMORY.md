@@ -39,7 +39,7 @@ Nüwa Backup is a **local-first, single-machine** backup and disaster recovery p
 
 ## 3. Current Product Baseline: NWB Storage Engine
 
-**Architecture authority:** The NWB Engineering Document Set (contract documents #1-7 per README S2) defines the current storage architecture.
+**Architecture authority:** Contract documents #1–6 of the NWB Engineering Document Set, in the authority order defined by README §2, define the current storage architecture. The Test Result Record (#7) is evidence only and is currently STALE / PENDING_CORRECTION.
 **Code baseline `518f9fe`:** Implements an initial **`crates/nwb-format` Registry** - the format-registration and type-system foundation.
 **Important:** `crates/nwb-format` is **not** a complete NWB Storage Engine. It is one component (the Registry) of the larger NWB architecture, which also requires Writer, Reader, Catalog, Chunk engine, Crypto, Verify/Salvage, and Provider abstractions.
 
