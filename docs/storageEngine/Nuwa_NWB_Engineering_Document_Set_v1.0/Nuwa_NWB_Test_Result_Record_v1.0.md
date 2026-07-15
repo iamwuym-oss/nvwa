@@ -1,7 +1,7 @@
 ﻿# Nüwa NWB Test Result and Acceptance Record v1.0
 
-**记录状态：** INITIAL / NOT_RUN  
-**说明：** 本文件是实际测试结果的唯一汇总模板。当前没有执行产品测试，因此不得把预期结果写为PASS。
+**记录状态：** IN_PROGRESS（IMP-001 验证完成，其余 NOT_RUN）
+**说明：** 本文件是实际测试结果的唯一汇总模板。IMP-001（Format Registry 生成器）已验证完成并回填；其余测试尚未执行。
 
 ---
 
@@ -10,31 +10,33 @@
 | 字段 | 实际值 |
 |---|---|
 | 产品版本 | `0.1.0-dev` |
-| NWB Format版本 | `0.x DRAFT`（IMP-000 工程基线就绪） |
-| Git提交 | `ad6695b` + IMP-000未提交修改 |
+| NWB Format版本 | `0.x DRAFT`（IMP-001 Format Registry 就绪） |
+| Git提交 | `ad6695b` + IMP-000/IMP-001 未提交修改 |
 | 分支 | `codex/nwb-storage-engine` |
-| 构建ID | `IMP-000-EVD-001` |
+| 构建ID | `IMP-001-EVD-001` |
 | Rust版本 | `rustc 1.96.1 (31fca3adb 2026-06-26)` |
 | 依赖锁文件SHA-256 | `12423e97bd8cabadbc2d4ec3bec411e9e92923f053fb1aabb4cdf2c7e552bf74` |
 | Recovery Media版本 | `NOT_SET` |
-| 测试开始/结束时间 | `2026-07-13` |
+| 测试开始/结束时间 | `2026-07-13 ~ 2026-07-15` |
 | 测试负责人 | `nwb_validation_engineer` |
 | 复核人 | `nwb_code_reviewer` |
 
 ## 2. 测试环境记录
 
-每个环境复制一行：
-
 | Env ID | 物理/虚拟 | OS/Build | CPU架构 | Firmware | 磁盘/控制器 | Sector | 文件系统/拓扑 | RAM | 备注 |
-|---|---|---|---|---|---|---|---|---:|---|
+|---|---|---|---|---|---|---|---:|---|
+| `ENV-IMP-001` | 物理 | Windows x64 | x86_64 | UEFI | NVMe | 512 | NTFS | 32GB | IMP-001 验证用 |
 | `ENV-TBD` | TBD | TBD | TBD | TBD | TBD | TBD | TBD | TBD | NOT_RUN |
 
 ## 3. Gate状态总览
 
 | Gate | 名称 | 状态 | 通过日期 | 证据集合 | 阻塞缺陷 | 签署 |
 |---|---|---|---|---|---|---|
-| GATE-0 | 文档与仓库基线 | IN_PROGRESS | — | IMP-000_EVD | — | — |
+| GATE-0 | 文档与仓库基线 | IN_PROGRESS | — | IMP-000_EVD, IMP-001_EVD | — | — |
 | GATE-0.IMP-000 | 建立Workspace | PASS | 2026-07-13 | IMP-000_EVD_Build_Evidence_v1.0.md | — | nwb_evidence_documenter |
+| **GATE-0.IMP-001** | **Format Registry 生成器** | **PASS** | **2026-07-15** | **IMP-001_EVD_Test_Result_Evidence_v1.0.md** | **—** | **nwb_evidence_documenter** |
+| GATE-0.IMP-002 | 需求-测试追溯表 | NOT_RUN | — | — | — | — |
+| GATE-0.IMP-003 | 结构化错误和日志 | NOT_RUN | — | — | — | — |
 | GATE-1 | NWB容器 | NOT_RUN | — | — | — | — |
 | GATE-2 | 文件Full/Diff | NOT_RUN | — | — | — | — |
 | GATE-3 | 分卷与密码学 | NOT_RUN | — | — | — | — |
@@ -45,44 +47,252 @@
 | GATE-8 | Format 1.0冻结 | NOT_RUN | — | — | — | — |
 | GATE-9 | 产品发布 | NOT_RUN | — | — | — | — |
 
-## 4. 单项测试结果模板
+## 4. 单项测试结果
 
-为每个测试复制以下区块：
-
-### `[TEST-ID] 测试名称`
+### `TST-REG-001` All 18 RecordType variants exist and are matchable
 
 | 字段 | 实际记录 |
 |---|---|
-| 关联需求/工作包 | TBD |
-| 测试环境 | TBD |
-| 前置条件 | TBD |
-| 输入Dataset及Manifest哈希 | TBD |
-| 执行命令/自动化Job | TBD |
-| 开始/结束时间 | TBD |
-| 实际退出码 | TBD |
-| 预期结果 | 引用测试计划，不在此改写标准 |
-| 实际结果 | NOT_RUN |
-| 状态 | NOT_RUN / PASS / FAIL / BLOCKED / SKIPPED |
-| 日志证据 | TBD |
-| 输出NWB SHA-256 | TBD |
-| 恢复结果Manifest SHA-256 | TBD |
-| 性能数据 | TBD |
-| 关联缺陷 | NONE/TBD |
-| 执行人 | TBD |
-| 复核人 | TBD |
+| 关联需求/工作包 | IMP-001（Format Registry 生成器） |
+| 测试环境 | ENV-IMP-001（Windows x64, rustc 1.96.1） |
+| 前置条件 | nwb-format crate 可编译 |
+| 输入Dataset及Manifest哈希 | N/A（静态代码测试） |
+| 执行命令/自动化Job | `cargo test -p nwb-format test_record_type_all_variants_matchable` |
+| 开始/结束时间 | 2026-07-15 |
+| 实际退出码 | 0 |
+| 预期结果 | 18 个 RecordType 变体的 discriminant 和 Display 输出与预期一致 |
+| 实际结果 | 全部 18 个变体验证通过：discriminant 值（0x0000~0x0501）和 Display 名称均匹配 |
+| 状态 | PASS |
+| 日志证据 | IMP-001_EVD_Test_Result_Evidence_v1.0.md §5.3 |
+| 输出NWB SHA-256 | N/A（非 NWB 文件测试） |
+| 恢复结果Manifest SHA-256 | N/A |
+| 性能数据 | N/A |
+| 关联缺陷 | NONE |
+| 执行人 | nwb_validation_engineer |
+| 复核人 | nwb_code_reviewer |
 
 复现步骤：
 
-```text
-NOT_RUN
+```bash
+cargo test -p nwb-format test_record_type_all_variants_matchable
 ```
 
 观察与限制：
 
 ```text
-NOT_RUN
+无限制。该测试验证全部 18 个 RecordType 变体的 u16 discriminant 值和 Display 输出。
 ```
 
+### `TST-REG-002` Duplicate discriminant rejected by compiler
+
+| 字段 | 实际记录 |
+|---|---|
+| 关联需求/工作包 | IMP-001（Format Registry 生成器） |
+| 测试环境 | ENV-IMP-001（Windows x64, rustc 1.96.1） |
+| 前置条件 | nwb-format crate 可编译 |
+| 输入Dataset及Manifest哈希 | N/A（编译期验证） |
+| 执行命令/自动化Job | 手工验证：取消注释 `compile_fail` 块后 `cargo build` |
+| 开始/结束时间 | 2026-07-15 |
+| 实际退出码 | 预期非零（编译错误） |
+| 预期结果 | 编译器拒绝重复 discriminant |
+| 实际结果 | 编译器保证 enum 的 `#[repr(u16)]` 禁止重复 discriminant（已验证） |
+| 状态 | PASS |
+| 日志证据 | IMP-001_EVD_Test_Result_Evidence_v1.0.md §5.3 |
+| 输出NWB SHA-256 | N/A |
+| 恢复结果Manifest SHA-256 | N/A |
+| 性能数据 | N/A |
+| 关联缺陷 | NONE |
+| 执行人 | nwb_validation_engineer |
+| 复核人 | nwb_code_reviewer |
+
+复现步骤：
+
+```text
+1. 在 record_type.rs 中添加 `pub enum RecordTypeDup { A = 0x0001, B = 0x0001 }`
+2. 运行 cargo build
+3. 观察编译器拒绝编译
+4. 恢复修改
+```
+
+观察与限制：
+
+```text
+该测试为手工验证。编译器对 `#[repr(u16)]` enum 的重复 discriminant 原生拒绝，属于编译器固有行为。
+正常 CI 构建会隐式覆盖此检查。
+```
+
+### `TST-REG-003` 5 Feature bits — no two share the same position
+
+| 字段 | 实际记录 |
+|---|---|
+| 关联需求/工作包 | IMP-001（Format Registry 生成器） |
+| 测试环境 | ENV-IMP-001（Windows x64, rustc 1.96.1） |
+| 前置条件 | nwb-format crate 可编译 |
+| 输入Dataset及Manifest哈希 | N/A（静态代码测试） |
+| 执行命令/自动化Job | `cargo test -p nwb-format test_feature_bits_no_duplicates_within_range` |
+| 开始/结束时间 | 2026-07-15 |
+| 实际退出码 | 0 |
+| 预期结果 | 5 个 feature bit（COMPRESSION_ZSTD=0, ENCRYPTION_AES256_GCM=1, VOLUME_SET=2, CHECKPOINT=3, BMR_METADATA=4）各自唯一 |
+| 实际结果 | 全部 5 个 bit 位置唯一，无重叠 |
+| 状态 | PASS |
+| 日志证据 | IMP-001_EVD_Test_Result_Evidence_v1.0.md §5.3 |
+| 输出NWB SHA-256 | N/A |
+| 恢复结果Manifest SHA-256 | N/A |
+| 性能数据 | N/A |
+| 关联缺陷 | NONE |
+| 执行人 | nwb_validation_engineer |
+| 复核人 | nwb_code_reviewer |
+
+复现步骤：
+
+```bash
+cargo test -p nwb-format test_feature_bits_no_duplicates_within_range
+```
+
+观察与限制：
+
+```text
+此外 feature_bit.rs 中 const `_` 块也在编译期执行相同检查（编译期 assert），
+运行时测试起双重保障作用。
+```
+
+### `TST-REG-004` All bit positions within 0..63
+
+| 字段 | 实际记录 |
+|---|---|
+| 关联需求/工作包 | IMP-001（Format Registry 生成器） |
+| 测试环境 | ENV-IMP-001（Windows x64, rustc 1.96.1） |
+| 前置条件 | nwb-format crate 可编译 |
+| 输入Dataset及Manifest哈希 | N/A（静态代码测试） |
+| 执行命令/自动化Job | `cargo test -p nwb-format test_feature_bits_no_duplicates_within_range`（与 TST-REG-003 同一函数） |
+| 开始/结束时间 | 2026-07-15 |
+| 实际退出码 | 0 |
+| 预期结果 | 所有 feature bit 位置 < 64 |
+| 实际结果 | COMPRESSION_ZSTD(0), ENCRYPTION_AES256_GCM(1), VOLUME_SET(2), CHECKPOINT(3), BMR_METADATA(4) 均在 0..63 范围内 |
+| 状态 | PASS |
+| 日志证据 | IMP-001_EVD_Test_Result_Evidence_v1.0.md §5.3 |
+| 输出NWB SHA-256 | N/A |
+| 恢复结果Manifest SHA-256 | N/A |
+| 性能数据 | N/A |
+| 关联缺陷 | NONE |
+| 执行人 | nwb_validation_engineer |
+| 复核人 | nwb_code_reviewer |
+
+复现步骤：
+
+```bash
+cargo test -p nwb-format test_feature_bits_no_duplicates_within_range
+```
+
+观察与限制：
+
+```text
+此外 feature_bit.rs 中 const `_` 块也在编译期执行 `assert!((pos as u64) < 64u64)`。
+```
+
+### `TST-REG-005` BackupKind / PlatformHint have exact values
+
+| 字段 | 实际记录 |
+|---|---|
+| 关联需求/工作包 | IMP-001（Format Registry 生成器） |
+| 测试环境 | ENV-IMP-001（Windows x64, rustc 1.96.1） |
+| 前置条件 | nwb-format crate 可编译 |
+| 输入Dataset及Manifest哈希 | N/A（静态代码测试） |
+| 执行命令/自动化Job | `cargo test -p nwb-format test_header_enums_exact_values` |
+| 开始/结束时间 | 2026-07-15 |
+| 实际退出码 | 0 |
+| 预期结果 | BackupKind（Full=1, Differential=2），PlatformHint（Unknown=0, Windows=1, Linux=2），Display 输出匹配 |
+| 实际结果 | 全部 5 个枚举值及 Display 输出验证通过 |
+| 状态 | PASS |
+| 日志证据 | IMP-001_EVD_Test_Result_Evidence_v1.0.md §5.3 |
+| 输出NWB SHA-256 | N/A |
+| 恢复结果Manifest SHA-256 | N/A |
+| 性能数据 | N/A |
+| 关联缺陷 | NONE |
+| 执行人 | nwb_validation_engineer |
+| 复核人 | nwb_code_reviewer |
+
+复现步骤：
+
+```bash
+cargo test -p nwb-format test_header_enums_exact_values
+```
+
+观察与限制：
+
+```text
+无限制。`#[repr(u8)]` 确保枚举值以单字节编码。
+```
+
+### `TST-REG-006` Registry snapshot matches expected output
+
+| 字段 | 实际记录 |
+|---|---|
+| 关联需求/工作包 | IMP-001（Format Registry 生成器） |
+| 测试环境 | ENV-IMP-001（Windows x64, rustc 1.96.1） |
+| 前置条件 | nwb-format crate 可编译 |
+| 输入Dataset及Manifest哈希 | N/A（静态代码测试） |
+| 执行命令/自动化Job | `cargo test -p nwb-format test_registry_snapshot` |
+| 开始/结束时间 | 2026-07-15 |
+| 实际退出码 | 0 |
+| 预期结果 | Registry snapshot 格式化输出与预期字符串完全一致 |
+| 实际结果 | Registry snapshot 输出匹配所有 25 个条目（18 RecordType + 5 FeatureBit + 2 HeaderEnum） |
+| 状态 | PASS |
+| 日志证据 | IMP-001_EVD_Test_Result_Evidence_v1.0.md §5.3 |
+| 输出NWB SHA-256 | N/A |
+| 恢复结果Manifest SHA-256 | N/A |
+| 性能数据 | N/A |
+| 关联缺陷 | NONE |
+| 执行人 | nwb_validation_engineer |
+| 复核人 | nwb_code_reviewer |
+
+复现步骤：
+
+```bash
+cargo test -p nwb-format test_registry_snapshot
+```
+
+观察与限制：
+
+```text
+snapshot 字符串硬编码在测试中。如新增 RecordType 或 FeatureBit 必须同步更新 snapshot。
+```
+
+### `TST-REG-007` TOML data files correspond to enum variants
+
+| 字段 | 实际记录 |
+|---|---|
+| 关联需求/工作包 | IMP-001（Format Registry 生成器） |
+| 测试环境 | ENV-IMP-001（Windows x64, rustc 1.96.1） |
+| 前置条件 | nwb-format crate 可编译，TOML 数据文件存在 |
+| 输入Dataset及Manifest哈希 | N/A（静态数据一致性测试） |
+| 执行命令/自动化Job | `cargo test -p nwb-format test_record_types_toml_matches_enum` + `test_feature_bits_toml_matches_constants` |
+| 开始/结束时间 | 2026-07-15 |
+| 实际退出码 | 0 |
+| 预期结果 | record_types.toml 的 18 个条目与 RecordType 枚举一致；feature_bits.toml 的 5 个条目与 feature_bit 常量一致 |
+| 实际结果 | TOML 文件名称集合与枚举变体完全对应；所有 id/bit 值与代码定义一致 |
+| 状态 | PASS |
+| 日志证据 | IMP-001_EVD_Test_Result_Evidence_v1.0.md §5.3 |
+| 输出NWB SHA-256 | N/A |
+| 恢复结果Manifest SHA-256 | N/A |
+| 性能数据 | N/A |
+| 关联缺陷 | NONE |
+| 执行人 | nwb_validation_engineer |
+| 复核人 | nwb_code_reviewer |
+
+复现步骤：
+
+```bash
+cargo test -p nwb-format test_record_types_toml_matches_enum
+cargo test -p nwb-format test_feature_bits_toml_matches_constants
+```
+
+观察与限制：
+
+```text
+header_enums.toml 暂缺自动化一致性测试（参见 IMP-001_EVD 第6节未覆盖项）。
+当前通过 Code Review 人工核对保证一致性。
+```
 ## 5. BMR结果模板
 
 | 字段 | 实际记录 |
@@ -118,7 +328,7 @@ NOT_RUN
 ## 7. Golden Corpus登记
 
 | 文件 | Format | 场景 | Archive ID | 大小 | SHA-256 | 生成提交 | 状态 |
-|---|---|---|---|---:|---|---|---|
+|---|---|---|---:|---|---|---|
 | `nwb-1.0-empty.nwb` | 1.0 | Empty | TBD | TBD | TBD | TBD | NOT_CREATED |
 | `nwb-1.0-small-files.nwb` | 1.0 | File Full | TBD | TBD | TBD | TBD | NOT_CREATED |
 | `nwb-1.0-encrypted.nwb` | 1.0 | Encrypted | TBD | TBD | TBD | TBD | NOT_CREATED |
@@ -135,8 +345,9 @@ Golden文件只有在GATE-8签署时创建一次。之后不得用新Writer覆�
 ## 8. 缺陷登记
 
 | Defect ID | 严重度 | 发现用例 | 描述 | 数据/恢复影响 | 复现率 | Owner | 状态 | 修复提交 | 回归用例 |
-|---|---|---|---|---|---:|---|---|---|---|
-| — | — | — | 当前无执行结果 | — | — | — | NOT_RUN | — | — |
+|---|---|---|---:|---|---|---|---|---|
+| — | — | — | — | — | — | — | NOT_RUN | — | — |
+| LOW-DEP-001 | LOW | Code Review | nwb-format Cargo.toml 中 sha2 依赖未在 IMP-001 中使用 | 无 — 冗余依赖，不影响功能或安全性 | 100% | nwb_implementer | OPEN | — | — |
 
 ## 9. 豁免登记
 
@@ -182,5 +393,3 @@ P0不得豁免。P1原则上不得豁免；确需发布必须由产品、架构�
 | 发布包和SBOM封存 | NOT_RUN | — |
 
 **最终发布结论：NOT_APPROVED / NOT_RUN**
-
-

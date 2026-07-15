@@ -1,0 +1,71 @@
+[INVALID]
+id = 0x0000
+description = "Invalid/zero sentinel — reserved, must not appear in valid streams"
+
+[MANIFEST]
+id = 0x0001
+description = "Volume manifest: metadata about the current physical volume"
+
+[VOLUME_SET_MANIFEST]
+id = 0x0002
+description = "Volume set manifest: linkage across a multi-volume archive"
+
+[VOLUME_FOOTER]
+id = 0x0003
+description = "Volume footer: final record sealing the volume"
+
+[TOMBSTONE]
+id = 0x0004
+description = "Tombstone: marks a removed or voided record slot"
+
+[DATA_CHUNK]
+id = 0x0101
+description = "Compressed/encrypted data chunk"
+
+[ZERO_RUN]
+id = 0x0102
+description = "Zero-byte run (sparse region descriptor)"
+
+[HOLE_RUN]
+id = 0x0103
+description = "Hole run (unallocated region descriptor)"
+
+[FILE_EXTENT]
+id = 0x0104
+description = "File extent: contiguous byte range within a file backup"
+
+[DISK_EXTENT]
+id = 0x0105
+description = "Disk extent: contiguous sector range within a disk backup"
+
+[DIFF_OPERATION]
+id = 0x0106
+description = "Differential operation: binary diff patch"
+
+[CATALOG_PAGE]
+id = 0x0201
+description = "Catalog page: sorted index of backed-up items"
+
+[CHUNK_INDEX_PAGE]
+id = 0x0202
+description = "Chunk index page: mapping of chunk hashes to storage locations"
+
+[ERROR_RECORD]
+id = 0x0301
+description = "Error record: logged I/O or integrity fault within the archive"
+
+[FILE_ENTRY]
+id = 0x0401
+description = "File entry: metadata for a single backed-up file"
+
+[PARTITION_LAYOUT]
+id = 0x0402
+description = "Partition layout: partition table snapshot"
+
+[BMR_ARTIFACT]
+id = 0x0403
+description = "BMR artifact: bare-metal recovery artifact (boot image, config, etc.)"
+
+[KEY_SLOT]
+id = 0x0501
+description = "Key slot: encrypted key material for envelope encryption"

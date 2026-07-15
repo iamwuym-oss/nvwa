@@ -1,0 +1,25 @@
+[backup_kind]
+description = "Type of backup contained in the archive"
+
+[backup_kind.values.FULL]
+value = 1
+description = "Full backup: all selected data"
+
+[backup_kind.values.DIFFERENTIAL]
+value = 2
+description = "Differential backup: changes since last full backup"
+
+[platform_hint]
+description = "Originating platform hint"
+
+[platform_hint.values.UNKNOWN]
+value = 0
+description = "Unknown or unspecified platform"
+
+[platform_hint.values.WINDOWS]
+value = 1
+description = "Microsoft Windows"
+
+[platform_hint.values.LINUX]
+value = 2
+description = "Linux"

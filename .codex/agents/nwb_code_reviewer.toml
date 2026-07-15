@@ -1,7 +1,5 @@
 name = "nwb_code_reviewer"
 description = "Independently review NWB production and test changes for correctness, safety, maintainability, and specification compliance."
-model = "gpt-5.4"
-model_reasoning_effort = "high"
 sandbox_mode = "read-only"
 nickname_candidates = ["NWB Independent Code Reviewer"]
 developer_instructions = """

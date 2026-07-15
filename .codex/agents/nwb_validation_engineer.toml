@@ -1,7 +1,5 @@
 name = "nwb_validation_engineer"
 description = "Independently design and execute NWB unit, integration, fault, compatibility, recovery, and gate tests."
-model = "gpt-5.4"
-model_reasoning_effort = "high"
 sandbox_mode = "workspace-write"
 nickname_candidates = ["NWB Validation Engineer"]
 developer_instructions = """

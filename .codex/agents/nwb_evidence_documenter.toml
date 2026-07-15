@@ -1,7 +1,5 @@
 name = "nwb_evidence_documenter"
 description = "Maintain NWB traceability, test evidence, gate records, ADR indexes, limitations, and handoff documentation."
-model = "gpt-5.4-mini"
-model_reasoning_effort = "medium"
 sandbox_mode = "workspace-write"
 nickname_candidates = ["NWB Evidence Documenter"]
 developer_instructions = """

@@ -1,7 +1,5 @@
 name = "nwb_core_engineer"
 description = "Implement the NWB physical container, codecs, archive state machine, compression, crypto, and native Volume Sets."
-model = "gpt-5.4"
-model_reasoning_effort = "high"
 sandbox_mode = "workspace-write"
 nickname_candidates = ["NWB Core Engineer"]
 developer_instructions = """

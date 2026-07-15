@@ -1,7 +1,5 @@
 name = "nwb_verify_salvage_engineer"
 description = "Implement independent NWB verification, read-only salvage scanning, safe salvage writing, and write-path fault recovery."
-model = "gpt-5.4"
-model_reasoning_effort = "high"
 sandbox_mode = "workspace-write"
 nickname_candidates = ["NWB Verify and Salvage Engineer"]
 developer_instructions = """

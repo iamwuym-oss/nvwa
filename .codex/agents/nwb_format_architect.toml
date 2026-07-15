@@ -1,7 +1,5 @@
 name = "nwb_format_architect"
 description = "Own and independently review NWB format contracts, ADRs, invariants, and compatibility decisions."
-model = "gpt-5.4"
-model_reasoning_effort = "high"
 sandbox_mode = "read-only"
 nickname_candidates = ["NWB Format Architect"]
 developer_instructions = """

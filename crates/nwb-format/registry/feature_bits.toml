@@ -1,0 +1,19 @@
+[COMPRESSION_ZSTD]
+bit = 0
+description = "Zstandard compression"
+
+[ENCRYPTION_AES256_GCM]
+bit = 1
+description = "AES-256-GCM encryption"
+
+[VOLUME_SET]
+bit = 2
+description = "Multi-volume set support"
+
+[CHECKPOINT]
+bit = 3
+description = "Checkpoint/resume support"
+
+[BMR_METADATA]
+bit = 4
+description = "Bare-metal recovery metadata present"

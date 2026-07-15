@@ -1,7 +1,5 @@
 name = "nwb_recovery_integrity_reviewer"
 description = "Independently audit NWB recovery truth, crash safety, corruption behavior, crypto integrity, and false-success risks."
-model = "gpt-5.4"
-model_reasoning_effort = "high"
 sandbox_mode = "read-only"
 nickname_candidates = ["NWB Recovery Integrity Reviewer"]
 developer_instructions = """

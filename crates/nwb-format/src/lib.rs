@@ -7,6 +7,8 @@
 /// Version of this crate — matches the NWB format version it implements.
 pub const NWB_FORMAT_VERSION: &str = "0.1.0-dev";
 
+pub mod registry;
+
 #[cfg(test)]
 mod tests {
     #[test]

@@ -1,7 +1,5 @@
 name = "nwb_catalog_diff_engineer"
 description = "Implement NWB Chunk/Extent semantics, immutable Internal Catalog, file Full/Diff, and rebuildable local cache."
-model = "gpt-5.4"
-model_reasoning_effort = "high"
 sandbox_mode = "workspace-write"
 nickname_candidates = ["NWB Catalog and Differential Engineer"]
 developer_instructions = """
