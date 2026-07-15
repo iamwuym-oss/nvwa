@@ -1,4 +1,4 @@
-﻿# IMP-001 EVD（工程验证文档）测试结果证据 v1.0
+# IMP-001 EVD（工程验证文档）测试结果证据 v1.0
 
 **工作包：** IMP-001 — 实现 Format Registry 生成器
 **所属阶段：** GATE-0（工程与契约基线）
@@ -260,9 +260,9 @@ Error ID Registry 属于实施计划中 IMP-001 的正式要求，目前未实�
 
 ## 8. 签署链记录
 
+| 角色 | 结论 | 日期 | 备注 |
 |---|---|---|---|
 | nwb_format_architect | SIGNED ✅ | 2026-07-15 | 历史记录，不覆盖§6阻塞项 |
 | nwb_code_reviewer | REVIEW_PASS ✅ | 2026-07-15 | 历史记录，不覆盖§6阻塞项 |
-| nwb_code_reviewer | REVIEW_PASS ✅（历史记录，不覆盖§6阻塞项） | 2026-07-15 |
-| nwb_validation_engineer | SUPERSEDED / ACCEPTANCE NOT MET ⚠️ | 2026-07-15 | 原PASS已被 BASELINE-CONSISTENCY-002-A-CORRECTION-1 推翻；§6 所列阻塞项未通过 |
-| nwb_evidence_documenter | EVD 归档 ⚠️ | 2026-07-15 | 已按 BASELINE-CONSISTENCY-002-A-CORRECTION-1 修正 |
+| nwb_validation_engineer | SUPERSEDED / ACCEPTANCE NOT MET ⚠️ | 2026-07-15 | 原PASS已被BASELINE-CONSISTENCY-002-A-CORRECTION-1推翻；§6阻塞项未通过 |
+| nwb_evidence_documenter | EVD归档 ⚠️ | 2026-07-15 | 已按BASELINE-CONSISTENCY-002-A-CORRECTION-1修正 |
