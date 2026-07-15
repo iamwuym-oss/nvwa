@@ -1,4 +1,4 @@
-# Nüwa NWB Test Result and Acceptance Record v1.0
+﻿# Nüwa NWB Test Result and Acceptance Record v1.0
 
 **记录状态：** IN_PROGRESS
 **说明：** 本文件是实际测试结果的唯一汇总模板。IMP-000 和 IMP-001 证据正在进行一致性修正（见 BASELINE-CONSISTENCY-002-A）；其余测试尚未执行。
@@ -118,8 +118,6 @@ cargo test -p nwb-format test_record_type_all_variants_matchable
 当前无自动化 compile_fail 测试。无真实编译器失败日志或退出码记录。
 解除条件：自动 compile_fail 测试，或保存真实非零退出码和编译器日志。
 ```
-```
-
 ### `TST-REG-003` 5 Feature bits — no two share the same position
 
 | 字段 | 实际记录 |
