@@ -167,8 +167,8 @@ fn get_drive_label(root: &str) -> String {
 /// Check whether a directory entry should be hidden from the browser.
 ///
 /// On Windows, hides system-protected directories (e.g. "System Volume Information").
+#[cfg(target_os = "windows")]
 fn is_hidden_or_system(entry: &std::fs::DirEntry) -> bool {
-    #[cfg(target_os = "windows")]
     {
         use std::os::windows::fs::MetadataExt;
         if let Ok(meta) = entry.metadata() {
