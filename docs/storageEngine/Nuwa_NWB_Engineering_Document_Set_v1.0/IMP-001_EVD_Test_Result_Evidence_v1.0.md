@@ -1,4 +1,4 @@
-﻿# IMP-001 EVD（工程验证文档）测试结果证据 v1.0
+# IMP-001 EVD（工程验证文档）测试结果证据 v1.0
 
 **工作包：** IMP-001 — 实现 Format Registry 生成器
 **所属阶段：** GATE-0（工程与契约基线）
@@ -43,6 +43,8 @@
 ## 2. IMP-001 交付物清单
 
 ### 2.1 生产代码（5 个文件）
+
+> ⚠ **非Generator实现：** 当前实现是手工维护的 Registry 代码和 TOML 文件。没有 Generator 或 build.rs 生成链。TOML、Rust 枚举和测试期望之间存在多份手工来源，尚未通过单一生成器保证一致性。
 
 | 文件 | 说明 |
 |---|---|
@@ -157,8 +159,8 @@
 | TST-REG-004 | All bit positions within 0..63 | `test_feature_bits_no_duplicates_within_range`（同函数） | ✅ PASS |
 | TST-REG-005 | BackupKind / PlatformHint have exact values | `test_header_enums_exact_values` | ✅ PASS |
 | TST-REG-006 | Registry snapshot matches expected output | `test_registry_snapshot` | ✅ PASS |
-| TST-REG-007 | TOML data files correspond to enum variants | `test_record_types_toml_matches_enum` + `test_feature_bits_toml_matches_constants` | ✅ PASS |
-| — | test_version_defined（lib.rs 单元测试） | `nwb_format::tests::test_version_defined` | ✅ PASS |
+| TST-REG-007 | TOML data files correspond to enum variants | `test_record_types_toml_matches_enum` + `test_feature_bits_toml_matches_constants`（注意：`test_header_enums_toml_matches_enum` 不存在） | ✅ PASS（record_types 和 feature_bits 仅；header_enums 无自动测试） |
+| — | test_version_defined（lib.rs 单元测试） | `nwb_format::tests::test_version_defined` | ✅ PASS（Windows-only，有限执行证据） |
 
 **nwb-format crate 总计：8 passed, 0 failed, 0 ignored**
 
@@ -177,9 +179,9 @@
 | AC-07 | Registry 快照输出符合预期 | TST-REG-006：25 个条目（18 RecordType + 5 FeatureBit + 2 HeaderEnum）完全匹配 | §5.3 TST-REG-006 | ✅ PASS |
 | AC-08 | TOML record_types 与枚举一致 | TST-REG-007：`test_record_types_toml_matches_enum` 验证名称集合和 id 值 | §5.3 TST-REG-007 | ✅ PASS |
 | AC-09 | TOML feature_bits 与常量一致 | TST-REG-007：`test_feature_bits_toml_matches_constants` 验证名称和 bit 值 | §5.3 TST-REG-007 | ✅ PASS |
-| AC-10 | TOML header_enums 与枚举一致 | TST-REG-007：`test_header_enums_toml_matches_enum` 验证名称和 value 值 | §5.3 TST-REG-007 | ✅ PASS |
+| AC-10 | TOML header_enums 与枚举一致 | 当前无自动化测试；`header_enums.toml` 无自动一致性测试。先前声称的 `test_header_enums_toml_matches_enum` 不存在。通过 Code Review 人工核对保证 | §6 IMPRV-004 | ❌ NOT_MET |
 | AC-11 | `cargo build` 干净通过 | QG-001：EXIT CODE 0 | §5.2 QG-001 | ✅ PASS |
-| AC-12 | `cargo clippy --all-targets` 无警告 | QG-003：EXIT CODE 0, no warnings | §5.2 QG-003 | ✅ PASS |
+| AC-12 | `cargo clippy --all-targets` 无警告 | QG-003：EXIT CODE 0, no warnings | §5.2 QG-003 | ✅ PASS（Windows-only，非Generator证据） |
 
 ---
 
@@ -194,11 +196,25 @@
 | IMPRV-001 | 冗余依赖 | `nwb-format/Cargo.toml` 中 `sha2` 声明未使用，建议后续清理 | 待后续 IMP 处理 |
 | IMPRV-002 | 测试覆盖 | TST-REG-002 重复 discriminant 测试依赖手工 `cargo build` 验证，无自动化 `compile_fail` 测试 | 待 `trybuild` 或等价工具引入 |
 | IMPRV-003 | 测试覆盖 | TST-REG-007 中手工 TOML 解析器 `parse_toml_entries()` 无独立单元测试覆盖错误路径 | 待后续测试增强 |
-| IMPRV-004 | 测试覆盖 | `header_enums.toml` 数据文件内容缺少自动化一致性测试，当前仅通过 Code Review 人工核对保证 | 待后续测试增强 |
+| IMPRV-004 | 验收阻塞 | `header_enums.toml` 数据文件内容缺少自动化一致性测试，先前声称的 `test_header_enums_toml_matches_enum` 不存在。当前仅通过 Code Review 人工核对保证 | 必须包含Generator验收条件 |
 
-> **IMPRV-004 说明：** `header_enums.toml` 定义 BackupKind（Full、Differential）和 PlatformHint（Unknown、Windows、Linux）共 5 个枚举值与 Header Enums 代码的一致性。当前无自动化测试自动验证 TOML 与代码的对应关系，但已有 TST-REG-007 中针对 record_types.toml 和 feature_bits.toml 的同类自动化测试可作为参考模式。此为**非阻塞改进项**，不影响 IMP-001 验收。
+> ⚠ **IMPRV-004 升级：** 先前声称存在 `test_header_enums_toml_matches_enum` 自动测试，实际代码中不存在该测试。此为**验收阻塞项**，必须包含 Generator 或自动一致性测试才能进入 ACCEPTED。
 
-### 6.2 不适用于本工作包的测试
+### 6.2 Generator 缺失
+
+| 改进项 ID | 类别 | 说明 | 跟踪 |
+|---|---|---|---|
+| IMPRV-005 | 架构缺失 | 无 Generator 或 build.rs 生成链。TOML、Rust 枚举和测试期望之间存在多份手工来源，无法保证一致性 | 必须满足 IMP-001 验收条件 |
+
+### 6.3 Error ID Registry 未实现
+
+当前 Format Registry 仅包含 RecordType、Feature Bit 和 Header Enums。Error ID Registry 尚未实现，不属于当前 IMP-001 范围，但表明 IMP-001 尚未覆盖 Format Registry 全部需求。
+
+### 6.4 生成产物哈希
+
+当前无生成产物哈希记录。旧提交/未提交工作树绑定不能自动升级为 518f9fe 证据。
+
+### 6.5 不适用于本工作包的测试
 
 以下测试类别属于后续 Gate，不在 IMP-001 验证范围内：
 
@@ -215,23 +231,30 @@
 
 ### 7.1 总体状态
 
-| 验收项 | 状态 |
-|---|---|
-| Record/Feature/Error ID 唯一 | ✅ PASS |
-| 重复 ID 导致构建失败 | ✅ PASS（编译器保证） |
-| Registry 单元和快照测试 | ✅ PASS（8 passed, 0 failed） |
-| 干净构建 | ✅ PASS（cargo build EXIT CODE 0） |
-| Clippy 无警告 | ✅ PASS（EXIT CODE 0, no warnings） |
-| 格式检查 | ✅ PASS（cargo fmt --check EXIT CODE 0） |
+**Status: IN_PROGRESS / ACCEPTANCE NOT MET**
+
+| 验收项 | 状态 | 说明 |
+|---|---|---|
+| RecordType/Feature Bit/Header Enum 手工定义 | ✅ 已实现 | 手工维护，非Generator生成 |
+| Error ID Registry | ❌ 未实现 | 不属于当前范围 |
+| 重复 ID 导致构建失败 | ✅ PASS | 编译器保证（Windows验证） |
+| Registry 单元和快照测试 | ⚠️ 部分通过 | 8 passed, 0 failed（Windows-only）；header_enums.toml 无自动测试 |
+| 干净构建 | ✅ PASS | cargo build EXIT CODE 0（Windows-only） |
+| Clippy 无警告 | ✅ PASS | Windows-only |
+| 格式检查 | ✅ PASS | Windows-only |
+| Generator 生成链 | ❌ 不存在 | 手工维护的多份来源无法替代单一生成器 |
+| 生成产物哈希 | ❌ 未记录 | 无可追溯的生成产物证据 |
 
 ### 7.2 IMP-001 在 Gate 中的位置
 
+> ⚠ 当前 8 项 Rust 测试通过可以保留为有限 Windows 执行结果，但不能证明 Generator 验收完成。
+
 | Gate | 工作包 | 状态 |
 |---|---|---|
-| GATE-0.IMP-000 | 建立 Workspace | ✅ PASS |
-| **GATE-0.IMP-001** | **Format Registry 生成器** | **✅ PASS** |
-| GATE-0.IMP-002 | 需求-测试追溯表 | 待实施 |
-| GATE-0.IMP-003 | 结构化错误和日志 | 待实施 |
+| GATE-0.IMP-000 | 建立 Workspace | ⚠️ IMPLEMENTED / ACCEPTANCE NOT MET |
+| **GATE-0.IMP-001** | **Format Registry 生成器** | **⚠️ IN_PROGRESS / ACCEPTANCE NOT MET** |
+| GATE-0.IMP-002 | 需求-测试追溯表 | NOT_RUN |
+| GATE-0.IMP-003 | 结构化错误和日志 | NOT_RUN |
 
 ---
 
@@ -241,5 +264,5 @@
 |---|---|---|
 | nwb_format_architect | SIGNED ✅ | 2026-07-15 |
 | nwb_code_reviewer | REVIEW_PASS ✅ | 2026-07-15 |
-| nwb_validation_engineer | PASS ✅ | 2026-07-15 |
-| nwb_evidence_documenter | EVD 归档 ✅ | 2026-07-15 |
+| nwb_validation_engineer | ACCEPTANCE NOT MET ⚠️ | 2026-07-15 | 独立验证发现 §6 所列阻塞项 |
+| nwb_evidence_documenter | EVD 归档 ⚠️ | 2026-07-15 | 已按 BASELINE-CONSISTENCY-002-A 修正 |

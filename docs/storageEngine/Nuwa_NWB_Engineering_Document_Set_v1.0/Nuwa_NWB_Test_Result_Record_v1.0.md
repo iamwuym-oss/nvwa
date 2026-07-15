@@ -1,7 +1,7 @@
-﻿# Nüwa NWB Test Result and Acceptance Record v1.0
+# Nüwa NWB Test Result and Acceptance Record v1.0
 
-**记录状态：** IN_PROGRESS（IMP-001 验证完成，其余 NOT_RUN）
-**说明：** 本文件是实际测试结果的唯一汇总模板。IMP-001（Format Registry 生成器）已验证完成并回填；其余测试尚未执行。
+**记录状态：** IN_PROGRESS
+**说明：** 本文件是实际测试结果的唯一汇总模板。IMP-000 和 IMP-001 证据正在进行一致性修正（见 BASELINE-CONSISTENCY-002-A）；其余测试尚未执行。
 
 ---
 
@@ -11,7 +11,7 @@
 |---|---|
 | 产品版本 | `0.1.0-dev` |
 | NWB Format版本 | `0.x DRAFT`（IMP-001 Format Registry 就绪） |
-| Git提交 | `ad6695b` + IMP-000/IMP-001 未提交修改 |
+| Git提交 | `ad6695b` + 当时未提交修改（原始证据绑定）；不能自动升级 |
 | 分支 | `codex/nwb-storage-engine` |
 | 构建ID | `IMP-001-EVD-001` |
 | Rust版本 | `rustc 1.96.1 (31fca3adb 2026-06-26)` |
@@ -33,8 +33,8 @@
 | Gate | 名称 | 状态 | 通过日期 | 证据集合 | 阻塞缺陷 | 签署 |
 |---|---|---|---|---|---|---|
 | GATE-0 | 文档与仓库基线 | IN_PROGRESS | — | IMP-000_EVD, IMP-001_EVD | — | — |
-| GATE-0.IMP-000 | 建立Workspace | PASS | 2026-07-13 | IMP-000_EVD_Build_Evidence_v1.0.md | — | nwb_evidence_documenter |
-| **GATE-0.IMP-001** | **Format Registry 生成器** | **PASS** | **2026-07-15** | **IMP-001_EVD_Test_Result_Evidence_v1.0.md** | **—** | **nwb_evidence_documenter** |
+| GATE-0.IMP-000 | 建立Workspace | IMPLEMENTED / ACCEPTANCE NOT MET | — | IMP-000_EVD_Build_Evidence_v1.0.md | 缺Release/CI/Linux证据 | — |
+| **GATE-0.IMP-001** | **Format Registry 生成器** | **IN_PROGRESS / ACCEPTANCE NOT MET** | **—** | **IMP-001_EVD_Test_Result_Evidence_v1.0.md** | **缺Generator/no header_enums test** | **—** |
 | GATE-0.IMP-002 | 需求-测试追溯表 | NOT_RUN | — | — | — | — |
 | GATE-0.IMP-003 | 结构化错误和日志 | NOT_RUN | — | — | — | — |
 | GATE-1 | NWB容器 | NOT_RUN | — | — | — | — |
@@ -62,12 +62,13 @@
 | 实际退出码 | 0 |
 | 预期结果 | 18 个 RecordType 变体的 discriminant 和 Display 输出与预期一致 |
 | 实际结果 | 全部 18 个变体验证通过：discriminant 值（0x0000~0x0501）和 Display 名称均匹配 |
-| 状态 | PASS |
+| 状态 | PASS（Windows-only，有限执行证据） |
 | 日志证据 | IMP-001_EVD_Test_Result_Evidence_v1.0.md §5.3 |
 | 输出NWB SHA-256 | N/A（非 NWB 文件测试） |
 | 恢复结果Manifest SHA-256 | N/A |
 | 性能数据 | N/A |
 | 关联缺陷 | NONE |
+| 原始提交绑定 | ad6695b + 当时未提交修改；不能自动视为 518f9fe 证据 |
 | 执行人 | nwb_validation_engineer |
 | 复核人 | nwb_code_reviewer |
 
@@ -96,12 +97,13 @@ cargo test -p nwb-format test_record_type_all_variants_matchable
 | 实际退出码 | 预期非零（编译错误） |
 | 预期结果 | 编译器拒绝重复 discriminant |
 | 实际结果 | 编译器保证 enum 的 `#[repr(u16)]` 禁止重复 discriminant（已验证） |
-| 状态 | PASS |
+| 状态 | PASS（手工验证，非自动化 compile_fail 测试，Windows-only） |
 | 日志证据 | IMP-001_EVD_Test_Result_Evidence_v1.0.md §5.3 |
 | 输出NWB SHA-256 | N/A |
 | 恢复结果Manifest SHA-256 | N/A |
 | 性能数据 | N/A |
 | 关联缺陷 | NONE |
+| 原始提交绑定 | ad6695b + 当时未提交修改 |
 | 执行人 | nwb_validation_engineer |
 | 复核人 | nwb_code_reviewer |
 
@@ -134,12 +136,13 @@ cargo test -p nwb-format test_record_type_all_variants_matchable
 | 实际退出码 | 0 |
 | 预期结果 | 5 个 feature bit（COMPRESSION_ZSTD=0, ENCRYPTION_AES256_GCM=1, VOLUME_SET=2, CHECKPOINT=3, BMR_METADATA=4）各自唯一 |
 | 实际结果 | 全部 5 个 bit 位置唯一，无重叠 |
-| 状态 | PASS |
+| 状态 | PASS（手工验证，非自动化 compile_fail 测试，Windows-only） |
 | 日志证据 | IMP-001_EVD_Test_Result_Evidence_v1.0.md §5.3 |
 | 输出NWB SHA-256 | N/A |
 | 恢复结果Manifest SHA-256 | N/A |
 | 性能数据 | N/A |
 | 关联缺陷 | NONE |
+| 原始提交绑定 | ad6695b + 当时未提交修改 |
 | 执行人 | nwb_validation_engineer |
 | 复核人 | nwb_code_reviewer |
 
@@ -169,12 +172,13 @@ cargo test -p nwb-format test_feature_bits_no_duplicates_within_range
 | 实际退出码 | 0 |
 | 预期结果 | 所有 feature bit 位置 < 64 |
 | 实际结果 | COMPRESSION_ZSTD(0), ENCRYPTION_AES256_GCM(1), VOLUME_SET(2), CHECKPOINT(3), BMR_METADATA(4) 均在 0..63 范围内 |
-| 状态 | PASS |
+| 状态 | PASS（手工验证，非自动化 compile_fail 测试，Windows-only） |
 | 日志证据 | IMP-001_EVD_Test_Result_Evidence_v1.0.md §5.3 |
 | 输出NWB SHA-256 | N/A |
 | 恢复结果Manifest SHA-256 | N/A |
 | 性能数据 | N/A |
 | 关联缺陷 | NONE |
+| 原始提交绑定 | ad6695b + 当时未提交修改 |
 | 执行人 | nwb_validation_engineer |
 | 复核人 | nwb_code_reviewer |
 
@@ -203,12 +207,13 @@ cargo test -p nwb-format test_feature_bits_no_duplicates_within_range
 | 实际退出码 | 0 |
 | 预期结果 | BackupKind（Full=1, Differential=2），PlatformHint（Unknown=0, Windows=1, Linux=2），Display 输出匹配 |
 | 实际结果 | 全部 5 个枚举值及 Display 输出验证通过 |
-| 状态 | PASS |
+| 状态 | PASS（手工验证，非自动化 compile_fail 测试，Windows-only） |
 | 日志证据 | IMP-001_EVD_Test_Result_Evidence_v1.0.md §5.3 |
 | 输出NWB SHA-256 | N/A |
 | 恢复结果Manifest SHA-256 | N/A |
 | 性能数据 | N/A |
 | 关联缺陷 | NONE |
+| 原始提交绑定 | ad6695b + 当时未提交修改 |
 | 执行人 | nwb_validation_engineer |
 | 复核人 | nwb_code_reviewer |
 
@@ -237,12 +242,13 @@ cargo test -p nwb-format test_header_enums_exact_values
 | 实际退出码 | 0 |
 | 预期结果 | Registry snapshot 格式化输出与预期字符串完全一致 |
 | 实际结果 | Registry snapshot 输出匹配所有 25 个条目（18 RecordType + 5 FeatureBit + 2 HeaderEnum） |
-| 状态 | PASS |
+| 状态 | PASS（手工验证，非自动化 compile_fail 测试，Windows-only） |
 | 日志证据 | IMP-001_EVD_Test_Result_Evidence_v1.0.md §5.3 |
 | 输出NWB SHA-256 | N/A |
 | 恢复结果Manifest SHA-256 | N/A |
 | 性能数据 | N/A |
 | 关联缺陷 | NONE |
+| 原始提交绑定 | ad6695b + 当时未提交修改 |
 | 执行人 | nwb_validation_engineer |
 | 复核人 | nwb_code_reviewer |
 
@@ -258,7 +264,7 @@ cargo test -p nwb-format test_registry_snapshot
 snapshot 字符串硬编码在测试中。如新增 RecordType 或 FeatureBit 必须同步更新 snapshot。
 ```
 
-### `TST-REG-007` TOML data files correspond to enum variants
+### `TST-REG-007` TOML data files correspond to enum variants（仅限于 record_types 和 feature_bits；header_enums 无自动测试）
 
 | 字段 | 实际记录 |
 |---|---|
@@ -271,12 +277,13 @@ snapshot 字符串硬编码在测试中。如新增 RecordType 或 FeatureBit �
 | 实际退出码 | 0 |
 | 预期结果 | record_types.toml 的 18 个条目与 RecordType 枚举一致；feature_bits.toml 的 5 个条目与 feature_bit 常量一致 |
 | 实际结果 | TOML 文件名称集合与枚举变体完全对应；所有 id/bit 值与代码定义一致 |
-| 状态 | PASS |
+| 状态 | PASS（手工验证，非自动化 compile_fail 测试，Windows-only） |
 | 日志证据 | IMP-001_EVD_Test_Result_Evidence_v1.0.md §5.3 |
 | 输出NWB SHA-256 | N/A |
 | 恢复结果Manifest SHA-256 | N/A |
 | 性能数据 | N/A |
 | 关联缺陷 | NONE |
+| 原始提交绑定 | ad6695b + 当时未提交修改 |
 | 执行人 | nwb_validation_engineer |
 | 复核人 | nwb_code_reviewer |
 
@@ -290,8 +297,8 @@ cargo test -p nwb-format test_feature_bits_toml_matches_constants
 观察与限制：
 
 ```text
-header_enums.toml 暂缺自动化一致性测试（参见 IMP-001_EVD 第6节未覆盖项）。
-当前通过 Code Review 人工核对保证一致性。
+header_enums.toml 暂缺自动化一致性测试。先前声称的 test_header_enums_toml_matches_enum 不存在。
+当前通过 Code Review 人工核对保证一致性。此为使 IMP-001 处于 ACCEPTANCE NOT MET 的阻塞项之一。
 ```
 ## 5. BMR结果模板
 

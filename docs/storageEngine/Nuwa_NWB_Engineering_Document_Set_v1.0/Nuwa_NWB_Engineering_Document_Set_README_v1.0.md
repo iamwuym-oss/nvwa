@@ -162,4 +162,18 @@ Codex执行本项目时必须遵守：
 存储引擎只有在 `GATE-8` 通过后才可以称为“NWB Format 1.0”；单机备份产品只有在 `GATE-9` 通过后才可以称为“首版完成”。
 
 本README是执行入口，不替代任何详细规范。
+## 11. 当前真实性声明
 
+本README是执行入口，不替代任何详细规范。以下为截至2026-07-15的实际工程状态：
+
+| 项 | 状态 |
+|---|---|
+| GATE-0 | IN_PROGRESS |
+| IMP-000 (Workspace) | IMPLEMENTED — 验收证据不足 |
+| IMP-001 (Format Registry) | IN_PROGRESS — 正式的Generator要求尚未满足 |
+| IMP-002 | NOT_RUN |
+
+- IMP-000和IMP-001均不得描述为VERIFIED、ACCEPTED或CLOSED
+- Test Result Record和EVD正在进行一致性修复
+- 任何工作包只有同时具备设计、实现、自动测试、恢复验证和证据记录才允许标记为ACCEPTED
+- IMP-002及以后保持NOT_RUN，等待GATE-0基线证据关闭

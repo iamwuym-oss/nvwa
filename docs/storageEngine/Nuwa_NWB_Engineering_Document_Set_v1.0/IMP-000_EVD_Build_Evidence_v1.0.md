@@ -1,4 +1,4 @@
-﻿# IMP-000 EVD（工程验证文档）构建证据 v1.0
+# IMP-000 EVD（工程验证文档）构建证据 v1.0
 
 **工作包：** IMP-000 — 建立Workspace、模块和依赖方向  
 **所属阶段：** GATE-0（工程与契约基线）  
@@ -26,9 +26,10 @@
 
 | 项 | 说明 |
 |---|---|
-| 基线提交 | ad6695b |
+| 基线提交 | ad6695b（原始证据绑定） |
 | 当前分支 | codex/nwb-storage-engine |
 | IMP-000实际变更 | Cargo.toml / src-tauri/Cargo.toml / Cargo.lock / crates/nwb-format/ |
+| 证据边界 | 原始证据绑定 ad6695b 及当时未提交修改，不能自动视为当前提交 518f9fe 的证据 |
 
 ### 1.3 与本工作包无关的内容
 
@@ -91,13 +92,15 @@ nwb-format不依赖根package，根package不依赖nwb-format，Core无平台Pro
 
 ### 3.2 质量门执行结果
 
-| 命令 | 结果 |
-|---|---|
-| cargo fmt --check | PASS（exit 0） |
-| cargo check（根Workspace） | PASS（exit 0） |
-| cargo test --workspace | PASS（123/123，exit 0） |
-| cargo build（根Workspace） | PASS（exit 0） |
-| cd src-tauri; cargo check | PASS（exit 0） |
+| 命令 | 结果 | 备注 |
+|---|---|---|
+| cargo fmt --check | PASS（exit 0） | Windows-only |
+| cargo check（根Workspace） | PASS（exit 0） | Windows-only |
+| cargo test --workspace | PASS（123/123，exit 0） | Windows-only |
+| cargo build（根Workspace） | PASS（exit 0） | Windows-only，Debug only |
+| cd src-tauri; cargo check | PASS（exit 0） | Windows-only |
+
+> ⚠ **证据边界：** 以上结果仅限 Windows x86-64 Debug 构建。无 Release 构建证据、无 Linux 构建/测试证据、无 CI 流水线（仓库无 .github/workflows）。原始执行绑定 ad6695b + 未提交修改，不能自动视为 518f9fe 提交的证据。
 
 测试明细：
 - nuwa_backup src/lib.rs：78 passed，0 failed
@@ -140,7 +143,10 @@ AGENTS.md不属于IMP-000工作包范围。
 
 ## 6. 已知限制
 
-- 当前仅验证Windows x64构建；Linux CI尚未在本次范围内验证
+- 当前仅验证Windows x64 Debug构建；无Release构建证据
+- 无Linux构建/测试证据
+- 仓库无 .github/workflows（无CI流水线）
+- 原始证据绑定 ad6695b 及当时未提交修改，不能自动视为 518f9fe 提交的证据
 - nwb-format的sha2依赖未在IMP-000工作单中明确授权，但已在独立验证环节确认属于允许的最低依赖
 - Format Registry尚未建立（属于IMP-001）
 
@@ -148,12 +154,28 @@ AGENTS.md不属于IMP-000工作包范围。
 
 ## 7. 结论
 
-| 验收项 | 状态 |
-|---|---|
-| 干净环境一条命令构建 | PASS |
-| Core不依赖平台Provider | PASS |
-| Debug构建 | PASS |
-| src-tauri保持独立 | PASS |
-| GATE-0 IMP-000完成 | PASS |
+**Status: IMPLEMENTED / ACCEPTANCE NOT MET**
+
+### 已实现
+
+- Workspace和nwb-format骨架已实现（Cargo workspace、crates/nwb-format/骨架）
+- 旧Windows命令结果可保留为有限历史执行记录
+
+### 验收未满足的原因
+
+- 没有Release构建完整证据
+- 没有Linux构建/测试证据
+- 没有Windows/Linux CI（仓库无 .github/workflows）
+- 原始证据绑定 ad6695b 和当时未提交修改，不能自动视为 518f9fe 提交的证据
+
+### 解除条件
+
+当前提交上通过以下全部检查并记录证据方可重新评估：
+- Debug/Release构建通过
+- Windows/Linux构建通过
+- CI流水线建立并通过
+- 命令、退出码、日志和复核记录齐全
+
+因此不能 PASS、ACCEPT 或 CLOSE IMP-000。
 
 ---
