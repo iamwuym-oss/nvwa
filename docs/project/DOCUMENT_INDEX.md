@@ -1,4 +1,4 @@
-﻿# Nüwa Backup — Document Index
+# Nüwa Backup — Document Index
 
 **Last Updated:** 2026-07-15 (BASELINE-CONSISTENCY-001-A)
 
@@ -19,7 +19,6 @@ This index lists every Markdown file in the `docs/` hierarchy with its purpose a
 | **HISTORICAL** | Superseded. Entries marked **ACCEPTED BASELINE** record formally accepted phase outcomes. |
 | **SUPERSEDED** | Replaced by later decisions or documents. Do not cite as current authority. |
 | **STALE / PENDING_CORRECTION** | Previously authoritative but known to be outdated. Must be corrected before reuse. |
-| **NOT_RUN** | Planned work not yet executed. |
 
 ### Classification Rules
 
@@ -127,7 +126,7 @@ All Phase 0 documents are **HISTORICAL**. They guided initial project setup but 
 
 ## docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/ — Current NWB Storage Engine Authority
 
-This directory contains the **current storage engine implementation authority**. Documents are listed in authority order per the Engineering Document Set Manifest.
+This directory contains the **current storage engine implementation authority**. Contract documents #1–6 follow the authority order defined by the Engineering Document Set README §2. Evidence and metadata documents are listed afterward and cannot override implementation contracts.
 
 ### AUTHORITATIVE Documents (implementation contracts)
 
@@ -140,15 +139,15 @@ This directory contains the **current storage engine implementation authority**.
 | 5 | `docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Implementation_Plan_v1.0.md` | Implementation plan and Gate roadmap |
 | 6 | `docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md` | Verification, acceptance, and test plan |
 
-### REFERENCE Documents (evidence records, cannot modify contracts)
+### REFERENCE / STALE Documents (evidence records, metadata)
 
-| # | Document | Purpose |
-|---|----------|---------|
-| 7 | `docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Test_Result_Record_v1.0.md` | Records actual test results. Cannot modify architecture contracts |
-| 8 | `docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/IMP-000_EVD_Build_Evidence_v1.0.md` | IMP-000 build evidence. REFERENCE only |
-| 9 | `docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/IMP-001_EVD_Test_Result_Evidence_v1.0.md` | IMP-001 test result evidence. REFERENCE only |
-| 10 | `docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Engineering_Document_Set_README_v1.0.md` | Document set README and reading order |
-| 11 | `docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Engineering_Document_Set_Manifest_v1.0.md` | Document set manifest with SHA-256 hashes |
+| # | Document | Classification | Purpose |
+|---|----------|----------------|---------|
+| 7 | `docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Test_Result_Record_v1.0.md` | STALE / PENDING_CORRECTION | Records actual test results. Cannot modify architecture contracts |
+| 8 | `docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/IMP-000_EVD_Build_Evidence_v1.0.md` | STALE / PENDING_CORRECTION | IMP-000 build evidence |
+| 9 | `docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/IMP-001_EVD_Test_Result_Evidence_v1.0.md` | STALE / PENDING_CORRECTION | IMP-001 test result evidence |
+| 10 | `docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Engineering_Document_Set_README_v1.0.md` | REFERENCE | Document set README and reading order |
+| 11 | `docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Engineering_Document_Set_Manifest_v1.0.md` | STALE / PENDING_CORRECTION | Document set manifest with SHA-256 hashes |
 
 ---
 
@@ -161,15 +160,14 @@ This directory contains the **current storage engine implementation authority**.
 | **Gate** | GATE-0 — IN_PROGRESS |
 | **IMP-000** (Workspace) | Consistency and evidence remediation pending — not yet a closed evidence loop |
 | **IMP-001** (Format Registry) | Consistency and evidence remediation pending — not yet a closed evidence loop |
-| **IMP-002** (Archive Engine) | NOT_RUN — not yet authorized to start |
+| **IMP-002** (Requirements–Test Traceability Matrix) | NOT_RUN — not yet authorized to start |
 | **IMP-100 and later** | NOT_STARTED / FORBIDDEN UNTIL GATE-0 — must not be initiated before GATE-0 is closed and IMP-002 is planned and authorized |
 
 ### Key Constraints
 
-1. All new functionality must use the NWB Repository Engine as the sole data foundation. The old flat-file format is read-only reference only.
-2. The old Repository Engine architecture (Phase S, `repo.db`, BlockStore, etc.) is **superseded** and must not be described as the current engine.
-3. `PROJECT_ENGINEERING_MEMORY.md` must be corrected in a dedicated work package before it can be reused as authoritative.
-4. `README.md` at repo root is **STALE / PENDING_CORRECTION** — its content does not reflect the current project status or NWB storage engine direction.
+1. All new storage functionality must follow the NWB Storage Engine architecture: each successful Full or Differential backup produces an immutable, self-describing logical NWB archive. It must not depend on the superseded Repository architecture.
+2. `PROJECT_ENGINEERING_MEMORY.md` must be corrected in a dedicated work package before it can be reused as authoritative.
+3. `README.md` at repo root is **STALE / PENDING_CORRECTION** — its content does not reflect the current project status or NWB storage engine direction.
 
 ---
 
@@ -177,7 +175,7 @@ This directory contains the **current storage engine implementation authority**.
 
 1. Start at this index to identify the correct authority level for each document.
 2. **AUTHORITATIVE** documents take precedence over all lower levels.
-3. In case of conflict between AUTHORITATIVE documents, the NWB Storage Engine Architecture v2.0 takes precedence for storage engine matters; `AGENTS.md` takes precedence for governance and execution discipline.
+3. In case of conflict between AUTHORITATIVE documents, the NWB Storage Engine Architecture v2.0 takes precedence for storage engine matters; AGENTS.md takes precedence for governance and execution discipline.
 4. **STALE / PENDING_CORRECTION** documents must be corrected before reuse as authority.
 5. Documents classified as **HISTORICAL** or **SUPERSEDED** must not be cited as current implementation authority.
 6. When a document on disk is not listed in this index, treat it as unclassified and do not rely on it for authoritative guidance until classified.
