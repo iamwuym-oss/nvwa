@@ -2,7 +2,7 @@
 
 **Status:** GATE-0 IN_PROGRESS
 
-Nüwa Backup is a **local-first, single-machine backup and disaster recovery** application for Windows. It is currently in active development and not yet a finished product.
+Nüwa Backup is a local-first, single-machine backup and disaster recovery application currently under active development. The existing desktop and application code is primarily Windows-oriented. The NWB product architecture targets Windows x86-64 and Linux x86-64 as defined by the Product Support Matrix; these are release targets, not claims of current certified support.
 
 ---
 
@@ -12,7 +12,7 @@ This README is a **REFERENCE** project entry point. It cannot override:
 
 - AGENTS.md — general engineering governance and safety rules
 - docs/project/DOCUMENT_INDEX.md — authoritative document classification (start here)
-- NWB Engineering Document Set — current storage architecture authority
+- NWB Engineering Document Set contract documents #1–6 — current storage architecture and implementation authority; evidence records cannot override these contracts
 
 Start navigating at docs/project/DOCUMENT_INDEX.md rather than relying on this file.
 
