@@ -1,6 +1,6 @@
-# Nüwa Backup — Document Index
+﻿# Nüwa Backup — Document Index
 
-**Last Updated:** 2026-07-15 (BASELINE-CONSISTENCY-001-B)
+**Last Updated:** 2026-07-15 (BASELINE-CONSISTENCY-001-C)
 
 ---
 
@@ -35,7 +35,7 @@ This index lists every Markdown file in the `docs/` hierarchy with its purpose a
 | Document | Authority | Purpose |
 |----------|-----------|---------|
 | `AGENTS.md` (repo root) | AUTHORITATIVE | Highest general engineering governance, safety rules, multi-agent roles |
-| `README.md` (repo root) | STALE / PENDING_CORRECTION | Not in `docs/`. Known to be outdated, must be corrected in a future task |
+| `README.md` (repo root) | REFERENCE | Current repository overview and navigation entry. Derived from authoritative contracts and repository state; cannot override them |
 
 ---
 
@@ -151,8 +151,6 @@ This directory contains the **current storage engine implementation authority**.
 
 ---
 
-
-
 ## Current Project State
 
 | Dimension | Status |
@@ -167,8 +165,6 @@ This directory contains the **current storage engine implementation authority**.
 
 1. All new storage functionality must follow the NWB Storage Engine architecture: each successful Full or Differential backup produces an immutable, self-describing logical NWB archive. It must not depend on the superseded Repository architecture.
 
-2. `README.md` at repo root is **STALE / PENDING_CORRECTION** — its content does not reflect the current project status or NWB storage engine direction.
-
 ---
 
 ## Navigation Rules
@@ -182,7 +178,6 @@ This directory contains the **current storage engine implementation authority**.
 
 ---
 
-
 ## Revision
 
 - **Version:** 1.0
@@ -190,4 +185,5 @@ This directory contains the **current storage engine implementation authority**.
 - **Purpose:** Rebuild document index to reflect real filesystem state, correct authority levels, and current project status
 - **Previous version:** 2026-07-13 (contained NUL bytes, listed deleted documents, incorrect authority levels)
 - **Correction:** 001-B reclassified PEM to REFERENCE; removed stale PEM constraint
+- **Correction:** 001-C reclassified README to REFERENCE; removed stale README constraint
 - **Maintenance:** Update when documents are added, removed, reclassified, or when project gate status changes
