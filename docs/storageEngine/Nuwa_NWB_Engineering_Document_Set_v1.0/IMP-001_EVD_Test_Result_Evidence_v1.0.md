@@ -121,7 +121,7 @@
 **角色：** nwb_validation_engineer  
 **验证依据：** `Nuwa_NWB_Implementation_Plan_v1.0.md` 第5.1节 IMP-001 验收条件及 `Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md`  
 **验证日期：** 2026-07-15  
-**结论：** **PASS** ✅ — 12 项验收条件全部满足
+**结论：** **ACCEPTANCE NOT MET** — limited Windows execution does not satisfy the formal IMP-001 Generator acceptance criteria
 
 ### 5.1 运行环境
 
@@ -154,7 +154,7 @@
 | 测试 ID | 测试名称 | 测试函数 | 结果 |
 |---|---|---|---|
 | TST-REG-001 | All 18 RecordType variants exist and are matchable | `test_record_type_all_variants_matchable` | ✅ PASS |
-| TST-REG-002 | Duplicate discriminant rejected by compiler | 编译期验证（参见第4.1节 NOTE） | ✅ PASS |
+| TST-REG-002 | Duplicate discriminant rejected by compiler | No raw compiler failure output or log preserved | ❌ NOT_RUN / EVIDENCE MISSING |
 | TST-REG-003 | 5 Feature bits — no two share the same position | `test_feature_bits_no_duplicates_within_range` | ✅ PASS |
 | TST-REG-004 | All bit positions within 0..63 | `test_feature_bits_no_duplicates_within_range`（同函数） | ✅ PASS |
 | TST-REG-005 | BackupKind / PlatformHint have exact values | `test_header_enums_exact_values` | ✅ PASS |
@@ -164,14 +164,14 @@
 
 **nwb-format crate 总计：8 passed, 0 failed, 0 ignored**
 
-### 5.4 验收条件映射（12 项全部满足）
+### 5.4 验收条件复核（未全部满足）
 
 根据 `Nuwa_NWB_Implementation_Plan_v1.0.md` 第5.1节 IMP-001 验收条件：
 
 | # | 验收条件 | 验证方式 | 证据引用 | 结果 |
 |---|---|---|---:|---|
 | AC-01 | RecordType 18 个变体赋值正确 | TST-REG-001：全部 18 个变体的 u16 discriminant 和 Display 输出匹配预期 | §5.3 TST-REG-001 | ✅ PASS |
-| AC-02 | RecordType discriminant 无重复 | 编译器 `#[repr(u16)]` 原生保证 + TST-REG-002 手工验证确认 | §5.3 TST-REG-002 | ✅ PASS |
+| AC-02 | RecordType discriminant 无重复 | 编译器 `#[repr(u16)]` 原生保证；TST-REG-002 证据缺失 | §5.3 TST-REG-002 | ❌ NOT_MET / EVIDENCE MISSING |
 | AC-03 | Feature bit 5 个位置无重复 | 编译期 `const _` assert + TST-REG-003 运行时双重验证 | §5.3 TST-REG-003 | ✅ PASS |
 | AC-04 | Feature bit 位置在 0..63 范围内 | 编译期 `assert!((pos as u64) < 64u64)` + TST-REG-004 | §5.3 TST-REG-004 | ✅ PASS |
 | AC-05 | BackupKind 枚举值精确 | TST-REG-005：验证 Full=1, Differential=2 及 Display 输出 | §5.3 TST-REG-005 | ✅ PASS |
@@ -187,14 +187,14 @@
 
 ## 6. 已知限制与改进项
 
-### 6.1 非阻塞改进项
+### 6.1 限制、改进项与验收阻塞项
 
 以下项目不影响 IMP-001 交付物验收，登记为后续可改进项：
 
 | 改进项 ID | 类别 | 说明 | 跟踪 |
 |---|---|---|---|
 | IMPRV-001 | 冗余依赖 | `nwb-format/Cargo.toml` 中 `sha2` 声明未使用，建议后续清理 | 待后续 IMP 处理 |
-| IMPRV-002 | 测试覆盖 | TST-REG-002 重复 discriminant 测试依赖手工 `cargo build` 验证，无自动化 `compile_fail` 测试 | 待 `trybuild` 或等价工具引入 |
+| IMPRV-002 | 验收阻塞 | TST-REG-002 证据缺失：无自动化 `compile_fail` 测试，无真实非零退出码或编译器日志 | 必须添加自动 compile_fail 测试或保存真实失败日志 |
 | IMPRV-003 | 测试覆盖 | TST-REG-007 中手工 TOML 解析器 `parse_toml_entries()` 无独立单元测试覆盖错误路径 | 待后续测试增强 |
 | IMPRV-004 | 验收阻塞 | `header_enums.toml` 数据文件内容缺少自动化一致性测试，先前声称的 `test_header_enums_toml_matches_enum` 不存在。当前仅通过 Code Review 人工核对保证 | 必须包含Generator验收条件 |
 
@@ -204,15 +204,15 @@
 
 | 改进项 ID | 类别 | 说明 | 跟踪 |
 |---|---|---|---|
-| IMPRV-005 | 架构缺失 | 无 Generator 或 build.rs 生成链。TOML、Rust 枚举和测试期望之间存在多份手工来源，无法保证一致性 | 必须满足 IMP-001 验收条件 |
+| IMPRV-005 | 验收阻塞 | 无 Generator 或 build.rs 生成链。TOML、Rust 枚举和测试期望之间存在多份手工来源，无法保证一致性 | 必须满足 IMP-001 正式验收条件 |
 
 ### 6.3 Error ID Registry 未实现
 
-当前 Format Registry 仅包含 RecordType、Feature Bit 和 Header Enums。Error ID Registry 尚未实现，不属于当前 IMP-001 范围，但表明 IMP-001 尚未覆盖 Format Registry 全部需求。
+Error ID Registry 属于实施计划中 IMP-001 的正式要求，目前未实现，因此是 IMP-001 不能验收的阻塞项。
 
-### 6.4 生成产物哈希
+### 6.4 生成产物哈希缺失（验收阻塞）
 
-当前无生成产物哈希记录。旧提交/未提交工作树绑定不能自动升级为 518f9fe 证据。
+当前无生成产物哈希记录。旧提交/未提交工作树绑定不能自动升级为 518f9fe 证据。此为使 IMP-001 不能验收的阻塞项。
 
 ### 6.5 不适用于本工作包的测试
 
@@ -236,8 +236,8 @@
 | 验收项 | 状态 | 说明 |
 |---|---|---|
 | RecordType/Feature Bit/Header Enum 手工定义 | ✅ 已实现 | 手工维护，非Generator生成 |
-| Error ID Registry | ❌ 未实现 | 不属于当前范围 |
-| 重复 ID 导致构建失败 | ✅ PASS | 编译器保证（Windows验证） |
+| Error ID Registry | ❌ 未实现 | 属于IMP-001正式要求，验收阻塞项 |
+| 重复 ID 导致构建失败 | ❌ NOT_MET | TST-REG-002 证据缺失 |
 | Registry 单元和快照测试 | ⚠️ 部分通过 | 8 passed, 0 failed（Windows-only）；header_enums.toml 无自动测试 |
 | 干净构建 | ✅ PASS | cargo build EXIT CODE 0（Windows-only） |
 | Clippy 无警告 | ✅ PASS | Windows-only |
@@ -262,7 +262,7 @@
 
 | 角色 | 结论 | 日期 |
 |---|---|---|
-| nwb_format_architect | SIGNED ✅ | 2026-07-15 |
-| nwb_code_reviewer | REVIEW_PASS ✅ | 2026-07-15 |
-| nwb_validation_engineer | ACCEPTANCE NOT MET ⚠️ | 2026-07-15 | 独立验证发现 §6 所列阻塞项 |
-| nwb_evidence_documenter | EVD 归档 ⚠️ | 2026-07-15 | 已按 BASELINE-CONSISTENCY-002-A 修正 |
+| nwb_format_architect | SIGNED ✅（历史记录，不覆盖§6阻塞项） | 2026-07-15 |
+| nwb_code_reviewer | REVIEW_PASS ✅（历史记录，不覆盖§6阻塞项） | 2026-07-15 |
+| nwb_validation_engineer | SUPERSEDED / ACCEPTANCE NOT MET ⚠️ | 2026-07-15 | 原PASS已被 BASELINE-CONSISTENCY-002-A-CORRECTION-1 推翻；§6 所列阻塞项未通过 |
+| nwb_evidence_documenter | EVD 归档 ⚠️ | 2026-07-15 | 已按 BASELINE-CONSISTENCY-002-A-CORRECTION-1 修正 |

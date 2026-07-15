@@ -83,7 +83,6 @@ cargo test -p nwb-format test_record_type_all_variants_matchable
 ```text
 无限制。该测试验证全部 18 个 RecordType 变体的 u16 discriminant 值和 Display 输出。
 ```
-
 ### `TST-REG-002` Duplicate discriminant rejected by compiler
 
 | 字段 | 实际记录 |
@@ -92,35 +91,33 @@ cargo test -p nwb-format test_record_type_all_variants_matchable
 | 测试环境 | ENV-IMP-001（Windows x64, rustc 1.96.1） |
 | 前置条件 | nwb-format crate 可编译 |
 | 输入Dataset及Manifest哈希 | N/A（编译期验证） |
-| 执行命令/自动化Job | 手工验证：取消注释 `compile_fail` 块后 `cargo build` |
-| 开始/结束时间 | 2026-07-15 |
-| 实际退出码 | 预期非零（编译错误） |
+| 执行命令/自动化Job | 无（仅手工说明） |
+| 开始/结束时间 | NOT_RUN |
+| 实际退出码 | NOT RECORDED |
 | 预期结果 | 编译器拒绝重复 discriminant |
-| 实际结果 | 编译器保证 enum 的 `#[repr(u16)]` 禁止重复 discriminant（已验证） |
-| 状态 | PASS（手工验证，非自动化 compile_fail 测试，Windows-only） |
-| 日志证据 | IMP-001_EVD_Test_Result_Evidence_v1.0.md §5.3 |
+| 实际结果 | No raw compiler failure output or log is preserved |
+| 状态 | NOT_RUN / EVIDENCE MISSING |
+| 日志证据 | 无 |
 | 输出NWB SHA-256 | N/A |
 | 恢复结果Manifest SHA-256 | N/A |
 | 性能数据 | N/A |
 | 关联缺陷 | NONE |
-| 原始提交绑定 | ad6695b + 当时未提交修改 |
-| 执行人 | nwb_validation_engineer |
-| 复核人 | nwb_code_reviewer |
+| 原始提交绑定 | ad6695b（原始绑定，无执行证据） |
+| 执行人 | — |
+| 复核人 | — |
 
 复现步骤：
 
 ```text
-1. 在 record_type.rs 中添加 `pub enum RecordTypeDup { A = 0x0001, B = 0x0001 }`
-2. 运行 cargo build
-3. 观察编译器拒绝编译
-4. 恢复修改
+需添加自动 compile_fail 测试或保存真实非零退出码和编译器日志后才能记录。
 ```
 
 观察与限制：
 
 ```text
-该测试为手工验证。编译器对 `#[repr(u16)]` enum 的重复 discriminant 原生拒绝，属于编译器固有行为。
-正常 CI 构建会隐式覆盖此检查。
+当前无自动化 compile_fail 测试。无真实编译器失败日志或退出码记录。
+解除条件：自动 compile_fail 测试，或保存真实非零退出码和编译器日志。
+```
 ```
 
 ### `TST-REG-003` 5 Feature bits — no two share the same position
@@ -136,7 +133,7 @@ cargo test -p nwb-format test_record_type_all_variants_matchable
 | 实际退出码 | 0 |
 | 预期结果 | 5 个 feature bit（COMPRESSION_ZSTD=0, ENCRYPTION_AES256_GCM=1, VOLUME_SET=2, CHECKPOINT=3, BMR_METADATA=4）各自唯一 |
 | 实际结果 | 全部 5 个 bit 位置唯一，无重叠 |
-| 状态 | PASS（手工验证，非自动化 compile_fail 测试，Windows-only） |
+| 状态 | PASS（Windows-only limited execution evidence; original commit/worktree binding） |
 | 日志证据 | IMP-001_EVD_Test_Result_Evidence_v1.0.md §5.3 |
 | 输出NWB SHA-256 | N/A |
 | 恢复结果Manifest SHA-256 | N/A |
@@ -172,7 +169,7 @@ cargo test -p nwb-format test_feature_bits_no_duplicates_within_range
 | 实际退出码 | 0 |
 | 预期结果 | 所有 feature bit 位置 < 64 |
 | 实际结果 | COMPRESSION_ZSTD(0), ENCRYPTION_AES256_GCM(1), VOLUME_SET(2), CHECKPOINT(3), BMR_METADATA(4) 均在 0..63 范围内 |
-| 状态 | PASS（手工验证，非自动化 compile_fail 测试，Windows-only） |
+| 状态 | PASS（Windows-only limited execution evidence; original commit/worktree binding） |
 | 日志证据 | IMP-001_EVD_Test_Result_Evidence_v1.0.md §5.3 |
 | 输出NWB SHA-256 | N/A |
 | 恢复结果Manifest SHA-256 | N/A |
@@ -207,7 +204,7 @@ cargo test -p nwb-format test_feature_bits_no_duplicates_within_range
 | 实际退出码 | 0 |
 | 预期结果 | BackupKind（Full=1, Differential=2），PlatformHint（Unknown=0, Windows=1, Linux=2），Display 输出匹配 |
 | 实际结果 | 全部 5 个枚举值及 Display 输出验证通过 |
-| 状态 | PASS（手工验证，非自动化 compile_fail 测试，Windows-only） |
+| 状态 | PASS（Windows-only limited execution evidence; original commit/worktree binding） |
 | 日志证据 | IMP-001_EVD_Test_Result_Evidence_v1.0.md §5.3 |
 | 输出NWB SHA-256 | N/A |
 | 恢复结果Manifest SHA-256 | N/A |
@@ -242,7 +239,7 @@ cargo test -p nwb-format test_header_enums_exact_values
 | 实际退出码 | 0 |
 | 预期结果 | Registry snapshot 格式化输出与预期字符串完全一致 |
 | 实际结果 | Registry snapshot 输出匹配所有 25 个条目（18 RecordType + 5 FeatureBit + 2 HeaderEnum） |
-| 状态 | PASS（手工验证，非自动化 compile_fail 测试，Windows-only） |
+| 状态 | PASS（Windows-only limited execution evidence; original commit/worktree binding） |
 | 日志证据 | IMP-001_EVD_Test_Result_Evidence_v1.0.md §5.3 |
 | 输出NWB SHA-256 | N/A |
 | 恢复结果Manifest SHA-256 | N/A |
@@ -277,7 +274,7 @@ snapshot 字符串硬编码在测试中。如新增 RecordType 或 FeatureBit �
 | 实际退出码 | 0 |
 | 预期结果 | record_types.toml 的 18 个条目与 RecordType 枚举一致；feature_bits.toml 的 5 个条目与 feature_bit 常量一致 |
 | 实际结果 | TOML 文件名称集合与枚举变体完全对应；所有 id/bit 值与代码定义一致 |
-| 状态 | PASS（手工验证，非自动化 compile_fail 测试，Windows-only） |
+| 状态 | PASS（Windows-only limited execution evidence; original commit/worktree binding） |
 | 日志证据 | IMP-001_EVD_Test_Result_Evidence_v1.0.md §5.3 |
 | 输出NWB SHA-256 | N/A |
 | 恢复结果Manifest SHA-256 | N/A |
