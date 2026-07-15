@@ -1,4 +1,4 @@
-﻿# Nüwa Backup — Document Index
+# Nüwa Backup — Document Index
 
 **Last Updated:** 2026-07-15 (BASELINE-CONSISTENCY-001-C)
 
@@ -143,11 +143,11 @@ This directory contains the **current storage engine implementation authority**.
 
 | # | Document | Classification | Purpose |
 |---|----------|----------------|---------|
-| 7 | `docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Test_Result_Record_v1.0.md` | STALE / PENDING_CORRECTION | Records actual test results. Cannot modify architecture contracts |
-| 8 | `docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/IMP-000_EVD_Build_Evidence_v1.0.md` | STALE / PENDING_CORRECTION | IMP-000 build evidence |
-| 9 | `docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/IMP-001_EVD_Test_Result_Evidence_v1.0.md` | STALE / PENDING_CORRECTION | IMP-001 test result evidence |
+| 7 | `docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Test_Result_Record_v1.0.md` | REFERENCE | Current result record; GATE-0 remains IN_PROGRESS |
+| 8 | `docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/IMP-000_EVD_Build_Evidence_v1.0.md` | REFERENCE | Corrected evidence; implemented, acceptance not met |
+| 9 | `docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/IMP-001_EVD_Test_Result_Evidence_v1.0.md` | REFERENCE | Corrected evidence; in progress, acceptance not met |
 | 10 | `docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Engineering_Document_Set_README_v1.0.md` | REFERENCE | Document set README and reading order |
-| 11 | `docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Engineering_Document_Set_Manifest_v1.0.md` | STALE / PENDING_CORRECTION | Document set manifest with SHA-256 hashes |
+| 11 | `docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Engineering_Document_Set_Manifest_v1.0.md` | REFERENCE | Current 10-document SHA-256 inventory |
 
 ---
 
@@ -186,4 +186,5 @@ This directory contains the **current storage engine implementation authority**.
 - **Previous version:** 2026-07-13 (contained NUL bytes, listed deleted documents, incorrect authority levels)
 - **Correction:** 001-B reclassified PEM to REFERENCE; removed stale PEM constraint
 - **Correction:** 001-C reclassified README to REFERENCE; removed stale README constraint
+- **Correction:** 002-B reclassified TRR, IMP-000 EVD, IMP-001 EVD, Manifest to REFERENCE; corrected evidence status
 - **Maintenance:** Update when documents are added, removed, reclassified, or when project gate status changes

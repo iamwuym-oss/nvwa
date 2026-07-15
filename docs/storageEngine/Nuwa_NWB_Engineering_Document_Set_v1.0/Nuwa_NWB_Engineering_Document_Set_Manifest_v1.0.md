@@ -1,27 +1,45 @@
-﻿# Nüwa NWB Engineering Document Set Manifest v1.0
+# Nüwa NWB Engineering Document Set Manifest v1.0
 
-**生成日期：** 2026-07-15  
-**文档数量：** 9（不含本Manifest）
-| 顺序 | 文件 | SHA-256 |
-|---:|---|---|
-| 1 | `Nuwa_NWB_Engineering_Document_Set_README_v1.0.md` | `3b8a55ef5d7645ca4bdc2ae1feaab04ff2aceedc7de32fc68d00f821e965cc9e` |
-| 2 | `Nuwa_NWB_Storage_Engine_Architecture_v2.0.md` | `3996d95c3b25c06f7ce357230afced6a5fa37c9b31f11c6cc06fed7dfea863c6` |
-| 3 | `Nuwa_NWB_Binary_Format_Specification_v1.0_Draft.md` | `57c0adb457ec4e06eea857b1058c2331ff3758433140b26fa6eb6028f8590660` |
-| 4 | `Nuwa_NWB_Provider_SDK_Specification_v1.0_Draft.md` | `b9f6ff0b375faa2b40c16bad9f4fa1162df2e4b0b8be9303c1ccf153c0409903` |
-| 5 | `Nuwa_NWB_Product_Support_Matrix_v1.0.md` | `4eb8b5b00b85bf17c1b040d82a9e0fd0413d71a96668a5fb5556425e41c1a4c9` |
-| 6 | `Nuwa_NWB_Implementation_Plan_v1.0.md` | `5cf82052c072c0be7cda5344c517a3187e96442d1bd9c8085786d1133e29323a` |
-| 7 | `Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md` | `ef44291ecc9028d663d1c5acfc226f830a6837f79ae53c7c5d9b884d7a08ecc9` |
-| 8 | `Nuwa_NWB_Test_Result_Record_v1.0.md` | `85c029c73f9335a39fff192b6fe5137450a48a7292e2e17090a30e641e4eaabb` |
-| 9 | `IMP-001_EVD_Test_Result_Evidence_v1.0.md` | `adedaf24f38657344086c9e25735559086e6dc4f2c7a57784e8697539afb47cd` |
+**Document Set:** Nuwa_NWB_Engineering_Document_Set_v1.0
+**Manifest generated:** 2026-07-15
+**Task:** BASELINE-CONSISTENCY-002-B
 
-## 使用方法
+---
 
-1. Codex首先读取README；2. 按README中的权威顺序读取其余文档；3. 实施前验证文件SHA-256；4. 从`IMP-000`开始，按Gate顺序实施；5. 所有实际结果回填到Test Result Record；6. 任何影响冻结原则的变更先提交ADR；7. Format 1.0冻结或文档修订后生成新Manifest，不覆盖本版本。
+## Current Authenticity Statement
 
-## 当前真实性声明
+| Item | Status |
+|------|--------|
+| GATE-0 | IN_PROGRESS |
+| IMP-000 | IMPLEMENTED / ACCEPTANCE NOT MET |
+| IMP-001 | IN_PROGRESS / ACCEPTANCE NOT MET |
+| IMP-002 | NOT_RUN |
 
-- 架构、计划、验收标准和测试设计已经建立；
-- 产品代码和恢复测试尚未由本文档集完整执行；
-- IMP-000（Workspace）和IMP-001（Format Registry）验证完成并回填；
-- 文档中的`CERTIFIED目标`与预期PASS不代表已经认证；
-- 只有测试结果记录、证据和Gate签署能够改变实际状态。
+> **Note:** This order is a checklist, not a new authority order. The authoritative document ordering is defined by the Document Set README (§2).
+
+---
+
+## Document Inventory
+
+Total documents listed: **10** (this manifest file is excluded)
+
+| # | File | SHA-256 |
+|---|------|---------|
+| 1 | Nuwa_NWB_Engineering_Document_Set_README_v1.0.md | 00a4460d2c661642b0c713669c5b1f5619913a04af154d33c6a44982c95cfe6f |
+| 2 | Nuwa_NWB_Storage_Engine_Architecture_v2.0.md | 3996d95c3b25c06f7ce357230afced6a5fa37c9b31f11c6cc06fed7dfea863c6 |
+| 3 | Nuwa_NWB_Binary_Format_Specification_v1.0_Draft.md | 57c0adb457ec4e06eea857b1058c2331ff3758433140b26fa6eb6028f8590660 |
+| 4 | Nuwa_NWB_Provider_SDK_Specification_v1.0_Draft.md | b9f6ff0b375faa2b40c16bad9f4fa1162df2e4b0b8be9303c1ccf153c0409903 |
+| 5 | Nuwa_NWB_Product_Support_Matrix_v1.0.md | 4eb8b5b00b85bf17c1b040d82a9e0fd0413d71a96668a5fb5556425e41c1a4c9 |
+| 6 | Nuwa_NWB_Implementation_Plan_v1.0.md | 5cf82052c072c0be7cda5344c517a3187e96442d1bd9c8085786d1133e29323a |
+| 7 | Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md | ef44291ecc9028d663d1c5acfc226f830a6837f79ae53c7c5d9b884d7a08ecc9 |
+| 8 | Nuwa_NWB_Test_Result_Record_v1.0.md | 0feb6320ea82235e6fe6de59607d8321d9aa0c577d56df2769dbffe15e7ce251 |
+| 9 | IMP-000_EVD_Build_Evidence_v1.0.md | f66c9547e586ef3022de73a0bd9ca3e30e3946f3a0c4978bfc300ece0156cb3d |
+| 10 | IMP-001_EVD_Test_Result_Evidence_v1.0.md | acc4ba9a131e17e983dfa94af2ec83afaf139e00c45fde6e48ba13be4aab46d9 |
+
+All SHA-256 values computed from Git index blob content (LF line endings).
+
+---
+
+## Verification
+
+Self-check: All 10 files present. No duplicates. No missing entries.

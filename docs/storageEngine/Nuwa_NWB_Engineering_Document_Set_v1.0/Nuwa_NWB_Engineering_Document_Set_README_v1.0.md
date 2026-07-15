@@ -174,7 +174,7 @@ Codex执行本项目时必须遵守：
 | IMP-002 | NOT_RUN |
 
 - IMP-000和IMP-001均不得描述为VERIFIED、ACCEPTED或CLOSED
-- Test Result Record和EVD已纠正为反映当前未满足验收的状态；Engineering Document Set Manifest仍待重新生成。
+- Test Result Record和EVD已纠正为反映当前未满足验收的状态；Manifest已由BASELINE-CONSISTENCY-002-B重新生成并校验。
 - 任何工作包只有同时具备设计、实现、自动测试、恢复验证和证据记录才允许标记为ACCEPTED
 - IMP-002 remains NOT_RUN until explicitly authorized
 - IMP-003–005 execute within GATE-0 according to dependencies and authorization
