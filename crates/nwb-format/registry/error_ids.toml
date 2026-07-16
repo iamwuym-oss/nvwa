@@ -1,0 +1,35 @@
+[INVALID]
+id = 0x0000
+description = "Invalid/zero sentinel, must not appear in valid output"
+
+[CHECKSUM_MISMATCH]
+id = 0x0001
+description = "Data integrity verification failed"
+
+[FORMAT_VERSION]
+id = 0x0002
+description = "Unsupported or unrecognized format version"
+
+[COMPRESSION]
+id = 0x0003
+description = "Compression or decompression error"
+
+[SEGMENT_CORRUPT]
+id = 0x0004
+description = "Segment data is corrupt or truncated"
+
+[IO_ERROR]
+id = 0x0100
+description = "Input/output operation failed"
+
+[VOLUME_MISSING]
+id = 0x0101
+description = "Required volume is not available"
+
+[ENCRYPTION_AUTH]
+id = 0x0200
+description = "Encryption authentication or decryption failure"
+
+[CATALOG_CORRUPT]
+id = 0x0300
+description = "Catalog data is corrupt or inconsistent"

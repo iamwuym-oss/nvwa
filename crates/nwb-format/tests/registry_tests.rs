@@ -484,3 +484,186 @@ fn test_feature_bits_toml_matches_constants() {
         );
     }
 }
+
+// ---------------------------------------------------------------------------
+// TST-REG-005 extended: BackupKind / PlatformHint Display counts
+// ---------------------------------------------------------------------------
+
+#[test]
+fn test_backup_kind_display_and_count() {
+    use registry::header_enums::BackupKind;
+
+    let cases: &[(BackupKind, u8, &str)] = &[
+        (BackupKind::Full, 1, "Full"),
+        (BackupKind::Differential, 2, "Differential"),
+    ];
+
+    assert_eq!(cases.len(), 2, "expected exactly 2 BackupKind variants");
+
+    for (variant, expected_value, expected_name) in cases {
+        assert_eq!(
+            *variant as u8, *expected_value,
+            "BackupKind discriminant mismatch for {expected_name}"
+        );
+        assert_eq!(
+            variant.to_string(),
+            *expected_name,
+            "BackupKind Display mismatch for {expected_name}"
+        );
+    }
+}
+
+#[test]
+fn test_platform_hint_display_and_count() {
+    use registry::header_enums::PlatformHint;
+
+    let cases: &[(PlatformHint, u8, &str)] = &[
+        (PlatformHint::Unknown, 0, "Unknown"),
+        (PlatformHint::Windows, 1, "Windows"),
+        (PlatformHint::Linux, 2, "Linux"),
+    ];
+
+    assert_eq!(cases.len(), 3, "expected exactly 3 PlatformHint variants");
+
+    for (variant, expected_value, expected_name) in cases {
+        assert_eq!(
+            *variant as u8, *expected_value,
+            "PlatformHint discriminant mismatch for {expected_name}"
+        );
+        assert_eq!(
+            variant.to_string(),
+            *expected_name,
+            "PlatformHint Display mismatch for {expected_name}"
+        );
+    }
+}
+
+// ---------------------------------------------------------------------------
+// TST-REG-00x: ErrorId TOML consistency
+// ---------------------------------------------------------------------------
+
+#[test]
+fn test_error_id_all_variants_matchable() {
+    let cases: &[(registry::error_id::ErrorId, u16, &str)] = &[
+        (registry::error_id::ErrorId::Invalid, 0x0000, "Invalid"),
+        (
+            registry::error_id::ErrorId::ChecksumMismatch,
+            0x0001,
+            "ChecksumMismatch",
+        ),
+        (
+            registry::error_id::ErrorId::FormatVersion,
+            0x0002,
+            "FormatVersion",
+        ),
+        (
+            registry::error_id::ErrorId::Compression,
+            0x0003,
+            "Compression",
+        ),
+        (
+            registry::error_id::ErrorId::SegmentCorrupt,
+            0x0004,
+            "SegmentCorrupt",
+        ),
+        (registry::error_id::ErrorId::IoError, 0x0100, "IoError"),
+        (
+            registry::error_id::ErrorId::VolumeMissing,
+            0x0101,
+            "VolumeMissing",
+        ),
+        (
+            registry::error_id::ErrorId::EncryptionAuth,
+            0x0200,
+            "EncryptionAuth",
+        ),
+        (
+            registry::error_id::ErrorId::CatalogCorrupt,
+            0x0300,
+            "CatalogCorrupt",
+        ),
+    ];
+
+    assert_eq!(cases.len(), 9, "expected exactly 9 ErrorId variants");
+
+    for (variant, expected_id, expected_name) in cases {
+        assert_eq!(
+            *variant as u16, *expected_id,
+            "ErrorId discriminant mismatch for {expected_name}"
+        );
+        assert_eq!(
+            variant.to_string(),
+            *expected_name,
+            "ErrorId Display mismatch for {expected_name}"
+        );
+    }
+}
+
+#[test]
+fn test_error_ids_toml_matches_enum() {
+    let manifest_dir = Path::new(env!("CARGO_MANIFEST_DIR"));
+    let toml_path = manifest_dir.join("registry").join("error_ids.toml");
+    let toml_str = std::fs::read_to_string(&toml_path)
+        .unwrap_or_else(|e| panic!("failed to read {toml_path:?}: {e}"));
+
+    let entries = parse_toml_entries(&toml_str);
+
+    let expected_names: HashSet<&str> = [
+        "INVALID",
+        "CHECKSUM_MISMATCH",
+        "FORMAT_VERSION",
+        "COMPRESSION",
+        "SEGMENT_CORRUPT",
+        "IO_ERROR",
+        "VOLUME_MISSING",
+        "ENCRYPTION_AUTH",
+        "CATALOG_CORRUPT",
+    ]
+    .into();
+
+    let toml_names: HashSet<&str> = entries.iter().map(|(name, _)| *name).collect();
+
+    assert_eq!(
+        toml_names.len(),
+        9,
+        "error_ids.toml should have exactly 9 entries, got {}",
+        toml_names.len()
+    );
+
+    let missing_in_toml: Vec<&&str> = expected_names.difference(&toml_names).collect();
+    let extra_in_toml: Vec<&&str> = toml_names.difference(&expected_names).collect();
+
+    assert!(
+        missing_in_toml.is_empty(),
+        "enum variants missing from error_ids.toml: {missing_in_toml:?}"
+    );
+    assert!(
+        extra_in_toml.is_empty(),
+        "error_ids.toml entries not in enum: {extra_in_toml:?}"
+    );
+
+    for (name, kvs) in &entries {
+        let id_str = kvs
+            .iter()
+            .find(|(k, _)| *k == "id")
+            .map(|(_, v)| *v)
+            .unwrap_or("");
+        let expected_id: u16 = match *name {
+            "INVALID" => 0x0000,
+            "CHECKSUM_MISMATCH" => 0x0001,
+            "FORMAT_VERSION" => 0x0002,
+            "COMPRESSION" => 0x0003,
+            "SEGMENT_CORRUPT" => 0x0004,
+            "IO_ERROR" => 0x0100,
+            "VOLUME_MISSING" => 0x0101,
+            "ENCRYPTION_AUTH" => 0x0200,
+            "CATALOG_CORRUPT" => 0x0300,
+            other => panic!("unexpected error id in TOML: {other}"),
+        };
+        assert_eq!(
+            id_str,
+            &format!("0x{expected_id:04X}"),
+            "error_ids.toml {name}: expected id 0x{expected_id:04X}, got {id_str}"
+        );
+    }
+}
