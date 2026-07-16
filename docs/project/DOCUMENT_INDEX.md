@@ -144,7 +144,7 @@ This directory contains the **current storage engine implementation authority**.
 | # | Document | Classification | Purpose |
 |---|----------|----------------|---------|
 | 7 | `docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Test_Result_Record_v1.0.md` | REFERENCE | Current result record; GATE-0 remains IN_PROGRESS |
-| 8 | `docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/IMP-000_EVD_Build_Evidence_v1.0.md` | REFERENCE | Corrected evidence; implemented, acceptance not met |
+| 8 | `docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/IMP-000_EVD_Build_Evidence_v1.0.md` | REFERENCE | Corrected evidence; closed, acceptance met |
 | 9 | `docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/IMP-001_EVD_Test_Result_Evidence_v1.0.md` | REFERENCE | Corrected evidence; in progress, acceptance not met |
 | 10 | `docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Engineering_Document_Set_README_v1.0.md` | REFERENCE | Document set README and reading order |
 | 11 | `docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Engineering_Document_Set_Manifest_v1.0.md` | REFERENCE | Current 10-document SHA-256 inventory |
@@ -156,7 +156,7 @@ This directory contains the **current storage engine implementation authority**.
 | Dimension | Status |
 |-----------|--------|
 | **Gate** | GATE-0 — IN_PROGRESS |
-| **IMP-000** (Workspace) | Consistency and evidence remediation pending — not yet a closed evidence loop |
+| **IMP-000** (Workspace) | CLOSED / PASS / ACCEPTANCE MET |
 | **IMP-001** (Format Registry) | Consistency and evidence remediation pending — not yet a closed evidence loop |
 | **IMP-002** (Requirements–Test Traceability Matrix) | NOT_RUN — not yet authorized to start |
 | **IMP-100 and later** | NOT_STARTED / FORBIDDEN UNTIL GATE-0 — must not be initiated before GATE-0 is closed and IMP-002 is planned and authorized |
@@ -187,4 +187,5 @@ This directory contains the **current storage engine implementation authority**.
 - **Correction:** 001-B reclassified PEM to REFERENCE; removed stale PEM constraint
 - **Correction:** 001-C reclassified README to REFERENCE; removed stale README constraint
 - **Correction:** 002-B reclassified TRR, IMP-000 EVD, IMP-001 EVD, Manifest to REFERENCE; corrected evidence status
+- **Closure:** IMP-000-EVIDENCE-CLOSURE-1 closed IMP-000 as PASS/ACCEPTANCE MET with full CI evidence (e1f1adb, run 29426443433)
 - **Maintenance:** Update when documents are added, removed, reclassified, or when project gate status changes

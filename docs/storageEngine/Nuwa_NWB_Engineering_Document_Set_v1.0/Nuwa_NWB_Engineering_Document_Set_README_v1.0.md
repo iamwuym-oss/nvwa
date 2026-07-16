@@ -169,12 +169,12 @@ Codex执行本项目时必须遵守：
 | 项 | 状态 |
 |---|---|
 | GATE-0 | IN_PROGRESS |
-| IMP-000 (Workspace) | IMPLEMENTED — 验收证据不足 |
+| IMP-000 (Workspace) | CLOSED / PASS / ACCEPTANCE MET |
 | IMP-001 (Format Registry) | IN_PROGRESS — 正式的Generator要求尚未满足 |
 | IMP-002 | NOT_RUN |
 
-- IMP-000和IMP-001均不得描述为VERIFIED、ACCEPTED或CLOSED
-- Test Result Record和EVD已纠正为反映当前未满足验收的状态；Manifest已由BASELINE-CONSISTENCY-002-B重新生成并校验。
+- IMP-000已关闭为CLOSED / PASS / ACCEPTANCE MET；IMP-001仍不得描述为VERIFIED、ACCEPTED或CLOSED
+- Test Result Record和IMP-000 EVD已更新为反映IMP-000关闭状态；Manifest已由BASELINE-CONSISTENCY-002-B重新生成并校验。IMP-000-EVIDENCE-CLOSURE-1进一步更新了Manifest。
 - 任何工作包只有同时具备设计、实现、自动测试、恢复验证和证据记录才允许标记为ACCEPTED
 - IMP-002 remains NOT_RUN until explicitly authorized
 - IMP-003–005 execute within GATE-0 according to dependencies and authorization

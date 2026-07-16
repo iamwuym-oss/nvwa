@@ -251,7 +251,7 @@ Error ID Registry 属于实施计划中 IMP-001 的正式要求，目前未实�
 
 | Gate | 工作包 | 状态 |
 |---|---|---|
-| GATE-0.IMP-000 | 建立 Workspace | ⚠️ IMPLEMENTED / ACCEPTANCE NOT MET |
+| GATE-0.IMP-000 | 建立 Workspace | ⚠️ CLOSED / PASS / ACCEPTANCE MET |
 | **GATE-0.IMP-001** | **Format Registry 生成器** | **⚠️ IN_PROGRESS / ACCEPTANCE NOT MET** |
 | GATE-0.IMP-002 | 需求-测试追溯表 | NOT_RUN |
 | GATE-0.IMP-003 | 结构化错误和日志 | NOT_RUN |

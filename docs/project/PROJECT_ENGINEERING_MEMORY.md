@@ -4,7 +4,7 @@
 **Last Updated:** 2026-07-15
 **Status:** CURRENT REFERENCE SNAPSHOT
 **Baseline Reviewed:** 4b8e747
-**Latest Code-Bearing Commit:** 518f9fe
+**Latest Code-Bearing Commit:** e1f1adb
 
 ---
 
@@ -97,14 +97,14 @@ The old Phase 3–6 roadmap (NTFS volume image, VSS, system recovery, BMR, disk 
 
 | IMP | Title | Status |
 |-----|-------|--------|
-| IMP-000 | Workspace (build, CI, scaffolding) | Evidence remediation pending |
+| IMP-000 | Workspace (build, CI, scaffolding) | CLOSED / PASS / ACCEPTANCE MET |
 | IMP-001 | Format Registry (nwb-format crate) | Implementation/evidence remediation pending |
 | IMP-002 | Requirements–Test Traceability Matrix | NOT_RUN / not authorized |
 | IMP-003 through IMP-005 | Defined remaining GATE-0 work packages | NOT_RUN - execute per dependency and authorization |
 | IMP-006 through IMP-009 | Not defined in current implementation plan | NOT_STARTED - must not start until defined |
 | IMP-100 and later | Post-GATE-0 work | FORBIDDEN |
 
-All evidence, test results, and EVD documents for IMP-000 and IMP-001 are currently classified as **STALE / PENDING_CORRECTION** in the document index. No IMP-000 or IMP-001 closure claim is supported by current verified evidence.
+IMP-000 evidence chain is now closed (CLOSED / PASS / ACCEPTANCE MET). IMP-001 evidence remains under remediation; its documents are classified as STALE / PENDING_CORRECTION.
 
 ---
 
@@ -112,13 +112,13 @@ All evidence, test results, and EVD documents for IMP-000 and IMP-001 are curren
 
 ### Rust build
 
-- Static audit of the repository shows a Rust workspace with `crates/nwb-format` and root-level `src/` modules.
-- No current CI pipeline exists in the repository (no GitHub Actions workflows).
-- Previous Windows build/test reports exist in documents marked STALE / PENDING_CORRECTION. They are not current PASS evidence.
+- CI pipeline established: `.github/workflows/nwb-workspace-ci.yml` (Windows + Ubuntu, 5 quality gates)
+- Final CI run: 29426443433 on commit e1f1adb — ALL PASS
+- Local Windows: all 5 quality gates pass, 130 tests pass
 
 ### Linux CI
 
-- No Linux CI evidence exists at this baseline.
+- GitHub Actions ubuntu-latest: fmt / clippy / test / debug build / release build — ALL PASS
 
 ### Test count
 
@@ -140,12 +140,12 @@ These are pre-existing defects, not introduced by this work package.
 ## 7. Known Limitations
 
 1. Complete NWB write/read/restore closed loop not yet implemented
-2. IMP-000 and IMP-001 evidence chains not yet remediated
-3. Linux CI absent
+2. IMP-001 evidence chain still under remediation (IMP-000 is CLOSED / PASS / ACCEPTANCE MET)
+3. Linux CI established (ubuntu-latest via GitHub Actions) — RESOLVED
 4. Frontend fails production build (BackupTreeView.tsx, Backup.tsx)
 5. Old Repository semantic residuals remain in UI/API layer
 6. Volume, disk, BMR, and system restore capability not yet authorized or implemented
-7. No GitHub Actions or any CI workflow configured in this repository
+7. CI workflow established (.github/workflows/nwb-workspace-ci.yml) — RESOLVED
 8. Provider SDK scope (file, volume, network) not implemented
 
 ---
@@ -154,10 +154,10 @@ These are pre-existing defects, not introduced by this work package.
 
 1. Fix root README.md (BASELINE-CONSISTENCY-001-C)
 2. Fix Manifest, Test Result Record, and EVD documents
-3. Fill IMP-000 CI / cross-platform evidence gap
+3. Fill IMP-000 CI / cross-platform evidence gap — COMPLETED (IMP-000-EVIDENCE-CLOSURE-1)
 4. Resolve format contract issues and rework IMP-001
 5. Fix UI build and clean Repository residuals
-6. Re-accept IMP-000 and IMP-001 with current verified evidence
+6. Re-accept IMP-000 and IMP-001 with current verified evidence — IMP-000 accepted (IMP-000-EVIDENCE-CLOSURE-1)
 7. Plan and authorize IMP-002 (Requirements–Test Traceability Matrix)
 
 - IMP-002 remains NOT_RUN, waiting for explicit authorization

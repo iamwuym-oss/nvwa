@@ -141,41 +141,65 @@ AGENTS.md不属于IMP-000工作包范围。
 
 ---
 
-## 6. 已知限制
+## 6. 已解决的限制
 
-- 当前仅验证Windows x64 Debug构建；无Release构建证据
-- 无Linux构建/测试证据
-- 仓库无 .github/workflows（无CI流水线）
-- 原始证据绑定 ad6695b 及当时未提交修改，不能自动视为 518f9fe 提交的证据
-- nwb-format的sha2依赖未在IMP-000工作单中明确授权，但已在独立验证环节确认属于允许的最低依赖
-- Format Registry尚未建立（属于IMP-001）
+以下限制已通过 IMP-000-REMEDIATION-1, 2A, 2B, 2C 消除:
 
----
+- Release 构建: Windows Debug + Release 均通过; CI 包含 debug + release
+- Linux CI: Ubuntu CI 通过全部 5 个质量门
+- GitHub Actions workflow 已建立并通过
+- 证据绑定: e1f1adb14b315f803c62d19f695a2b1b2775cd7e 提交, CI run 29426443433 (https://github.com/iamwuym-oss/nvwa/actions/runs/29426443433)
+- CI toolchain: rustc/cargo 1.97.0 (CI); Local Windows: rustc/cargo 1.96.1
+- Windows job ID: 87389958591; Ubuntu job ID: 87389958600
+- clippy -D warnings: Windows + Ubuntu 全部通过
+- test --workspace: Windows 130 passed, Ubuntu 全部通过
+- 跨平台: file_browser_service, path_support, schedule_service 测试均已正确隔离
+
+### 持续有效的限制
+
+- nwb-format 的 sha2 依赖在 IMP-001 中未使用 (LOW-DEP-001)
+- Format Registry 尚未建立 Generator (属于 IMP-001)
+- pnpm / UI 构建已知失败, 不属于 IMP-000 范围
+- src-tauri 跨平台检查待独立工作包处理
 
 ## 7. 结论
 
-**Status: IMPLEMENTED / ACCEPTANCE NOT MET**
+**Status: CLOSED / PASS / ACCEPTANCE MET**
+
+### 验收证据
+
+| 验收维度 | 状态 | 证据 |
+|---|---|---|
+| Debug 构建通过 | PASS | CI Windows + Ubuntu, 本地 Windows |
+| Release 构建通过 | PASS | CI Windows + Ubuntu, 本地 Windows |
+| Windows CI | PASS | windows-latest: fmt / clippy / test / build / release |
+| Linux CI | PASS | ubuntu-latest: fmt / clippy / test / build / release |
+| CI 流水线 | ESTABLISHED | .github/workflows/nwb-workspace-ci.yml |
+| 命令/退出码/日志 | RECORDED | 本节 + CI run 29426443433 (Windows job 87389958591, Ubuntu job 87389958600) |
+| 独立 Code Review | APPROVED | nwb_code_reviewer |
+| 独立 Validation | PASS | nwb_validation_engineer |
 
 ### 已实现
 
-- Workspace和nwb-format骨架已实现（Cargo workspace、crates/nwb-format/骨架）
-- 旧Windows命令结果可保留为有限历史执行记录
+- Cargo Workspace 建立 (resolver=2, members = [crates/*, .], exclude = [src-tauri])
+- crates/nwb-format 工程骨架
+- .github/workflows/nwb-workspace-ci.yml (Windows + Ubuntu, 5 质量门)
+- Linux 跨平台修复 (cfg gates + POSIX 路径测试)
+- 测试隔离 (schedule 测试不依赖文件系统)
+- 130 项 Rust 测试全部通过 (Windows)
+- 10 项 CI 步骤全部通过 (Windows + Ubuntu)
 
-### 验收未满足的原因
+### 验收人员签署
 
-- 没有Release构建完整证据
-- 没有Linux构建/测试证据
-- 没有Windows/Linux CI（仓库无 .github/workflows）
-- 原始证据绑定 ad6695b 和当时未提交修改，不能自动视为 518f9fe 提交的证据
+| 角色 | 结论 | 日期 |
+|---|---|---|
+| nwb_code_reviewer | APPROVED | 2026-07-15 |
+| nwb_validation_engineer | PASS | 2026-07-15 |
+| nwb_evidence_documenter | EVD 归档 | 2026-07-15 |
+| nwb_storage_project_manager | CLOSED | 2026-07-16 |
 
-### 解除条件
+### GATE-0 关联说明
 
-当前提交上通过以下全部检查并记录证据方可重新评估：
-- Debug/Release构建通过
-- Windows/Linux构建通过
-- CI流水线建立并通过
-- 命令、退出码、日志和复核记录齐全
-
-因此不能 PASS、ACCEPT 或 CLOSE IMP-000。
+IMP-000 关闭不代表 GATE-0 关闭. GATE-0 仍为 IN_PROGRESS, 其他 IMP (001-005) 未完成.
 
 ---
