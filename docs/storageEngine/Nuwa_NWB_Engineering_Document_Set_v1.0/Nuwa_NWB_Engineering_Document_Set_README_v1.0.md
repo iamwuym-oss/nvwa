@@ -162,19 +162,20 @@ Codex执行本项目时必须遵守：
 存储引擎只有在 `GATE-8` 通过后才可以称为“NWB Format 1.0”；单机备份产品只有在 `GATE-9` 通过后才可以称为“首版完成”。
 
 本README是执行入口，不替代任何详细规范。
+
 ## 11. 当前真实性声明
 
-本README是执行入口，不替代任何详细规范。以下为截至2026-07-15的实际工程状态：
+本README是执行入口，不替代任何详细规范。以下为截至2026-07-16的实际工程状态：
 
 | 项 | 状态 |
 |---|---|
 | GATE-0 | IN_PROGRESS |
 | IMP-000 (Workspace) | CLOSED / PASS / ACCEPTANCE MET |
-| IMP-001 (Format Registry) | IN_PROGRESS — 正式的Generator要求尚未满足 |
+| IMP-001 (Format Registry) | CLOSED / PASS / ACCEPTANCE MET — ErrorId已实现，trybuild已添加，CI跨平台验证通过 (d550907, run 29471690977) |
 | IMP-002 | NOT_RUN |
 
-- IMP-000已关闭为CLOSED / PASS / ACCEPTANCE MET；IMP-001仍不得描述为VERIFIED、ACCEPTED或CLOSED
-- Test Result Record和IMP-000 EVD已更新为反映IMP-000关闭状态；Manifest已由BASELINE-CONSISTENCY-002-B重新生成并校验。IMP-000-EVIDENCE-CLOSURE-1进一步更新了Manifest。
+- IMP-000和IMP-001均已关闭为CLOSED / PASS / ACCEPTANCE MET
+- Test Result Record和IMP-001 EVD已更新为反映IMP-001关闭状态
 - 任何工作包只有同时具备设计、实现、自动测试、恢复验证和证据记录才允许标记为ACCEPTED
 - IMP-002 remains NOT_RUN until explicitly authorized
 - IMP-003–005 execute within GATE-0 according to dependencies and authorization

@@ -32,13 +32,14 @@ The current implementation target is the **NWB Storage Engine**:
 
 ## Current Implementation Status
 
-crates/nwb-format currently contains an initial Registry only:
+crates/nwb-format currently contains an initial Registry:
 
-- RecordType identifiers
-- Feature-bit constants
-- Header enums
-- Registry TOML files
-- Registry tests
+- RecordType identifiers (18 variants)
+- Feature-bit constants (5 constants)
+- Header enums (BackupKind 5, PlatformHint 3)
+- ErrorId identifiers (9 variants)
+- Registry TOML files (4)
+- Registry tests (13 unit/integration + 1 trybuild compile-fail)
 
 It is not a complete NWB Storage Engine. The following have not yet been implemented as a complete closed loop:
 
@@ -60,7 +61,7 @@ src-tauri/ and ui/ exist but contain old Repository semantic residuals that have
 ## Quality Status
 
 - IMP-000: CI evidence complete (e1f1adb, run 29426443433) — PASS / ACCEPTANCE MET
-- IMP-001: evidence chains still under remediation — not yet PASS
+- IMP-001: CI evidence complete (d550907, run 29471690977) — PASS / ACCEPTANCE MET
 - pnpm build is known to fail:
   - ui/src/components/common/BackupTreeView.tsx — garbled characters
   - ui/src/pages/Backup.tsx — JSX structural errors
@@ -73,7 +74,7 @@ src-tauri/ and ui/ exist but contain old Repository semantic residuals that have
 | IMP | Title | Status |
 |-----|-------|--------|
 | IMP-000 | Workspace (build, CI, scaffolding) | CLOSED / PASS / ACCEPTANCE MET |
-| IMP-001 | Format Registry (nwb-format crate) | Implementation/evidence remediation pending |
+| IMP-001 | Format Registry (nwb-format crate) | CLOSED / PASS / ACCEPTANCE MET |
 | IMP-002 | Requirements-Test Traceability Matrix | NOT_RUN / not authorized |
 | IMP-003-005 | Defined remaining GATE-0 work packages | NOT_RUN |
 | IMP-006-009 | Not defined in current plan | NOT_STARTED |
