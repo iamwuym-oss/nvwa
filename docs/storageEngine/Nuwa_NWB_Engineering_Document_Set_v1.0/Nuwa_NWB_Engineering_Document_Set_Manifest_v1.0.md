@@ -1,8 +1,8 @@
-# Nüwa NWB Engineering Document Set Manifest v1.0
+﻿# Nüwa NWB Engineering Document Set Manifest v1.0
 
 **Document Set:** Nuwa_NWB_Engineering_Document_Set_v1.0
 **Manifest generated:** 2026-07-16
-**Task:** IMP-001 evidence closure
+**Task:** IMP-001 evidence remediation (Generator Remediation reopen)
 
 ---
 
@@ -12,7 +12,7 @@
 |------|--------|
 | GATE-0 | IN_PROGRESS |
 | IMP-000 | CLOSED / PASS / ACCEPTANCE MET |
-| IMP-001 | CLOSED / PASS / ACCEPTANCE MET |
+| IMP-001 | CLOSED (v1.0, d550907) -> REOPENED / IN_PROGRESS (Generator Remediation 2026-07-18) |
 | IMP-002 | NOT_RUN |
 
 > **Note:** This order is a checklist, not a new authority order. The authoritative document ordering is defined by the Document Set README (§2).
@@ -25,7 +25,7 @@ Total documents listed: **10** (this manifest file is excluded)
 
 | # | File | SHA-256 |
 |---|------|---------|
-| 1 | Nuwa_NWB_Engineering_Document_Set_README_v1.0.md | A6EF1B6766BAEE081ECC2D91DDDF4FA39C4E795E6C98902FE229664EA714A73B |
+| 1 | Nuwa_NWB_Engineering_Document_Set_README_v1.0.md | BCC9BB782838497CDFCA4352407EAF600AFDA146031513D279B4A1BB949F8280 |
 | 2 | Nuwa_NWB_Storage_Engine_Architecture_v2.0.md | 3996D95C3B25C06F7CE357230AFCED6A5FA37C9B31F11C6CC06FED7DFEA863C6 |
 | 3 | Nuwa_NWB_Binary_Format_Specification_v1.0_Draft.md | 57C0ADB457EC4E06EEA857B1058C2331FF3758433140B26FA6EB6028F8590660 |
 | 4 | Nuwa_NWB_Provider_SDK_Specification_v1.0_Draft.md | B9F6FF0B375FAA2B40C16BAD9F4FA1162DF2E4B0B8BE9303C1CCF153C0409903 |
@@ -34,7 +34,7 @@ Total documents listed: **10** (this manifest file is excluded)
 | 7 | Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md | EF44291ECC9028D663D1C5ACFC226F830A6837F79AE53C7C5D9B884D7A08ECC9 |
 | 8 | Nuwa_NWB_Test_Result_Record_v1.0.md | 854F5F7A51C226B8177FA57703AE8895D117294BAB3C4AF0AD2B657E99C1CCCE |
 | 9 | IMP-000_EVD_Build_Evidence_v1.0.md | 63F3B3741BB52E8FAA2E7E37F426E56B4C476E60DA0B35B49EC93DD956A0742D |
-| 10 | IMP-001_EVD_Test_Result_Evidence_v1.0.md | 4169F0F89A0EFAB12719D7B92EE50F5B996159C93A6E4A15FC5FFC6958828B4E |
+| 10 | IMP-001_EVD_Test_Result_Evidence_v1.0.md | 42BC7DE44779DF47C40442DB5CC9202802FBCEFF46A4FFFC9467830B99774758 |
 
 All SHA-256 values computed via PowerShell Get-FileHash -Algorithm SHA256 from working tree files (CRLF line endings).
 
@@ -57,4 +57,4 @@ The following files are unchanged since the previous manifest (IMP-000-EVIDENCE-
 |---|------|--------|
 | 1 | Nuwa_NWB_Engineering_Document_Set_README_v1.0.md | §11 authenticity statement updated: IMP-001 state changed to CLOSED |
 | 8 | Nuwa_NWB_Test_Result_Record_v1.0.md | 854F5F7A51C226B8177FA57703AE8895D117294BAB3C4AF0AD2B657E99C1CCCE revision: commit, CI evidence, test results updated for IMP-001 closure |
-| 10 | IMP-001_EVD_Test_Result_Evidence_v1.0.md | 4169F0F89A0EFAB12719D7B92EE50F5B996159C93A6E4A15FC5FFC6958828B4E revision: status changed from IN_PROGRESS/ACCEPTANCE NOT MET to CLOSED/PASS/ACCEPTANCE MET; ErrorId, trybuild, CI evidence, review history, governance deviation recorded |
+| 10 | IMP-001_EVD_Test_Result_Evidence_v1.0.md | 42BC7DE44779DF47C40442DB5CC9202802FBCEFF46A4FFFC9467830B99774758 revision: status changed from IN_PROGRESS/ACCEPTANCE NOT MET to CLOSED/PASS/ACCEPTANCE MET; ErrorId, trybuild, CI evidence, review history, governance deviation recorded |

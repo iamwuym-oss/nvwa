@@ -1,0 +1,19 @@
+﻿[package]
+name = "format-registry-generator"
+version = "0.1.0"
+edition = "2021"
+description = "NWB Format Registry code generator — reads schema v1 TOML and produces Rust source files"
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+toml = "0.8"
+
+# Do not add dev-dependencies. This is a build-time tool only.
+
+[[bin]]
+name = "format-registry-generator"
+path = "src/main.rs"
+
+[[test]]
+name = "cli_exit_codes"
+harness = true

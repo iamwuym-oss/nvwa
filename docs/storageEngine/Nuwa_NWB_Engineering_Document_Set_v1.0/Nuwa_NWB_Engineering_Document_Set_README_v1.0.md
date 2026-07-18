@@ -171,10 +171,10 @@ Codex执行本项目时必须遵守：
 |---|---|
 | GATE-0 | IN_PROGRESS |
 | IMP-000 (Workspace) | CLOSED / PASS / ACCEPTANCE MET |
-| IMP-001 (Format Registry) | CLOSED / PASS / ACCEPTANCE MET — ErrorId已实现，trybuild已添加，CI跨平台验证通过 (d550907, run 29471690977) |
+| IMP-001 (Format Registry) | CLOSED (v1.0, d550907) -> REOPENED / IN_PROGRESS (Generator Remediation 2026-07-18); local 170/170 PASS, CI PENDING_POST_COMMIT |
 | IMP-002 | NOT_RUN |
 
-- IMP-000和IMP-001均已关闭为CLOSED / PASS / ACCEPTANCE MET
+- IMP-000已关闭为CLOSED / PASS / ACCEPTANCE MET。IMP-001原关闭状态（d550907）已因Generator Remediation重新打开，当前为IN_PROGRESS
 - Test Result Record和IMP-001 EVD已更新为反映IMP-001关闭状态
 - 任何工作包只有同时具备设计、实现、自动测试、恢复验证和证据记录才允许标记为ACCEPTED
 - IMP-002 remains NOT_RUN until explicitly authorized

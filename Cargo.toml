@@ -1,6 +1,6 @@
 ﻿[workspace]
 resolver = "2"
-members = ["crates/*", "."]
+members = ["crates/*", ".", "tools/format-registry-generator"]
 exclude = ["src-tauri"]
 
 [package]
@@ -26,3 +26,4 @@ thiserror = "1"
 
 [dev-dependencies]
 tempfile = "3"
+

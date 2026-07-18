@@ -8,4 +8,5 @@ description = "NWB format: binary format structures, encoding, and parsing"
 sha2 = "0.10"
 
 [dev-dependencies]
+format-registry-generator = { path = "../../tools/format-registry-generator" }
 trybuild = "1"

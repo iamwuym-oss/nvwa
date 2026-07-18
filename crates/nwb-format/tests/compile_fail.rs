@@ -1,7 +1,9 @@
-//! Compile-fail tests for the NWB format registry.
+﻿//! Compile-fail tests for the NWB format registry.
 //!
 //! These tests verify that the compiler catches invalid enum definitions
-//! at compile time using the `trybuild` crate.
+//! at compile time using the `trybuild` crate.  Previously blocked by
+//! missing dev-dependency approval; now `trybuild = "1"` is enabled in
+//! `Cargo.toml` and available for all registry compile-fail tests.
 
 #[test]
 fn test_error_id_duplicate_discriminant() {

@@ -1,6 +1,6 @@
 # Nüwa Backup — Document Index
 
-**Last Updated:** 2026-07-16 (IMP-001 evidence closure)
+**Last Updated:** 2026-07-18 (IMP-001 evidence remediation - Generator Remediation reopen)
 
 ---
 
@@ -130,7 +130,7 @@ This directory contains the **current storage engine implementation authority**.
 |---|----------|----------------|---------|
 | 7 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Test_Result_Record_v1.0.md | REFERENCE | Current result record; IMP-000 and IMP-001 both CLOSED/PASS |
 | 8 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/IMP-000_EVD_Build_Evidence_v1.0.md | REFERENCE | Corrected evidence; closed, acceptance met |
-| 9 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/IMP-001_EVD_Test_Result_Evidence_v1.0.md | REFERENCE | Corrected evidence; closed, acceptance met (d550907, CI run 29471690977) |
+| 9 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/IMP-001_EVD_Test_Result_Evidence_v1.0.md | REFERENCE | Corrected v1.0 evidence; CLOSED at d550907 -> REOPENED by Generator Remediation (2026-07-18); current working tree: 170/170 local, CI PENDING_POST_COMMIT |
 | 10 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Engineering_Document_Set_README_v1.0.md | REFERENCE | Document set README and reading order |
 | 11 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Engineering_Document_Set_Manifest_v1.0.md | REFERENCE | Current 10-document SHA-256 inventory |
 
@@ -170,5 +170,6 @@ This directory contains the **current storage engine implementation authority**.
 - **Purpose:** Rebuild document index to reflect real filesystem state, correct authority levels, and current project status
 - **Previous version:** 2026-07-15 (IMP-000 evidence closure)
 - **Closure IMP-000:** IMP-000-EVIDENCE-CLOSURE-1 closed IMP-000 as PASS/ACCEPTANCE MET with full CI evidence (e1f1adb, run 29426443433)
-- **Closure IMP-001:** IMP-001 evidence closed as PASS/ACCEPTANCE MET with full CI evidence (d550907, run 29471690977); ErrorId implemented, trybuild added, header_enums consistency verified, review history documented, governance deviation recorded
+- **Closure IMP-001 (v1.0):** IMP-001 evidence closed as PASS/ACCEPTANCE MET at d550907 (CI run 29471690977)
+- **Reopened IMP-001 (v1.1):** IMP-001 reopened by Generator Remediation (RIR-005, 2026-07-18). Current working tree (HEAD 48830039, uncommitted): Code Review APPROVED, Validation 170/170 PASS, Recovery Integrity APPROVED. GitHub CI PENDING_POST_COMMIT. IMP-001 overall status: IN_PROGRESS. Next: PM pre-commit check.
 - **Maintenance:** Update when documents are added, removed, reclassified, or when project gate status changes

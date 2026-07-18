@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: MIT
-# NWB Workspace CI — IMP-000-REMEDIATION-1
+# NWB Workspace CI -- IMP-000-REMEDIATION-1
 # Baseline: 61ce44e13530db6e24877849b0aabc86f1627061
 
 name: NWB Workspace CI
@@ -53,6 +53,8 @@ jobs:
 
       - name: Format check
         run: cargo fmt --all -- --check
+      - name: Format Registry check
+        run: cargo run --locked -p format-registry-generator -- check
 
       - name: Clippy
         run: cargo clippy --workspace --all-targets --locked -- -D warnings
