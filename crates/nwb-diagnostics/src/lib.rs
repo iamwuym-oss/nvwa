@@ -196,6 +196,31 @@ impl Diagnostic {
     pub const fn error_id(&self) -> ErrorId {
         self.error_id
     }
+
+    #[must_use]
+    pub const fn severity(&self) -> Severity {
+        self.severity
+    }
+
+    #[must_use]
+    pub const fn stage(&self) -> Stage {
+        self.stage
+    }
+
+    #[must_use]
+    pub const fn retryability(&self) -> Retryability {
+        self.retryability
+    }
+
+    #[must_use]
+    pub const fn recovery_impact(&self) -> RecoveryImpact {
+        self.recovery_impact
+    }
+
+    #[must_use]
+    pub const fn os_error_code(&self) -> Option<i32> {
+        self.os_error_code
+    }
 }
 
 /// Error returned when a diagnostic violates the registry contract.
@@ -257,15 +282,32 @@ impl LogEvent {
         }
     }
 
+    /// Creates an event whose severity and stage are derived from its diagnostic.
     #[must_use]
-    pub const fn with_operation_id(mut self, operation_id: OperationId) -> Self {
-        self.operation_id = Some(operation_id);
-        self
+    pub const fn from_diagnostic(
+        timestamp_unix_ms: u64,
+        event: EventKind,
+        diagnostic: Diagnostic,
+    ) -> Self {
+        Self {
+            timestamp_unix_ms,
+            level: diagnostic.severity,
+            event,
+            stage: diagnostic.stage,
+            operation_id: None,
+            diagnostic: Some(diagnostic),
+            metrics: Metrics {
+                objects_processed: 0,
+                bytes_processed: 0,
+                retry_count: 0,
+                warning_count: 0,
+            },
+        }
     }
 
     #[must_use]
-    pub const fn with_diagnostic(mut self, diagnostic: Diagnostic) -> Self {
-        self.diagnostic = Some(diagnostic);
+    pub const fn with_operation_id(mut self, operation_id: OperationId) -> Self {
+        self.operation_id = Some(operation_id);
         self
     }
 
@@ -278,7 +320,7 @@ impl LogEvent {
     /// Encodes exactly one deterministic UTF-8 JSON line.
     pub fn to_json_line(&self) -> Result<Vec<u8>, LogWriteError> {
         let wire = LogEventWire::from(self);
-        let mut encoded = serde_json::to_vec(&wire).map_err(|_| LogWriteError::Encoding)?;
+        let mut encoded = serde_json::to_vec(&wire).map_err(|_| LogWriteError::encoding())?;
         encoded.push(b'\n');
         Ok(encoded)
     }
@@ -288,7 +330,7 @@ impl LogEvent {
         let encoded = self.to_json_line()?;
         writer
             .write_all(&encoded)
-            .map_err(|error| LogWriteError::Io(error.kind()))
+            .map_err(|error| LogWriteError::io(error.kind()))
     }
 }
 
@@ -322,7 +364,7 @@ impl From<&LogEvent> for LogEventWire {
 #[derive(Serialize)]
 struct DiagnosticWire {
     error_id: u16,
-    error_name: &'static str,
+    error_name: String,
     severity: Severity,
     stage: Stage,
     retryability: Retryability,
@@ -334,7 +376,7 @@ impl From<Diagnostic> for DiagnosticWire {
     fn from(diagnostic: Diagnostic) -> Self {
         Self {
             error_id: diagnostic.error_id as u16,
-            error_name: error_id_name(diagnostic.error_id),
+            error_name: diagnostic.error_id.to_string(),
             severity: diagnostic.severity,
             stage: diagnostic.stage,
             retryability: diagnostic.retryability,
@@ -344,32 +386,64 @@ impl From<Diagnostic> for DiagnosticWire {
     }
 }
 
-const fn error_id_name(error_id: ErrorId) -> &'static str {
-    match error_id {
-        ErrorId::Invalid => "Invalid",
-        ErrorId::ChecksumMismatch => "ChecksumMismatch",
-        ErrorId::FormatVersion => "FormatVersion",
-        ErrorId::Compression => "Compression",
-        ErrorId::SegmentCorrupt => "SegmentCorrupt",
-        ErrorId::IoError => "IoError",
-        ErrorId::VolumeMissing => "VolumeMissing",
-        ErrorId::EncryptionAuth => "EncryptionAuth",
-        ErrorId::CatalogCorrupt => "CatalogCorrupt",
-    }
-}
-
 /// Sanitized write failure. The underlying error text is intentionally discarded.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
-pub enum LogWriteError {
+pub struct LogWriteError {
+    kind: LogWriteErrorKind,
+    diagnostic: Option<Diagnostic>,
+}
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+enum LogWriteErrorKind {
     Encoding,
     Io(io::ErrorKind),
 }
 
+impl LogWriteError {
+    const fn encoding() -> Self {
+        Self {
+            kind: LogWriteErrorKind::Encoding,
+            diagnostic: None,
+        }
+    }
+
+    fn io(error_kind: io::ErrorKind) -> Self {
+        Self {
+            kind: LogWriteErrorKind::Io(error_kind),
+            diagnostic: Some(Diagnostic {
+                error_id: ErrorId::IoError,
+                severity: Severity::Error,
+                stage: Stage::Writer,
+                retryability: Retryability::Transient,
+                recovery_impact: RecoveryImpact::Degraded,
+                os_error_code: None,
+            }),
+        }
+    }
+
+    /// Returns the safe operating-system error category for I/O failures.
+    #[must_use]
+    pub const fn error_kind(&self) -> Option<io::ErrorKind> {
+        match self.kind {
+            LogWriteErrorKind::Encoding => None,
+            LogWriteErrorKind::Io(error_kind) => Some(error_kind),
+        }
+    }
+
+    /// Returns structured context for I/O failures.
+    #[must_use]
+    pub const fn diagnostic(&self) -> Option<Diagnostic> {
+        self.diagnostic
+    }
+}
+
 impl fmt::Display for LogWriteError {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match self {
-            Self::Encoding => formatter.write_str("structured log encoding failed"),
-            Self::Io(_) => formatter.write_str("structured log write failed"),
+        match self.kind {
+            LogWriteErrorKind::Encoding => {
+                formatter.write_str("structured log encoding failed")
+            }
+            LogWriteErrorKind::Io(_) => formatter.write_str("structured log write failed"),
         }
     }
 }

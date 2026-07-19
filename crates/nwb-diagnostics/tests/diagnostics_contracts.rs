@@ -1,6 +1,6 @@
 use nwb_diagnostics::{
-    Diagnostic, DiagnosticBuildError, EventKind, LogEvent, LogWriteError, Metrics, OperationId,
-    RecoveryImpact, Retryability, Secret, Severity, Stage,
+    Diagnostic, DiagnosticBuildError, EventKind, LogEvent, Metrics, OperationId, RecoveryImpact,
+    Retryability, Secret, Severity, Stage,
 };
 use nwb_format::registry::error_id::ErrorId;
 use serde_json::Value;
@@ -21,14 +21,12 @@ fn sample_diagnostic() -> Diagnostic {
 }
 
 fn sample_event() -> LogEvent {
-    LogEvent::new(
+    LogEvent::from_diagnostic(
         1_721_234_567_890,
-        Severity::Error,
         EventKind::OperationFailed,
-        Stage::Reader,
+        sample_diagnostic(),
     )
     .with_operation_id(OperationId::from_bytes([0xAB; 16]))
-    .with_diagnostic(sample_diagnostic())
     .with_metrics(Metrics {
         objects_processed: 4,
         bytes_processed: 8192,
@@ -49,6 +47,37 @@ fn structured_error_uses_registry_identity() {
     assert_eq!(diagnostic["retryability"], "never");
     assert_eq!(diagnostic["recovery_impact"], "blocks_restore");
     assert_eq!(diagnostic["os_error_code"], 23);
+
+    for (error_id, expected_name) in [
+        (ErrorId::ChecksumMismatch, "ChecksumMismatch"),
+        (ErrorId::FormatVersion, "FormatVersion"),
+        (ErrorId::Compression, "Compression"),
+        (ErrorId::SegmentCorrupt, "SegmentCorrupt"),
+        (ErrorId::IoError, "IoError"),
+        (ErrorId::VolumeMissing, "VolumeMissing"),
+        (ErrorId::EncryptionAuth, "EncryptionAuth"),
+        (ErrorId::CatalogCorrupt, "CatalogCorrupt"),
+    ] {
+        let diagnostic = Diagnostic::new(
+            error_id,
+            Severity::Error,
+            Stage::Core,
+            Retryability::Never,
+            RecoveryImpact::None,
+        )
+        .expect("a non-reserved ErrorId must build");
+        let line = LogEvent::from_diagnostic(
+            1_721_234_567_890,
+            EventKind::OperationFailed,
+            diagnostic,
+        )
+        .to_json_line()
+        .expect("event must encode");
+        let value: Value = serde_json::from_slice(&line).expect("JSON line must parse");
+
+        assert_eq!(value["diagnostic"]["error_name"], expected_name);
+        assert_eq!(error_id.to_string(), expected_name);
+    }
 }
 
 // TST-ERR-002: the reserved zero ErrorId cannot become a valid diagnostic.
@@ -109,7 +138,16 @@ fn secret_canary_writer_error_is_not_exposed() {
         .write_json_line(&mut CanaryFailingWriter)
         .expect_err("the failing writer must return an error");
 
-    assert_eq!(error, LogWriteError::Io(io::ErrorKind::Other));
+    assert_eq!(error.error_kind(), Some(io::ErrorKind::Other));
+    let diagnostic = error
+        .diagnostic()
+        .expect("an I/O failure must include structured context");
+    assert_eq!(diagnostic.error_id(), ErrorId::IoError);
+    assert_eq!(diagnostic.severity(), Severity::Error);
+    assert_eq!(diagnostic.stage(), Stage::Writer);
+    assert_eq!(diagnostic.retryability(), Retryability::Transient);
+    assert_eq!(diagnostic.recovery_impact(), RecoveryImpact::Degraded);
+    assert_eq!(diagnostic.os_error_code(), None);
     assert!(!error.to_string().contains(SECRET_CANARY));
     assert!(!format!("{error:?}").contains(SECRET_CANARY));
 }
@@ -171,4 +209,30 @@ fn structured_log_schema_has_no_free_text_fields() {
     ] {
         assert!(!encoded.contains(&forbidden.to_ascii_lowercase()));
     }
+}
+
+// TST-ERR-007: diagnostic events have one severity and stage source.
+#[test]
+fn diagnostic_event_derives_severity_and_stage() {
+    let diagnostic = Diagnostic::new(
+        ErrorId::IoError,
+        Severity::Critical,
+        Stage::Catalog,
+        Retryability::AfterUserAction,
+        RecoveryImpact::BlocksCommit,
+    )
+    .expect("a non-reserved ErrorId must build");
+    let line = LogEvent::from_diagnostic(
+        1_721_234_567_890,
+        EventKind::OperationFailed,
+        diagnostic,
+    )
+    .to_json_line()
+    .expect("event must encode");
+    let value: Value = serde_json::from_slice(&line).expect("JSON line must parse");
+
+    assert_eq!(value["level"], value["diagnostic"]["severity"]);
+    assert_eq!(value["stage"], value["diagnostic"]["stage"]);
+    assert_eq!(value["level"], "critical");
+    assert_eq!(value["stage"], "catalog");
 }

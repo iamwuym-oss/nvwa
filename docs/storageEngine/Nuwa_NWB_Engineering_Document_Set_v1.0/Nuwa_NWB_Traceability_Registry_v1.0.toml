@@ -1595,6 +1595,16 @@ anchor = "// TST-ERR-006:"
 excerpt = "fn structured_log_schema_has_no_free_text_fields"
 
 [[test]]
+id = "TST-ERR-007"
+title = "诊断事件严重度与阶段单一来源"
+kind = "NEGATIVE"
+status = "IMPLEMENTED"
+traceability = "MAPPED"
+source = "crates/nwb-diagnostics/tests/diagnostics_contracts.rs"
+anchor = "// TST-ERR-007:"
+excerpt = "fn diagnostic_event_derives_severity_and_stage"
+
+[[test]]
 id = "TST-PRV-001"
 title = "Provider只提交逻辑数据且Core创建物理Record"
 kind = "POSITIVE"
@@ -2057,6 +2067,12 @@ kind = "rust_test"
 path = "crates/nwb-diagnostics/tests/diagnostics_contracts.rs"
 symbol = "structured_log_schema_has_no_free_text_fields"
 
+[[locator]]
+test = "TST-ERR-007"
+kind = "rust_test"
+path = "crates/nwb-diagnostics/tests/diagnostics_contracts.rs"
+symbol = "diagnostic_event_derives_severity_and_stage"
+
 
 [[mapping]]
 requirement = "REQ-019"
@@ -2093,6 +2109,12 @@ requirement = "REQ-019"
 test = "TST-ERR-006"
 role = "SECURITY"
 rationale = "Wire Schema没有自由文本、路径、载荷或底层错误文本入口。"
+
+[[mapping]]
+requirement = "REQ-019"
+test = "TST-ERR-007"
+role = "NEGATIVE"
+rationale = "诊断事件从Diagnostic派生顶层严重度与阶段，消除同一日志内的冲突语义。"
 
 [[mapping]]
 requirement = "REQ-001"

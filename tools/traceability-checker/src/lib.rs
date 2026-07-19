@@ -682,7 +682,7 @@ fn validate_test_denominator(
     let expected_traceability: BTreeSet<_> = (1..=16)
         .map(|number| format!("TST-TRC-{number:03}"))
         .collect();
-    let expected_diagnostics: BTreeSet<_> = (1..=6)
+    let expected_diagnostics: BTreeSet<_> = (1..=7)
         .map(|number| format!("TST-ERR-{number:03}"))
         .collect();
     let registry_planned: BTreeSet<_> = EXPECTED_REGISTRY_PLANNED_TEST_IDS
@@ -703,9 +703,9 @@ fn validate_test_denominator(
             &actual,
         ));
     }
-    if actual.len() != 144 {
+    if actual.len() != 145 {
         return semantic(format!(
-            "formal test denominator is {}; expected 144",
+            "formal test denominator is {}; expected 145",
             actual.len()
         ));
     }
@@ -1155,7 +1155,7 @@ fn validate_test_dispositions(
             _ => unreachable!("traceability disposition was validated earlier"),
         }
     }
-    if mapped != 125 || scoped != 19 {
+    if mapped != 126 || scoped != 19 {
         return semantic(format!(
             "test disposition counts mismatch; mapped={mapped}, source_scoped={scoped}"
         ));
@@ -1201,6 +1201,7 @@ fn validate_exact_mappings(registry: &Registry) -> Result<(), CheckError> {
                 ("TST-ERR-004", "SECURITY"),
                 ("TST-ERR-005", "SECURITY"),
                 ("TST-ERR-006", "SECURITY"),
+                ("TST-ERR-007", "NEGATIVE"),
             ],
         ),
         (

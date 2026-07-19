@@ -73,12 +73,12 @@ fn valid_registry_passes() {
     let report = validate_registry(&committed_registry(), &workspace_root())
         .expect("registry must validate");
     assert_eq!(report.requirements, 37);
-    assert_eq!(report.tests, 144);
-    assert_eq!(report.mappings, 147);
+    assert_eq!(report.tests, 145);
+    assert_eq!(report.mappings, 148);
     assert_eq!(report.p0_requirements, 34);
     assert_eq!(report.planned_tests, 115);
-    assert_eq!(report.implemented_tests, 29);
-    assert_eq!(report.mapped_tests, 125);
+    assert_eq!(report.implemented_tests, 30);
+    assert_eq!(report.mapped_tests, 126);
     assert_eq!(report.source_scoped_tests, 19);
     let registry = committed_registry();
     assert!(registry

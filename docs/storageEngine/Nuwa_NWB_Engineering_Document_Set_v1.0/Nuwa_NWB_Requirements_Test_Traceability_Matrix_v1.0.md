@@ -9,12 +9,12 @@
 | 正式需求 | 37 |
 | P0需求 | 34 |
 | P1需求 | 3 |
-| 正式测试 | 144 |
-| 已实现测试 | 29 |
+| 正式测试 | 145 |
+| 已实现测试 | 30 |
 | 计划测试 | 115 |
-| 已映射测试 | 125 |
+| 已映射测试 | 126 |
 | Source-scoped测试 | 19 |
-| 唯一映射 | 147 |
+| 唯一映射 | 148 |
 
 ## 2. 需求到测试
 
@@ -56,7 +56,7 @@
 | REQ-016 | P0 | P-16 | 多分卷归档以Final Volume提交为有效恢复点 | TST-VOL-001, TST-VOL-004, TST-VOL-005, TST-VOL-006, TST-VOL-007, TST-VOL-009 |
 | REQ-017 | P0 | IMP-001 | Format Registry ID唯一且生成一致 | TST-REG-001, TST-REG-002, TST-REG-003, TST-REG-004, TST-REG-005, TST-REG-006, TST-REG-007 |
 | REQ-018 | P0 | IMP-002 | P0需求100%映射且CI拒绝孤儿 | TST-TRC-001, TST-TRC-002, TST-TRC-003, TST-TRC-004, TST-TRC-005, TST-TRC-006, TST-TRC-007, TST-TRC-008, TST-TRC-009, TST-TRC-010, TST-TRC-011, TST-TRC-012, TST-TRC-013, TST-TRC-014, TST-TRC-015, TST-TRC-016 |
-| REQ-019 | P0 | IMP-003 | 结构化错误与日志不得泄露密钥或密码 | TST-ERR-001, TST-ERR-002, TST-ERR-003, TST-ERR-004, TST-ERR-005, TST-ERR-006 |
+| REQ-019 | P0 | IMP-003 | 结构化错误与日志不得泄露密钥或密码 | TST-ERR-001, TST-ERR-002, TST-ERR-003, TST-ERR-004, TST-ERR-005, TST-ERR-006, TST-ERR-007 |
 
 ## 3. 测试登记
 
@@ -107,6 +107,7 @@
 | TST-ERR-004 | SECURITY | IMPLEMENTED | MAPPED | Secret Canary格式化脱敏 | crates/nwb-diagnostics/tests/diagnostics_contracts.rs |
 | TST-ERR-005 | SECURITY | IMPLEMENTED | MAPPED | Secret Canary日志写入错误不泄漏 | crates/nwb-diagnostics/tests/diagnostics_contracts.rs |
 | TST-ERR-006 | SECURITY | IMPLEMENTED | MAPPED | 日志Schema无自由文本路径或载荷字段 | crates/nwb-diagnostics/tests/diagnostics_contracts.rs |
+| TST-ERR-007 | NEGATIVE | IMPLEMENTED | MAPPED | 诊断事件严重度与阶段单一来源 | crates/nwb-diagnostics/tests/diagnostics_contracts.rs |
 | TST-FAULT-001 | FAULT | PLANNED | MAPPED | 进程强杀 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md |
 | TST-FAULT-002 | FAULT | PLANNED | MAPPED | ENOSPC | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md |
 | TST-FAULT-003 | FAULT | PLANNED | MAPPED | USB拔出 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md |
@@ -382,6 +383,7 @@
 | REQ-019 | TST-ERR-004 | SECURITY | 密码与密钥Canary在Secret的Debug和Display路径中保持脱敏。 |
 | REQ-019 | TST-ERR-005 | SECURITY | 底层I/O错误即使携带Canary文本也不会被二次输出。 |
 | REQ-019 | TST-ERR-006 | SECURITY | Wire Schema没有自由文本、路径、载荷或底层错误文本入口。 |
+| REQ-019 | TST-ERR-007 | NEGATIVE | 诊断事件从Diagnostic派生顶层严重度与阶段，消除同一日志内的冲突语义。 |
 
 ## 6. 旧测试库存（非正式追溯分母）
 

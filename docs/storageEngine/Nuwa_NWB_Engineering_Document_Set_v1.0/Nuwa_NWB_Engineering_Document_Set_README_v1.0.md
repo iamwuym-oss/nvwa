@@ -176,13 +176,13 @@ Codex执行本项目时必须遵守：
 | IMP-000 (Workspace) | CLOSED / PASS / ACCEPTANCE MET |
 | IMP-001 (Format Registry) | CLOSED / PASS / ACCEPTANCE MET；最终被测提交 3bceb34，CI run 29684903853，Windows/Ubuntu 172/172 PASS |
 | IMP-002 (Requirements–Test Traceability) | CLOSED / PASS / ACCEPTANCE MET；最终被测提交 8b2a68b，CI run 29691731514，Windows/Ubuntu 188/188 PASS |
-| IMP-003 (Structured Diagnostics) | IMPLEMENTED / PENDING_CI_AND_REVIEW；候选代码与6项契约测试已建立，尚未验收 |
+| IMP-003 (Structured Diagnostics) | IMPLEMENTED / PENDING_CI_AND_REVIEW；候选代码与7项契约测试已建立，尚未验收 |
 | IMP-004–005 | NOT_RUN |
 
 - IMP-000、IMP-001与IMP-002均已关闭为CLOSED / PASS / ACCEPTANCE MET；GATE-0仍为IN_PROGRESS
 - 当前结果记录为`Nuwa_NWB_Test_Result_Record_v1.2.md`；当前工作包证据包括`IMP-001_EVD_Test_Result_Evidence_v1.2.md`与`IMP-002_EVD_Requirements_Traceability_Evidence_v1.0.md`
 - Test Result Record v1.1已标记为HISTORICAL / SUPERSEDED；v1.0 Test Result Record和v1.0 IMP-001 EVD继续保留为HISTORICAL / SUPERSEDED / MALFORMED_SOURCE_RETAINED_FOR_TRACEABILITY
-- 当前Registry登记37项需求、144项正式测试与147条映射；其中IMP-003新增的6项测试仅为候选实现，必须以最终双平台CI证据确认执行结果
+- 当前Registry登记37项需求、145项正式测试与148条映射；其中IMP-003的7项测试仍处于候选实现状态，必须以修复后的双平台CI证据确认执行结果
 - IMP-002只证明追溯治理与CI检查通过；真实Backup/Restore、BMR和故障注入仍为N/A / NOT_RUN
 - 任何工作包只有同时具备设计、实现、自动测试、恢复验证和证据记录才允许标记为ACCEPTED
 - IMP-003已进入候选实现阶段，CI、独立审查、验证和证据闭环完成前不得标记为ACCEPTED；IMP-004–005按依赖和授权在GATE-0内另行执行
