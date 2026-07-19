@@ -56,6 +56,9 @@ jobs:
       - name: Format Registry check
         run: cargo run --locked -p format-registry-generator -- check
 
+      - name: Requirements traceability check
+        run: cargo run --locked -p traceability-checker -- check
+
       - name: Clippy
         run: cargo clippy --workspace --all-targets --locked -- -D warnings
 
