@@ -1,0 +1,2798 @@
+schema_version = 1
+matrix_path = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Requirements_Test_Traceability_Matrix_v1.0.md"
+source_allowlist = [
+  "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Storage_Engine_Architecture_v2.0.md",
+  "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Binary_Format_Specification_v1.0_Draft.md",
+  "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Provider_SDK_Specification_v1.0_Draft.md",
+  "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Product_Support_Matrix_v1.0.md",
+  "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Implementation_Plan_v1.0.md",
+  "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md",
+  "crates/nwb-format/tests/registry_tests.rs",
+  "tools/traceability-checker/tests/traceability_tests.rs",
+  "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Traceability_Registry_v1.0.toml",
+]
+code_test_id_sources = [
+  "crates/nwb-format/tests/registry_tests.rs",
+  "tools/traceability-checker/tests/traceability_tests.rs",
+]
+
+[[legacy_test_inventory]]
+scope = "Repository Rust test attributes before IMP-002"
+test_attributes = 174
+disposition = "Inventory only; existing unnumbered tests are not part of the formal IMP-002 denominator and are not renamed."
+
+[[requirement]]
+id = "REQ-001"
+source_id = "P-01"
+title = "每次成功备份产生一个逻辑NWB归档"
+priority = "P0"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Storage_Engine_Architecture_v2.0.md"
+anchor = "| P-01 |"
+excerpt = "每次成功备份产生一个逻辑NWB归档"
+
+[[requirement]]
+id = "REQ-002"
+source_id = "P-02"
+title = "完整逻辑归档独立可恢复"
+priority = "P0"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Storage_Engine_Architecture_v2.0.md"
+anchor = "| P-02 |"
+excerpt = "完整逻辑归档独立可恢复"
+
+[[requirement]]
+id = "REQ-003"
+source_id = "P-03"
+title = "差异备份只依赖指定完整备份"
+priority = "P0"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Storage_Engine_Architecture_v2.0.md"
+anchor = "| P-03 |"
+excerpt = "差异备份仅依赖指定完整备份"
+
+[[requirement]]
+id = "REQ-004"
+source_id = "P-04"
+title = "NWB归档是恢复真相"
+priority = "P0"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Storage_Engine_Architecture_v2.0.md"
+anchor = "| P-04 |"
+excerpt = "`.nwb` 是恢复真相"
+
+[[requirement]]
+id = "REQ-005"
+source_id = "P-05"
+title = "提交后的归档不可原位修改"
+priority = "P0"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Storage_Engine_Architecture_v2.0.md"
+anchor = "| P-05 |"
+excerpt = "提交后的归档不可原位修改"
+
+[[requirement]]
+id = "REQ-006"
+source_id = "P-06"
+title = "文件、卷和磁盘统一容器与记录层"
+priority = "P1"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Storage_Engine_Architecture_v2.0.md"
+anchor = "| P-06 |"
+excerpt = "统一使用同一个容器格式和数据记录层"
+
+[[requirement]]
+id = "REQ-007"
+source_id = "P-07"
+title = "大小、偏移和计数使用64位字段"
+priority = "P0"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Storage_Engine_Architecture_v2.0.md"
+anchor = "| P-07 |"
+excerpt = "所有大小、偏移和计数使用 64 位字段"
+
+[[requirement]]
+id = "REQ-008"
+source_id = "P-08"
+title = "提交内容可验证且加密具备机密性和真实性"
+priority = "P0"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Storage_Engine_Architecture_v2.0.md"
+anchor = "| P-08 |"
+excerpt = "所有已提交内容必须可验证"
+
+[[requirement]]
+id = "REQ-009"
+source_id = "P-09"
+title = "Reader拒绝未知强制特性与非法布局"
+priority = "P0"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Storage_Engine_Architecture_v2.0.md"
+anchor = "| P-09 |"
+excerpt = "格式读取器必须拒绝未知的强制特性"
+
+[[requirement]]
+id = "REQ-010"
+source_id = "P-10"
+title = "BMR可仅凭完整归档和用户密钥恢复"
+priority = "P0"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Storage_Engine_Architecture_v2.0.md"
+anchor = "| P-10 |"
+excerpt = "BMR启动介质可以只凭完整NWB逻辑归档"
+
+[[requirement]]
+id = "REQ-011"
+source_id = "P-11"
+title = "BMR与异机还原是第一版标准能力"
+priority = "P1"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Storage_Engine_Architecture_v2.0.md"
+anchor = "| P-11 |"
+excerpt = "BMR和异机还原是第一版发布标准能力"
+
+[[requirement]]
+id = "REQ-012"
+source_id = "P-12"
+title = "第一版支持Windows UEFI/GPT恢复场景"
+priority = "P1"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Storage_Engine_Architecture_v2.0.md"
+anchor = "| P-12 |"
+excerpt = "第一版必须支持Windows UEFI/GPT系统"
+
+[[requirement]]
+id = "REQ-013"
+source_id = "P-13"
+title = "Windows启动关键数据必须入档"
+priority = "P0"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Storage_Engine_Architecture_v2.0.md"
+anchor = "| P-13 |"
+excerpt = "UEFI启动信息、GPT、ESP、BCD、WinRE和Boot-critical Driver必须纳入归档"
+
+[[requirement]]
+id = "REQ-014"
+source_id = "P-14"
+title = "单文件与分卷共用协议"
+priority = "P0"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Storage_Engine_Architecture_v2.0.md"
+anchor = "| P-14 |"
+excerpt = "单文件与分卷必须共用同一Record/Segment/Catalog协议"
+
+[[requirement]]
+id = "REQ-015"
+source_id = "P-15"
+title = "Chunk与Segment不得跨物理卷"
+priority = "P0"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Storage_Engine_Architecture_v2.0.md"
+anchor = "| P-15 |"
+excerpt = "Chunk Record和Segment不得跨越物理分卷边界"
+
+[[requirement]]
+id = "REQ-016"
+source_id = "P-16"
+title = "多分卷归档以Final Volume提交为有效恢复点"
+priority = "P0"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Storage_Engine_Architecture_v2.0.md"
+anchor = "| P-16 |"
+excerpt = "只有在Final Volume中的Set Manifest提交后才是有效恢复点"
+
+[[requirement]]
+id = "REQ-017"
+source_id = "IMP-001"
+title = "Format Registry ID唯一且生成一致"
+priority = "P0"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Implementation_Plan_v1.0.md"
+anchor = "| `IMP-001` |"
+excerpt = "Record/Feature/Error ID唯一"
+
+[[requirement]]
+id = "REQ-018"
+source_id = "IMP-002"
+title = "P0需求100%映射且CI拒绝孤儿"
+priority = "P0"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Implementation_Plan_v1.0.md"
+anchor = "| `IMP-002` |"
+excerpt = "P0需求100%映射"
+
+[[requirement]]
+id = "FMT-001"
+source_id = "FMT-001"
+title = "所有整数使用Little Endian"
+priority = "P0"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Binary_Format_Specification_v1.0_Draft.md"
+anchor = "| `FMT-001` |"
+excerpt = "所有整数使用Little Endian"
+
+[[requirement]]
+id = "FMT-002"
+source_id = "FMT-002"
+title = "偏移长度与计数使用无符号64位整数"
+priority = "P0"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Binary_Format_Specification_v1.0_Draft.md"
+anchor = "| `FMT-002` |"
+excerpt = "所有偏移、长度和逻辑数据计数使用无符号64位整数"
+
+[[requirement]]
+id = "FMT-003"
+source_id = "FMT-003"
+title = "Writer只追加且不得原位修改已提交数据"
+priority = "P0"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Binary_Format_Specification_v1.0_Draft.md"
+anchor = "| `FMT-003` |"
+excerpt = "Writer只能追加"
+
+[[requirement]]
+id = "FMT-004"
+source_id = "FMT-004"
+title = "Full自包含且Diff只绑定一个Full"
+priority = "P0"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Binary_Format_Specification_v1.0_Draft.md"
+anchor = "| `FMT-004` |"
+excerpt = "Full自包含；Diff仅依赖一个"
+
+[[requirement]]
+id = "FMT-005"
+source_id = "FMT-005"
+title = "格式结构不得跨物理卷"
+priority = "P0"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Binary_Format_Specification_v1.0_Draft.md"
+anchor = "| `FMT-005` |"
+excerpt = "Chunk、Record、Catalog Page和Segment不得跨物理卷"
+
+[[requirement]]
+id = "FMT-006"
+source_id = "FMT-006"
+title = "只有合法Commit引用的Manifest构成提交归档"
+priority = "P0"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Binary_Format_Specification_v1.0_Draft.md"
+anchor = "| `FMT-006` |"
+excerpt = "只有合法Commit副本引用的Manifest才构成已提交归档"
+
+[[requirement]]
+id = "FMT-007"
+source_id = "FMT-007"
+title = "Reader不信任外部或未经校验的信息"
+priority = "P0"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Binary_Format_Specification_v1.0_Draft.md"
+anchor = "| `FMT-007` |"
+excerpt = "Reader不得信任文件名、外部数据库或未经校验的偏移"
+
+[[requirement]]
+id = "FMT-008"
+source_id = "FMT-008"
+title = "未知必需特性拒绝且未知可选特性可跳过"
+priority = "P0"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Binary_Format_Specification_v1.0_Draft.md"
+anchor = "| `FMT-008` |"
+excerpt = "未知Required Feature必须导致拒绝打开"
+
+[[requirement]]
+id = "FMT-009"
+source_id = "FMT-009"
+title = "加密先于持久化且认证前不释放明文"
+priority = "P0"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Binary_Format_Specification_v1.0_Draft.md"
+anchor = "| `FMT-009` |"
+excerpt = "解密认证成功前不得向恢复端释放明文"
+
+[[requirement]]
+id = "FMT-010"
+source_id = "FMT-010"
+title = "结构具有显式版本长度和校验"
+priority = "P0"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Binary_Format_Specification_v1.0_Draft.md"
+anchor = "| `FMT-010` |"
+excerpt = "每个结构必须有显式版本、长度和校验"
+
+[[requirement]]
+id = "PRV-001"
+source_id = "PRV-001"
+title = "Provider不得操作NWB物理记录"
+priority = "P0"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Provider_SDK_Specification_v1.0_Draft.md"
+anchor = "| `PRV-001` |"
+excerpt = "Provider不得直接创建、定位或修改NWB物理记录"
+
+[[requirement]]
+id = "PRV-002"
+source_id = "PRV-002"
+title = "Provider只向Core提交逻辑数据"
+priority = "P0"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Provider_SDK_Specification_v1.0_Draft.md"
+anchor = "| `PRV-002` |"
+excerpt = "Provider只向Core提交对象、元数据、数据流、范围、依赖和状态"
+
+[[requirement]]
+id = "PRV-003"
+source_id = "PRV-003"
+title = "Core独占格式与提交职责"
+priority = "P0"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Provider_SDK_Specification_v1.0_Draft.md"
+anchor = "| `PRV-003` |"
+excerpt = "Core独占Chunk、Segment、压缩、加密、Catalog、Commit和分卷"
+
+[[requirement]]
+id = "PRV-004"
+source_id = "PRV-004"
+title = "Provider不得获取密钥或密码"
+priority = "P0"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Provider_SDK_Specification_v1.0_Draft.md"
+anchor = "| `PRV-004` |"
+excerpt = "Provider不得获取Archive DEK、用户密码或恢复密钥"
+
+[[requirement]]
+id = "PRV-005"
+source_id = "PRV-005"
+title = "Provider崩溃不得产生伪成功"
+priority = "P0"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Provider_SDK_Specification_v1.0_Draft.md"
+anchor = "| `PRV-005` |"
+excerpt = "Provider崩溃不得使未提交归档成为成功状态"
+
+[[requirement]]
+id = "PRV-006"
+source_id = "PRV-006"
+title = "Provider私有元数据具有公共Envelope和版本"
+priority = "P0"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Provider_SDK_Specification_v1.0_Draft.md"
+anchor = "| `PRV-006` |"
+excerpt = "Provider私有Metadata必须有公共Envelope和Schema版本"
+
+[[requirement]]
+id = "PRV-007"
+source_id = "PRV-007"
+title = "首版只加载Nüwa签名Provider"
+priority = "P0"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Provider_SDK_Specification_v1.0_Draft.md"
+anchor = "| `PRV-007` |"
+excerpt = "首版只加载Nüwa签名Provider"
+
+[[requirement]]
+id = "PRV-008"
+source_id = "PRV-008"
+title = "归档不得嵌入或执行Provider代码"
+priority = "P0"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Provider_SDK_Specification_v1.0_Draft.md"
+anchor = "| `PRV-008` |"
+excerpt = "归档不得嵌入或执行Provider代码"
+
+# The 87 planned IDs are authoritative Test Plan cases. Their source ID is the
+# unique excerpt; PLANNED means no execution claim is made by this registry.
+[[test]]
+id = "TST-FMT-001"
+title = "Header编码解码"
+kind = "POSITIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-FMT-001"
+excerpt = "| `TST-FMT-001` |"
+
+[[test]]
+id = "TST-FMT-002"
+title = "坏Magic/CRC/SHA"
+kind = "NEGATIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-FMT-002"
+excerpt = "| `TST-FMT-002` |"
+
+[[test]]
+id = "TST-FMT-003"
+title = "未知Required Feature"
+kind = "NEGATIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-FMT-003"
+excerpt = "| `TST-FMT-003` |"
+
+[[test]]
+id = "TST-FMT-004"
+title = "未知Optional Feature"
+kind = "POSITIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-FMT-004"
+excerpt = "| `TST-FMT-004` |"
+
+[[test]]
+id = "TST-FMT-005"
+title = "Record长度溢出/越界"
+kind = "NEGATIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-FMT-005"
+excerpt = "| `TST-FMT-005` |"
+
+[[test]]
+id = "TST-FMT-006"
+title = "Segment正常密封"
+kind = "POSITIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-FMT-006"
+excerpt = "| `TST-FMT-006` |"
+
+[[test]]
+id = "TST-FMT-007"
+title = "Segment各边界截断"
+kind = "NEGATIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-FMT-007"
+excerpt = "| `TST-FMT-007` |"
+
+[[test]]
+id = "TST-FMT-008"
+title = "Commit A损坏"
+kind = "POSITIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-FMT-008"
+excerpt = "| `TST-FMT-008` |"
+
+[[test]]
+id = "TST-FMT-009"
+title = "Commit A/B均损坏"
+kind = "NEGATIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-FMT-009"
+excerpt = "| `TST-FMT-009` |"
+
+[[test]]
+id = "TST-FMT-010"
+title = "两Commit合法但不一致"
+kind = "NEGATIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-FMT-010"
+excerpt = "| `TST-FMT-010` |"
+
+[[test]]
+id = "TST-FMT-011"
+title = "Manifest错误引用"
+kind = "NEGATIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-FMT-011"
+excerpt = "| `TST-FMT-011` |"
+
+[[test]]
+id = "TST-FMT-012"
+title = "独立Checker互验"
+kind = "POSITIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-FMT-012"
+excerpt = "| `TST-FMT-012` |"
+
+[[test]]
+id = "TST-FILE-001"
+title = "FILE-01 Full"
+kind = "POSITIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-FILE-001"
+excerpt = "| `TST-FILE-001` |"
+
+[[test]]
+id = "TST-FILE-002"
+title = "删除外部Cache后浏览"
+kind = "POSITIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-FILE-002"
+excerpt = "| `TST-FILE-002` |"
+
+[[test]]
+id = "TST-FILE-003"
+title = "Full全量恢复"
+kind = "POSITIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-FILE-003"
+excerpt = "| `TST-FILE-003` |"
+
+[[test]]
+id = "TST-DIFF-001"
+title = "DIFF-01创建"
+kind = "POSITIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-DIFF-001"
+excerpt = "| `TST-DIFF-001` |"
+
+[[test]]
+id = "TST-DIFF-002"
+title = "Full+Diff恢复"
+kind = "POSITIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-DIFF-002"
+excerpt = "| `TST-DIFF-002` |"
+
+[[test]]
+id = "TST-DIFF-003"
+title = "删除中间Diff"
+kind = "POSITIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-DIFF-003"
+excerpt = "| `TST-DIFF-003` |"
+
+[[test]]
+id = "TST-DIFF-004"
+title = "错Full同名替换"
+kind = "NEGATIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-DIFF-004"
+excerpt = "| `TST-DIFF-004` |"
+
+[[test]]
+id = "TST-DIFF-005"
+title = "变化日志回绕/丢失"
+kind = "POSITIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-DIFF-005"
+excerpt = "| `TST-DIFF-005` |"
+
+[[test]]
+id = "TST-DIFF-006"
+title = "只改元数据"
+kind = "POSITIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-DIFF-006"
+excerpt = "| `TST-DIFF-006` |"
+
+[[test]]
+id = "TST-VOL-001"
+title = "64MiB测试阈值多卷"
+kind = "POSITIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-VOL-001"
+excerpt = "| `TST-VOL-001` |"
+
+[[test]]
+id = "TST-VOL-002"
+title = "Segment接近卷边界"
+kind = "NEGATIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-VOL-002"
+excerpt = "| `TST-VOL-002` |"
+
+[[test]]
+id = "TST-VOL-003"
+title = "Catalog Page接近边界"
+kind = "NEGATIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-VOL-003"
+excerpt = "| `TST-VOL-003` |"
+
+[[test]]
+id = "TST-VOL-004"
+title = "分卷重命名和乱序"
+kind = "POSITIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-VOL-004"
+excerpt = "| `TST-VOL-004` |"
+
+[[test]]
+id = "TST-VOL-005"
+title = "缺中间卷"
+kind = "NEGATIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-VOL-005"
+excerpt = "| `TST-VOL-005` |"
+
+[[test]]
+id = "TST-VOL-006"
+title = "缺Final Volume"
+kind = "NEGATIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-VOL-006"
+excerpt = "| `TST-VOL-006` |"
+
+[[test]]
+id = "TST-VOL-007"
+title = "混入其他Set卷"
+kind = "NEGATIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-VOL-007"
+excerpt = "| `TST-VOL-007` |"
+
+[[test]]
+id = "TST-VOL-008"
+title = "FAT32真实目标"
+kind = "POSITIVE"
+status = "PLANNED"
+traceability = "SOURCE_SCOPED"
+scope_source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Binary_Format_Specification_v1.0_Draft.md"
+scope_anchor = "- `AUTO`：探测文件系统限制"
+scope_excerpt = "FAT32默认安全上限约3.75GiB"
+scope_justification = "当前36项正式需求未为该测试主题分配独立Requirement ID；保留为权威来源范围内计划测试，不计入需求覆盖。"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-VOL-008"
+excerpt = "| `TST-VOL-008` |"
+
+[[test]]
+id = "TST-VOL-009"
+title = "空间不足"
+kind = "FAULT"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-VOL-009"
+excerpt = "| `TST-VOL-009` |"
+
+[[test]]
+id = "TST-CRY-001"
+title = "Zstd和None选择"
+kind = "POSITIVE"
+status = "PLANNED"
+traceability = "SOURCE_SCOPED"
+scope_source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Binary_Format_Specification_v1.0_Draft.md"
+scope_anchor = "Writer对压缩收益不足的Chunk写`NONE`"
+scope_excerpt = "Reader按记录中的算法解压，不依赖全局默认压缩等级"
+scope_justification = "当前36项正式需求未为该测试主题分配独立Requirement ID；保留为权威来源范围内计划测试，不计入需求覆盖。"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-CRY-001"
+excerpt = "| `TST-CRY-001` |"
+
+[[test]]
+id = "TST-CRY-002"
+title = "正确密码"
+kind = "POSITIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-CRY-002"
+excerpt = "| `TST-CRY-002` |"
+
+[[test]]
+id = "TST-CRY-003"
+title = "错误密码"
+kind = "NEGATIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-CRY-003"
+excerpt = "| `TST-CRY-003` |"
+
+[[test]]
+id = "TST-CRY-004"
+title = "Ciphertext/Tag/AAD位翻转"
+kind = "SECURITY"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-CRY-004"
+excerpt = "| `TST-CRY-004` |"
+
+[[test]]
+id = "TST-CRY-005"
+title = "Key Slot损坏"
+kind = "NEGATIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-CRY-005"
+excerpt = "| `TST-CRY-005` |"
+
+[[test]]
+id = "TST-CRY-006"
+title = "Nonce唯一性"
+kind = "POSITIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-CRY-006"
+excerpt = "| `TST-CRY-006` |"
+
+[[test]]
+id = "TST-CRY-007"
+title = "日志/崩溃/转储Secret扫描"
+kind = "SECURITY"
+status = "PLANNED"
+traceability = "SOURCE_SCOPED"
+scope_source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Implementation_Plan_v1.0.md"
+scope_anchor = "| `IMP-303` |"
+scope_excerpt = "密钥内存处理 | 不写日志/转储，使用后清理"
+scope_justification = "当前36项正式需求未为该测试主题分配独立Requirement ID；保留为权威来源范围内计划测试，不计入需求覆盖。"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-CRY-007"
+excerpt = "| `TST-CRY-007` |"
+
+[[test]]
+id = "TST-CRY-008"
+title = "密码变更"
+kind = "POSITIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-CRY-008"
+excerpt = "| `TST-CRY-008` |"
+
+[[test]]
+id = "TST-VER-001"
+title = "正常Archive Quick/Full Verify"
+kind = "POSITIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-VER-001"
+excerpt = "| `TST-VER-001` |"
+
+[[test]]
+id = "TST-VER-002"
+title = "单Chunk位翻转"
+kind = "NEGATIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-VER-002"
+excerpt = "| `TST-VER-002` |"
+
+[[test]]
+id = "TST-VER-003"
+title = "多处损坏"
+kind = "NEGATIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-VER-003"
+excerpt = "| `TST-VER-003` |"
+
+[[test]]
+id = "TST-SAL-001"
+title = "尾部截断"
+kind = "NEGATIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-SAL-001"
+excerpt = "| `TST-SAL-001` |"
+
+[[test]]
+id = "TST-SAL-002"
+title = "Catalog页损坏"
+kind = "NEGATIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-SAL-002"
+excerpt = "| `TST-SAL-002` |"
+
+[[test]]
+id = "TST-SAL-003"
+title = "缺卷选择性恢复"
+kind = "POSITIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-SAL-003"
+excerpt = "| `TST-SAL-003` |"
+
+[[test]]
+id = "TST-SAL-004"
+title = "输出抢救NWB"
+kind = "POSITIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-SAL-004"
+excerpt = "| `TST-SAL-004` |"
+
+[[test]]
+id = "TST-SAL-005"
+title = "Salvage空间不足/取消"
+kind = "FAULT"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-SAL-005"
+excerpt = "| `TST-SAL-005` |"
+
+[[test]]
+id = "TST-FAULT-001"
+title = "进程强杀"
+kind = "FAULT"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-FAULT-001"
+excerpt = "| `TST-FAULT-001` |"
+
+[[test]]
+id = "TST-FAULT-002"
+title = "ENOSPC"
+kind = "FAULT"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-FAULT-002"
+excerpt = "| `TST-FAULT-002` |"
+
+[[test]]
+id = "TST-FAULT-003"
+title = "USB拔出"
+kind = "FAULT"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-FAULT-003"
+excerpt = "| `TST-FAULT-003` |"
+
+[[test]]
+id = "TST-FAULT-004"
+title = "SMB断开重连"
+kind = "FAULT"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-FAULT-004"
+excerpt = "| `TST-FAULT-004` |"
+
+[[test]]
+id = "TST-FAULT-005"
+title = "用户取消"
+kind = "FAULT"
+status = "PLANNED"
+traceability = "SOURCE_SCOPED"
+scope_source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Provider_SDK_Specification_v1.0_Draft.md"
+scope_anchor = "无论成功、失败、取消或超时"
+scope_excerpt = "都必须执行`ReleaseSnapshot`和资源清理"
+scope_justification = "当前36项正式需求未为该测试主题分配独立Requirement ID；保留为权威来源范围内计划测试，不计入需求覆盖。"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-FAULT-005"
+excerpt = "| `TST-FAULT-005` |"
+
+[[test]]
+id = "TST-FAULT-006"
+title = "系统重启"
+kind = "FAULT"
+status = "PLANNED"
+traceability = "SOURCE_SCOPED"
+scope_source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Storage_Engine_Architecture_v2.0.md"
+scope_anchor = "失败、取消和超时都必须释放Snapshot"
+scope_excerpt = "系统重启导致Snapshot消失时不得跨新时间点续写旧Archive"
+scope_justification = "当前36项正式需求未为该测试主题分配独立Requirement ID；保留为权威来源范围内计划测试，不计入需求覆盖。"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-FAULT-006"
+excerpt = "| `TST-FAULT-006` |"
+
+[[test]]
+id = "TST-FAULT-007"
+title = "Cache写失败"
+kind = "FAULT"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-FAULT-007"
+excerpt = "| `TST-FAULT-007` |"
+
+[[test]]
+id = "TST-FAULT-008"
+title = "陈旧锁/孤儿临时卷"
+kind = "FAULT"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-FAULT-008"
+excerpt = "| `TST-FAULT-008` |"
+
+[[test]]
+id = "TST-BLK-001"
+title = "BLOCK-01 Full/restore"
+kind = "POSITIVE"
+status = "PLANNED"
+traceability = "SOURCE_SCOPED"
+scope_source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Implementation_Plan_v1.0.md"
+scope_anchor = "| `IMP-500` |"
+scope_excerpt = "保存Sector、容量、范围和错误"
+scope_justification = "当前36项正式需求未为该测试主题分配独立Requirement ID；保留为权威来源范围内计划测试，不计入需求覆盖。"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-BLK-001"
+excerpt = "| `TST-BLK-001` |"
+
+[[test]]
+id = "TST-BLK-002"
+title = "块Diff"
+kind = "POSITIVE"
+status = "PLANNED"
+traceability = "SOURCE_SCOPED"
+scope_source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Implementation_Plan_v1.0.md"
+scope_anchor = "| `IMP-503` |"
+scope_excerpt = "变化块恢复一致"
+scope_justification = "当前36项正式需求未为该测试主题分配独立Requirement ID；保留为权威来源范围内计划测试，不计入需求覆盖。"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-BLK-002"
+excerpt = "| `TST-BLK-002` |"
+
+[[test]]
+id = "TST-BLK-003"
+title = "GPT主表损坏"
+kind = "POSITIVE"
+status = "PLANNED"
+traceability = "SOURCE_SCOPED"
+scope_source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Implementation_Plan_v1.0.md"
+scope_anchor = "| `IMP-502` |"
+scope_excerpt = "原始字节+解析语义"
+scope_justification = "当前36项正式需求未为该测试主题分配独立Requirement ID；保留为权威来源范围内计划测试，不计入需求覆盖。"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-BLK-003"
+excerpt = "| `TST-BLK-003` |"
+
+[[test]]
+id = "TST-BLK-004"
+title = "GPT主备冲突"
+kind = "NEGATIVE"
+status = "PLANNED"
+traceability = "SOURCE_SCOPED"
+scope_source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Implementation_Plan_v1.0.md"
+scope_anchor = "| `IMP-502` |"
+scope_excerpt = "主/备GPT损坏、MBR扩展分区"
+scope_justification = "当前36项正式需求未为该测试主题分配独立Requirement ID；保留为权威来源范围内计划测试，不计入需求覆盖。"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-BLK-004"
+excerpt = "| `TST-BLK-004` |"
+
+[[test]]
+id = "TST-BLK-005"
+title = "目标盘过小"
+kind = "NEGATIVE"
+status = "PLANNED"
+traceability = "SOURCE_SCOPED"
+scope_source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Implementation_Plan_v1.0.md"
+scope_anchor = "| `IMP-504` |"
+scope_excerpt = "错盘/小盘被阻止"
+scope_justification = "当前36项正式需求未为该测试主题分配独立Requirement ID；保留为权威来源范围内计划测试，不计入需求覆盖。"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-BLK-005"
+excerpt = "| `TST-BLK-005` |"
+
+[[test]]
+id = "TST-BLK-006"
+title = "目标盘更大"
+kind = "POSITIVE"
+status = "PLANNED"
+traceability = "SOURCE_SCOPED"
+scope_source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Implementation_Plan_v1.0.md"
+scope_anchor = "| `IMP-504` |"
+scope_excerpt = "512e/4Kn、大小变化"
+scope_justification = "当前36项正式需求未为该测试主题分配独立Requirement ID；保留为权威来源范围内计划测试，不计入需求覆盖。"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-BLK-006"
+excerpt = "| `TST-BLK-006` |"
+
+[[test]]
+id = "TST-BLK-007"
+title = "512e↔4Kn"
+kind = "POSITIVE"
+status = "PLANNED"
+traceability = "SOURCE_SCOPED"
+scope_source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Implementation_Plan_v1.0.md"
+scope_anchor = "| `IMP-504` |"
+scope_excerpt = "稳定ID、容量、Sector预检"
+scope_justification = "当前36项正式需求未为该测试主题分配独立Requirement ID；保留为权威来源范围内计划测试，不计入需求覆盖。"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-BLK-007"
+excerpt = "| `TST-BLK-007` |"
+
+[[test]]
+id = "TST-BLK-008"
+title = "源坏扇区"
+kind = "NEGATIVE"
+status = "PLANNED"
+traceability = "SOURCE_SCOPED"
+scope_source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Implementation_Plan_v1.0.md"
+scope_anchor = "| `IMP-500` |"
+scope_excerpt = "非对齐读、尾范围、坏扇区"
+scope_justification = "当前36项正式需求未为该测试主题分配独立Requirement ID；保留为权威来源范围内计划测试，不计入需求覆盖。"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-BLK-008"
+excerpt = "| `TST-BLK-008` |"
+
+[[test]]
+id = "TST-BLK-009"
+title = "恢复目标I/O错误"
+kind = "FAULT"
+status = "PLANNED"
+traceability = "SOURCE_SCOPED"
+scope_source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Implementation_Plan_v1.0.md"
+scope_anchor = "| `IMP-505` |"
+scope_excerpt = "I/O错误、重试、填零策略"
+scope_justification = "当前36项正式需求未为该测试主题分配独立Requirement ID；保留为权威来源范围内计划测试，不计入需求覆盖。"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-BLK-009"
+excerpt = "| `TST-BLK-009` |"
+
+[[test]]
+id = "TST-BMR-W-001"
+title = "UEFI/GPT/NTFS Full同机"
+kind = "POSITIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-BMR-W-001"
+excerpt = "| `TST-BMR-W-001` |"
+
+[[test]]
+id = "TST-BMR-W-002"
+title = "UEFI/GPT/NTFS Diff同机"
+kind = "POSITIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-BMR-W-002"
+excerpt = "| `TST-BMR-W-002` |"
+
+[[test]]
+id = "TST-BMR-W-003"
+title = "Windows恢复到更大盘"
+kind = "POSITIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-BMR-W-003"
+excerpt = "| `TST-BMR-W-003` |"
+
+[[test]]
+id = "TST-BMR-W-004"
+title = "SATA到NVMe虚拟异机"
+kind = "POSITIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-BMR-W-004"
+excerpt = "| `TST-BMR-W-004` |"
+
+[[test]]
+id = "TST-BMR-W-005"
+title = "ESP/BCD重建"
+kind = "POSITIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-BMR-W-005"
+excerpt = "| `TST-BMR-W-005` |"
+
+[[test]]
+id = "TST-BMR-W-006"
+title = "缺启动必需卷"
+kind = "NEGATIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-BMR-W-006"
+excerpt = "| `TST-BMR-W-006` |"
+
+[[test]]
+id = "TST-BMR-W-007"
+title = "BitLocker认证场景"
+kind = "POSITIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-BMR-W-007"
+excerpt = "| `TST-BMR-W-007` |"
+
+[[test]]
+id = "TST-BMR-W-008"
+title = "Windows 7 SP1"
+kind = "POSITIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-BMR-W-008"
+excerpt = "| `TST-BMR-W-008` |"
+
+[[test]]
+id = "TST-BMR-L-001"
+title = "UEFI/GPT/LVM/ext4 Full"
+kind = "POSITIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-BMR-L-001"
+excerpt = "| `TST-BMR-L-001` |"
+
+[[test]]
+id = "TST-BMR-L-002"
+title = "Linux同场景Diff"
+kind = "POSITIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-BMR-L-002"
+excerpt = "| `TST-BMR-L-002` |"
+
+[[test]]
+id = "TST-BMR-L-003"
+title = "Linux恢复到更大盘"
+kind = "POSITIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-BMR-L-003"
+excerpt = "| `TST-BMR-L-003` |"
+
+[[test]]
+id = "TST-BMR-L-004"
+title = "控制器变化异机"
+kind = "POSITIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-BMR-L-004"
+excerpt = "| `TST-BMR-L-004` |"
+
+[[test]]
+id = "TST-BMR-L-005"
+title = "UUID变化"
+kind = "POSITIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-BMR-L-005"
+excerpt = "| `TST-BMR-L-005` |"
+
+[[test]]
+id = "TST-BMR-L-006"
+title = "XFS恢复与缩容阻止"
+kind = "NEGATIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-BMR-L-006"
+excerpt = "| `TST-BMR-L-006` |"
+
+[[test]]
+id = "TST-BMR-L-007"
+title = "Btrfs简单子卷"
+kind = "POSITIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-BMR-L-007"
+excerpt = "| `TST-BMR-L-007` |"
+
+[[test]]
+id = "TST-BMR-L-008"
+title = "复杂RAID/ZFS阻止误导BMR"
+kind = "NEGATIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-BMR-L-008"
+excerpt = "| `TST-BMR-L-008` |"
+
+[[test]]
+id = "TST-SEC-001"
+title = "路径穿越与设备路径"
+kind = "SECURITY"
+status = "PLANNED"
+traceability = "SOURCE_SCOPED"
+scope_source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Binary_Format_Specification_v1.0_Draft.md"
+scope_anchor = "恢复路径必须经过包含性检查"
+scope_excerpt = "所有乘加、Offset和Length运算使用checked arithmetic"
+scope_justification = "当前36项正式需求未为该测试主题分配独立Requirement ID；保留为权威来源范围内计划测试，不计入需求覆盖。"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-SEC-001"
+excerpt = "| `TST-SEC-001` |"
+
+[[test]]
+id = "TST-SEC-002"
+title = "Symbolic/Reparse链接逃逸"
+kind = "SECURITY"
+status = "PLANNED"
+traceability = "SOURCE_SCOPED"
+scope_source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Binary_Format_Specification_v1.0_Draft.md"
+scope_anchor = "符号链接/Reparse Point最后创建"
+scope_excerpt = "不能将后续文件写出恢复根"
+scope_justification = "当前36项正式需求未为该测试主题分配独立Requirement ID；保留为权威来源范围内计划测试，不计入需求覆盖。"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-SEC-002"
+excerpt = "| `TST-SEC-002` |"
+
+[[test]]
+id = "TST-SEC-003"
+title = "Catalog循环和深度炸弹"
+kind = "SECURITY"
+status = "PLANNED"
+traceability = "SOURCE_SCOPED"
+scope_source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Binary_Format_Specification_v1.0_Draft.md"
+scope_anchor = "Reader必须验证页内偏移、Key排序、重复Key策略和树层级"
+scope_excerpt = "任何循环引用、越界Child或深度超过实现上限都必须拒绝"
+scope_justification = "当前36项正式需求未为该测试主题分配独立Requirement ID；保留为权威来源范围内计划测试，不计入需求覆盖。"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-SEC-003"
+excerpt = "| `TST-SEC-003` |"
+
+[[test]]
+id = "TST-SEC-004"
+title = "超大长度和数量"
+kind = "SECURITY"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-SEC-004"
+excerpt = "| `TST-SEC-004` |"
+
+[[test]]
+id = "TST-SEC-005"
+title = "压缩炸弹"
+kind = "SECURITY"
+status = "PLANNED"
+traceability = "SOURCE_SCOPED"
+scope_source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Binary_Format_Specification_v1.0_Draft.md"
+scope_anchor = "- 最大解压比例和单Chunk明文长度"
+scope_excerpt = "最大解压比例和单Chunk明文长度"
+scope_justification = "当前36项正式需求未为该测试主题分配独立Requirement ID；保留为权威来源范围内计划测试，不计入需求覆盖。"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-SEC-005"
+excerpt = "| `TST-SEC-005` |"
+
+[[test]]
+id = "TST-SEC-006"
+title = "Provider恶意或崩溃"
+kind = "SECURITY"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-SEC-006"
+excerpt = "| `TST-SEC-006` |"
+
+[[test]]
+id = "TST-SEC-007"
+title = "Fuzz Record/Page/Manifest"
+kind = "SECURITY"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-SEC-007"
+excerpt = "| `TST-SEC-007` |"
+
+[[test]]
+id = "TST-SEC-008"
+title = "目标磁盘误选"
+kind = "SECURITY"
+status = "PLANNED"
+traceability = "SOURCE_SCOPED"
+scope_source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Provider_SDK_Specification_v1.0_Draft.md"
+scope_anchor = "块恢复接口必须暴露目标稳定ID"
+scope_excerpt = "目标选择不得只使用“Disk 0”序号"
+scope_justification = "当前36项正式需求未为该测试主题分配独立Requirement ID；保留为权威来源范围内计划测试，不计入需求覆盖。"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md"
+anchor = "TST-SEC-008"
+excerpt = "| `TST-SEC-008` |"
+
+[[test]]
+id = "TST-REG-001"
+title = "RecordType完整性"
+kind = "POSITIVE"
+status = "IMPLEMENTED"
+traceability = "MAPPED"
+source = "crates/nwb-format/tests/registry_tests.rs"
+anchor = "| TST-REG-001 |"
+excerpt = "All 18 RecordType variants exist and are matchable"
+
+[[test]]
+id = "TST-REG-002"
+title = "重复ErrorId编译失败"
+kind = "NEGATIVE"
+status = "IMPLEMENTED"
+traceability = "MAPPED"
+source = "crates/nwb-format/tests/registry_tests.rs"
+anchor = "| TST-REG-002 |"
+excerpt = "Duplicate ErrorId discriminant rejected by compile-fail test"
+
+[[test]]
+id = "TST-REG-003"
+title = "Feature bit唯一"
+kind = "POSITIVE"
+status = "IMPLEMENTED"
+traceability = "MAPPED"
+source = "crates/nwb-format/tests/registry_tests.rs"
+anchor = "| TST-REG-003 |"
+excerpt = "5 Feature bits — no two share the same position"
+
+[[test]]
+id = "TST-REG-004"
+title = "Feature bit范围"
+kind = "NEGATIVE"
+status = "IMPLEMENTED"
+traceability = "MAPPED"
+source = "crates/nwb-format/tests/registry_tests.rs"
+anchor = "| TST-REG-004 |"
+excerpt = "All bit positions within 0..63"
+
+[[test]]
+id = "TST-REG-005"
+title = "Header枚举精确值"
+kind = "POSITIVE"
+status = "IMPLEMENTED"
+traceability = "MAPPED"
+source = "crates/nwb-format/tests/registry_tests.rs"
+anchor = "| TST-REG-005 |"
+excerpt = "BackupKind / PlatformHint have exact values"
+
+[[test]]
+id = "TST-REG-006"
+title = "Registry快照"
+kind = "POSITIVE"
+status = "IMPLEMENTED"
+traceability = "MAPPED"
+source = "crates/nwb-format/tests/registry_tests.rs"
+anchor = "| TST-REG-006 |"
+excerpt = "Registry snapshot matches expected output"
+
+[[test]]
+id = "TST-REG-007"
+title = "生成Rust与提交文件一致"
+kind = "NEGATIVE"
+status = "IMPLEMENTED"
+traceability = "MAPPED"
+source = "crates/nwb-format/tests/registry_tests.rs"
+anchor = "| TST-REG-007 |"
+excerpt = "//! | TST-REG-007 | Generated Rust matches committed files byte-for-byte |"
+
+[[test]]
+id = "TST-TRC-001"
+title = "合法Registry通过"
+kind = "POSITIVE"
+status = "IMPLEMENTED"
+traceability = "MAPPED"
+source = "tools/traceability-checker/tests/traceability_tests.rs"
+anchor = "// TST-TRC-001:"
+excerpt = "fn valid_registry_passes"
+
+[[test]]
+id = "TST-TRC-002"
+title = "Markdown确定性生成"
+kind = "POSITIVE"
+status = "IMPLEMENTED"
+traceability = "MAPPED"
+source = "tools/traceability-checker/tests/traceability_tests.rs"
+anchor = "// TST-TRC-002:"
+excerpt = "fn markdown_generation_is_deterministic"
+
+[[test]]
+id = "TST-TRC-003"
+title = "重复Requirement拒绝"
+kind = "NEGATIVE"
+status = "IMPLEMENTED"
+traceability = "MAPPED"
+source = "tools/traceability-checker/tests/traceability_tests.rs"
+anchor = "// TST-TRC-003:"
+excerpt = "fn duplicate_requirement_is_rejected"
+
+[[test]]
+id = "TST-TRC-004"
+title = "重复Test拒绝"
+kind = "NEGATIVE"
+status = "IMPLEMENTED"
+traceability = "MAPPED"
+source = "tools/traceability-checker/tests/traceability_tests.rs"
+anchor = "// TST-TRC-004:"
+excerpt = "fn duplicate_test_is_rejected"
+
+[[test]]
+id = "TST-TRC-005"
+title = "重复Mapping拒绝"
+kind = "NEGATIVE"
+status = "IMPLEMENTED"
+traceability = "MAPPED"
+source = "tools/traceability-checker/tests/traceability_tests.rs"
+anchor = "// TST-TRC-005:"
+excerpt = "fn duplicate_mapping_is_rejected"
+
+[[test]]
+id = "TST-TRC-006"
+title = "非法ID拒绝"
+kind = "NEGATIVE"
+status = "IMPLEMENTED"
+traceability = "MAPPED"
+source = "tools/traceability-checker/tests/traceability_tests.rs"
+anchor = "// TST-TRC-006:"
+excerpt = "fn illegal_id_is_rejected"
+
+[[test]]
+id = "TST-TRC-007"
+title = "悬空Requirement引用拒绝"
+kind = "NEGATIVE"
+status = "IMPLEMENTED"
+traceability = "MAPPED"
+source = "tools/traceability-checker/tests/traceability_tests.rs"
+anchor = "// TST-TRC-007:"
+excerpt = "fn unknown_requirement_reference_is_rejected"
+
+[[test]]
+id = "TST-TRC-008"
+title = "悬空Test引用拒绝"
+kind = "NEGATIVE"
+status = "IMPLEMENTED"
+traceability = "MAPPED"
+source = "tools/traceability-checker/tests/traceability_tests.rs"
+anchor = "// TST-TRC-008:"
+excerpt = "fn unknown_test_reference_is_rejected"
+
+[[test]]
+id = "TST-TRC-009"
+title = "P0缺正向测试拒绝"
+kind = "NEGATIVE"
+status = "IMPLEMENTED"
+traceability = "MAPPED"
+source = "tools/traceability-checker/tests/traceability_tests.rs"
+anchor = "// TST-TRC-009:"
+excerpt = "fn p0_without_positive_test_is_rejected"
+
+[[test]]
+id = "TST-TRC-010"
+title = "P0缺负向故障或安全测试拒绝"
+kind = "NEGATIVE"
+status = "IMPLEMENTED"
+traceability = "MAPPED"
+source = "tools/traceability-checker/tests/traceability_tests.rs"
+anchor = "// TST-TRC-010:"
+excerpt = "fn p0_without_negative_test_is_rejected"
+
+[[test]]
+id = "TST-TRC-011"
+title = "零P0拒绝"
+kind = "NEGATIVE"
+status = "IMPLEMENTED"
+traceability = "MAPPED"
+source = "tools/traceability-checker/tests/traceability_tests.rs"
+anchor = "// TST-TRC-011:"
+excerpt = "fn zero_p0_requirements_is_rejected"
+
+[[test]]
+id = "TST-TRC-012"
+title = "MAPPED与SOURCE_SCOPED Disposition组合校验"
+kind = "NEGATIVE"
+status = "IMPLEMENTED"
+traceability = "MAPPED"
+source = "tools/traceability-checker/tests/traceability_tests.rs"
+anchor = "// TST-TRC-012:"
+excerpt = "fn orphan_test_is_rejected"
+
+[[test]]
+id = "TST-TRC-013"
+title = "Source文件Anchor或Excerpt异常拒绝"
+kind = "NEGATIVE"
+status = "IMPLEMENTED"
+traceability = "MAPPED"
+source = "tools/traceability-checker/tests/traceability_tests.rs"
+anchor = "// TST-TRC-013:"
+excerpt = "fn invalid_source_evidence_is_rejected"
+
+[[test]]
+id = "TST-TRC-014"
+title = "Markdown缺失或漂移拒绝"
+kind = "NEGATIVE"
+status = "IMPLEMENTED"
+traceability = "MAPPED"
+source = "tools/traceability-checker/tests/traceability_tests.rs"
+anchor = "// TST-TRC-014:"
+excerpt = "fn matrix_drift_is_rejected"
+
+[[test]]
+id = "TST-TRC-015"
+title = "代码TST ID漏登记拒绝且旧裸测试仅库存"
+kind = "NEGATIVE"
+status = "IMPLEMENTED"
+traceability = "MAPPED"
+source = "tools/traceability-checker/tests/traceability_tests.rs"
+anchor = "// TST-TRC-015:"
+excerpt = "fn code_test_inventory_must_match_registry"
+
+[[test]]
+id = "TST-TRC-016"
+title = "CLI退出码0/2/3/4"
+kind = "NEGATIVE"
+status = "IMPLEMENTED"
+traceability = "MAPPED"
+source = "tools/traceability-checker/tests/traceability_tests.rs"
+anchor = "// TST-TRC-016:"
+excerpt = "fn cli_exit_codes_are_stable"
+
+[[test]]
+id = "TST-PRV-001"
+title = "Provider只提交逻辑数据且Core创建物理Record"
+kind = "POSITIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Traceability_Registry_v1.0.toml"
+anchor = "id = \"TST-PRV-001\""
+excerpt = "title = \"Provider只提交逻辑数据且Core创建物理Record\""
+
+[[test]]
+id = "TST-PRV-002"
+title = "Provider直接创建、定位或修改物理Record被拒绝"
+kind = "NEGATIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Traceability_Registry_v1.0.toml"
+anchor = "id = \"TST-PRV-002\""
+excerpt = "title = \"Provider直接创建、定位或修改物理Record被拒绝\""
+
+[[test]]
+id = "TST-PRV-003"
+title = "Object、Metadata、Stream、Range、Dependency和State正常提交"
+kind = "POSITIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Traceability_Registry_v1.0.toml"
+anchor = "id = \"TST-PRV-003\""
+excerpt = "title = \"Object、Metadata、Stream、Range、Dependency和State正常提交\""
+
+[[test]]
+id = "TST-PRV-004"
+title = "物理Offset、Record或未声明对象类型被拒绝"
+kind = "NEGATIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Traceability_Registry_v1.0.toml"
+anchor = "id = \"TST-PRV-004\""
+excerpt = "title = \"物理Offset、Record或未声明对象类型被拒绝\""
+
+[[test]]
+id = "TST-PRV-005"
+title = "格式、压缩、加密、Catalog、Commit与分卷由Core完成"
+kind = "POSITIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Traceability_Registry_v1.0.toml"
+anchor = "id = \"TST-PRV-005\""
+excerpt = "title = \"格式、压缩、加密、Catalog、Commit与分卷由Core完成\""
+
+[[test]]
+id = "TST-PRV-006"
+title = "Provider指定物理布局、密文、Commit或绕过Core策略失败"
+kind = "NEGATIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Traceability_Registry_v1.0.toml"
+anchor = "id = \"TST-PRV-006\""
+excerpt = "title = \"Provider指定物理布局、密文、Commit或绕过Core策略失败\""
+
+[[test]]
+id = "TST-PRV-007"
+title = "不透明数据接口完成且Provider不接触凭据"
+kind = "POSITIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Traceability_Registry_v1.0.toml"
+anchor = "id = \"TST-PRV-007\""
+excerpt = "title = \"不透明数据接口完成且Provider不接触凭据\""
+
+[[test]]
+id = "TST-PRV-008"
+title = "凭据Canary不出现在IPC、回调、内存输出或日志"
+kind = "SECURITY"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Traceability_Registry_v1.0.toml"
+anchor = "id = \"TST-PRV-008\""
+excerpt = "title = \"凭据Canary不出现在IPC、回调、内存输出或日志\""
+
+[[test]]
+id = "TST-PRV-009"
+title = "Provider正常结束后Core才允许Commit"
+kind = "POSITIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Traceability_Registry_v1.0.toml"
+anchor = "id = \"TST-PRV-009\""
+excerpt = "title = \"Provider正常结束后Core才允许Commit\""
+
+[[test]]
+id = "TST-PRV-010"
+title = "Provider生命周期崩溃不提交且不报告成功"
+kind = "FAULT"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Traceability_Registry_v1.0.toml"
+anchor = "id = \"TST-PRV-010\""
+excerpt = "title = \"Provider生命周期崩溃不提交且不报告成功\""
+
+[[test]]
+id = "TST-PRV-011"
+title = "公共Envelope与Schema版本往返一致"
+kind = "POSITIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Traceability_Registry_v1.0.toml"
+anchor = "id = \"TST-PRV-011\""
+excerpt = "title = \"公共Envelope与Schema版本往返一致\""
+
+[[test]]
+id = "TST-PRV-012"
+title = "缺Envelope、非法长度、未知Required Schema或坏Hash被拒绝"
+kind = "NEGATIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Traceability_Registry_v1.0.toml"
+anchor = "id = \"TST-PRV-012\""
+excerpt = "title = \"缺Envelope、非法长度、未知Required Schema或坏Hash被拒绝\""
+
+[[test]]
+id = "TST-PRV-013"
+title = "合法Nüwa签名Provider可以加载"
+kind = "POSITIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Traceability_Registry_v1.0.toml"
+anchor = "id = \"TST-PRV-013\""
+excerpt = "title = \"合法Nüwa签名Provider可以加载\""
+
+[[test]]
+id = "TST-PRV-014"
+title = "无签名、错误签名者、篡改Binary或Hash Mismatch被拒绝"
+kind = "SECURITY"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Traceability_Registry_v1.0.toml"
+anchor = "id = \"TST-PRV-014\""
+excerpt = "title = \"无签名、错误签名者、篡改Binary或Hash Mismatch被拒绝\""
+
+[[test]]
+id = "TST-PRV-015"
+title = "Archive只保存Provider Metadata且Reader不执行"
+kind = "POSITIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Traceability_Registry_v1.0.toml"
+anchor = "id = \"TST-PRV-015\""
+excerpt = "title = \"Archive只保存Provider Metadata且Reader不执行\""
+
+[[test]]
+id = "TST-PRV-016"
+title = "嵌入代码、脚本、Binary或执行指令作为非执行数据处理"
+kind = "SECURITY"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Traceability_Registry_v1.0.toml"
+anchor = "id = \"TST-PRV-016\""
+excerpt = "title = \"嵌入代码、脚本、Binary或执行指令作为非执行数据处理\""
+
+[[test]]
+id = "TST-REQ-001"
+title = "成功Run恰好发布一个逻辑Archive与唯一Identity"
+kind = "POSITIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Traceability_Registry_v1.0.toml"
+anchor = "id = \"TST-REQ-001\""
+excerpt = "title = \"成功Run恰好发布一个逻辑Archive与唯一Identity\""
+
+[[test]]
+id = "TST-REQ-002"
+title = "零个、多个或未绑定输出不得报告成功"
+kind = "NEGATIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Traceability_Registry_v1.0.toml"
+anchor = "id = \"TST-REQ-002\""
+excerpt = "title = \"零个、多个或未绑定输出不得报告成功\""
+
+[[test]]
+id = "TST-REQ-003"
+title = "File、Volume与Disk共用Envelope、Record层和Reader入口"
+kind = "POSITIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Traceability_Registry_v1.0.toml"
+anchor = "id = \"TST-REQ-003\""
+excerpt = "title = \"File、Volume与Disk共用Envelope、Record层和Reader入口\""
+
+[[test]]
+id = "TST-REQ-004"
+title = "删除Cache与配置数据库后只凭Archive和Key完成BMR"
+kind = "POSITIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Traceability_Registry_v1.0.toml"
+anchor = "id = \"TST-REQ-004\""
+excerpt = "title = \"删除Cache与配置数据库后只凭Archive和Key完成BMR\""
+
+[[test]]
+id = "TST-REQ-005"
+title = "缺Archive、Required Volume或错误Key时写盘前阻止"
+kind = "NEGATIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Traceability_Registry_v1.0.toml"
+anchor = "id = \"TST-REQ-005\""
+excerpt = "title = \"缺Archive、Required Volume或错误Key时写盘前阻止\""
+
+[[test]]
+id = "TST-REQ-006"
+title = "启动关键Artifact带Version与Hash入档"
+kind = "POSITIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Traceability_Registry_v1.0.toml"
+anchor = "id = \"TST-REQ-006\""
+excerpt = "title = \"启动关键Artifact带Version与Hash入档\""
+
+[[test]]
+id = "TST-REQ-007"
+title = "逐项缺少必要Boot Artifact时预检不得Ready"
+kind = "NEGATIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Traceability_Registry_v1.0.toml"
+anchor = "id = \"TST-REQ-007\""
+excerpt = "title = \"逐项缺少必要Boot Artifact时预检不得Ready\""
+
+[[test]]
+id = "TST-REQ-008"
+title = "同一Reader与协议打开等价单文件和多卷"
+kind = "POSITIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Traceability_Registry_v1.0.toml"
+anchor = "id = \"TST-REQ-008\""
+excerpt = "title = \"同一Reader与协议打开等价单文件和多卷\""
+
+[[test]]
+id = "TST-REQ-009"
+title = "模式专用或协议分叉结构被确定拒绝"
+kind = "NEGATIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Traceability_Registry_v1.0.toml"
+anchor = "id = \"TST-REQ-009\""
+excerpt = "title = \"模式专用或协议分叉结构被确定拒绝\""
+
+[[test]]
+id = "TST-FMT-013"
+title = "Endian Swap或Big Endian规范输入被拒绝"
+kind = "NEGATIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Traceability_Registry_v1.0.toml"
+anchor = "id = \"TST-FMT-013\""
+excerpt = "title = \"Endian Swap或Big Endian规范输入被拒绝\""
+
+[[test]]
+id = "TST-FMT-014"
+title = "已密封Segment或已提交Archive重写被拒绝且原字节不变"
+kind = "NEGATIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Traceability_Registry_v1.0.toml"
+anchor = "id = \"TST-FMT-014\""
+excerpt = "title = \"已密封Segment或已提交Archive重写被拒绝且原字节不变\""
+
+[[test]]
+id = "TST-FMT-015"
+title = "跨卷Chunk、Record、Catalog Page或Segment被Reader拒绝"
+kind = "NEGATIVE"
+status = "PLANNED"
+traceability = "MAPPED"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Traceability_Registry_v1.0.toml"
+anchor = "id = \"TST-FMT-015\""
+excerpt = "title = \"跨卷Chunk、Record、Catalog Page或Segment被Reader拒绝\""
+
+
+[[locator]]
+test = "TST-REG-001"
+kind = "rust_test"
+path = "crates/nwb-format/tests/registry_tests.rs"
+symbol = "test_record_type_all_variants_matchable"
+
+[[locator]]
+test = "TST-REG-002"
+kind = "trybuild"
+path = "crates/nwb-format/tests/compile_fail.rs"
+symbol = "test_error_id_duplicate_discriminant"
+fixture = "crates/nwb-format/tests/compile-fail/error_id_duplicate.rs"
+stderr = "crates/nwb-format/tests/compile-fail/error_id_duplicate.stderr"
+
+[[locator]]
+test = "TST-REG-003"
+kind = "rust_test"
+path = "crates/nwb-format/tests/registry_tests.rs"
+symbol = "test_feature_bits_no_duplicates_within_range"
+
+[[locator]]
+test = "TST-REG-004"
+kind = "rust_test"
+path = "crates/nwb-format/tests/registry_tests.rs"
+symbol = "test_feature_bits_no_duplicates_within_range"
+
+[[locator]]
+test = "TST-REG-005"
+kind = "rust_test"
+path = "crates/nwb-format/tests/registry_tests.rs"
+symbol = "test_backup_kind_exact_values"
+
+[[locator]]
+test = "TST-REG-005"
+kind = "rust_test"
+path = "crates/nwb-format/tests/registry_tests.rs"
+symbol = "test_platform_hint_exact_values"
+
+[[locator]]
+test = "TST-REG-006"
+kind = "rust_test"
+path = "crates/nwb-format/tests/registry_tests.rs"
+symbol = "test_registry_snapshot"
+
+[[locator]]
+test = "TST-REG-007"
+kind = "rust_test"
+path = "crates/nwb-format/tests/registry_tests.rs"
+symbol = "test_generated_files_match_toml_sources"
+
+[[locator]]
+test = "TST-TRC-001"
+kind = "rust_test"
+path = "tools/traceability-checker/tests/traceability_tests.rs"
+symbol = "valid_registry_passes"
+
+[[locator]]
+test = "TST-TRC-002"
+kind = "rust_test"
+path = "tools/traceability-checker/tests/traceability_tests.rs"
+symbol = "markdown_generation_is_deterministic"
+
+[[locator]]
+test = "TST-TRC-003"
+kind = "rust_test"
+path = "tools/traceability-checker/tests/traceability_tests.rs"
+symbol = "duplicate_requirement_is_rejected"
+
+[[locator]]
+test = "TST-TRC-004"
+kind = "rust_test"
+path = "tools/traceability-checker/tests/traceability_tests.rs"
+symbol = "duplicate_test_is_rejected"
+
+[[locator]]
+test = "TST-TRC-005"
+kind = "rust_test"
+path = "tools/traceability-checker/tests/traceability_tests.rs"
+symbol = "duplicate_mapping_is_rejected"
+
+[[locator]]
+test = "TST-TRC-006"
+kind = "rust_test"
+path = "tools/traceability-checker/tests/traceability_tests.rs"
+symbol = "illegal_id_is_rejected"
+
+[[locator]]
+test = "TST-TRC-007"
+kind = "rust_test"
+path = "tools/traceability-checker/tests/traceability_tests.rs"
+symbol = "unknown_requirement_reference_is_rejected"
+
+[[locator]]
+test = "TST-TRC-008"
+kind = "rust_test"
+path = "tools/traceability-checker/tests/traceability_tests.rs"
+symbol = "unknown_test_reference_is_rejected"
+
+[[locator]]
+test = "TST-TRC-009"
+kind = "rust_test"
+path = "tools/traceability-checker/tests/traceability_tests.rs"
+symbol = "p0_without_positive_test_is_rejected"
+
+[[locator]]
+test = "TST-TRC-010"
+kind = "rust_test"
+path = "tools/traceability-checker/tests/traceability_tests.rs"
+symbol = "p0_without_negative_test_is_rejected"
+
+[[locator]]
+test = "TST-TRC-011"
+kind = "rust_test"
+path = "tools/traceability-checker/tests/traceability_tests.rs"
+symbol = "zero_p0_requirements_is_rejected"
+
+[[locator]]
+test = "TST-TRC-012"
+kind = "rust_test"
+path = "tools/traceability-checker/tests/traceability_tests.rs"
+symbol = "orphan_test_is_rejected"
+
+[[locator]]
+test = "TST-TRC-013"
+kind = "rust_test"
+path = "tools/traceability-checker/tests/traceability_tests.rs"
+symbol = "invalid_source_evidence_is_rejected"
+
+[[locator]]
+test = "TST-TRC-014"
+kind = "rust_test"
+path = "tools/traceability-checker/tests/traceability_tests.rs"
+symbol = "matrix_drift_is_rejected"
+
+[[locator]]
+test = "TST-TRC-015"
+kind = "rust_test"
+path = "tools/traceability-checker/tests/traceability_tests.rs"
+symbol = "code_test_inventory_must_match_registry"
+
+[[locator]]
+test = "TST-TRC-016"
+kind = "rust_test"
+path = "tools/traceability-checker/tests/traceability_tests.rs"
+symbol = "cli_exit_codes_are_stable"
+
+
+[[mapping]]
+requirement = "REQ-001"
+test = "TST-REQ-001"
+role = "POSITIVE"
+rationale = "成功运行发布恰好一个归档与唯一身份，直接证明单次成功备份的归档基数。"
+
+[[mapping]]
+requirement = "REQ-001"
+test = "TST-REQ-002"
+role = "NEGATIVE"
+rationale = "拒绝零个、多个或未绑定输出被报告为成功。"
+
+[[mapping]]
+requirement = "REQ-006"
+test = "TST-REQ-003"
+role = "POSITIVE"
+rationale = "三类数据源共用Envelope、Record层与Reader入口，直接证明统一容器协议。"
+
+[[mapping]]
+requirement = "REQ-010"
+test = "TST-REQ-004"
+role = "POSITIVE"
+rationale = "删除外部状态后仅凭Archive与Key完成BMR。"
+
+[[mapping]]
+requirement = "REQ-010"
+test = "TST-REQ-005"
+role = "NEGATIVE"
+rationale = "缺少归档、必要卷或正确密钥时在写盘前停止。"
+
+[[mapping]]
+requirement = "REQ-013"
+test = "TST-REQ-006"
+role = "POSITIVE"
+rationale = "启动关键Artifact带版本与哈希完整入档。"
+
+[[mapping]]
+requirement = "REQ-013"
+test = "TST-REQ-007"
+role = "NEGATIVE"
+rationale = "逐项缺失启动关键Artifact时预检不得Ready。"
+
+[[mapping]]
+requirement = "REQ-014"
+test = "TST-REQ-008"
+role = "POSITIVE"
+rationale = "同一Reader与协议读取等价单文件和多卷归档。"
+
+[[mapping]]
+requirement = "REQ-014"
+test = "TST-REQ-009"
+role = "NEGATIVE"
+rationale = "确定拒绝模式专用结构或协议分叉。"
+
+[[mapping]]
+requirement = "REQ-002"
+test = "TST-FILE-001"
+role = "POSITIVE"
+rationale = "完整Catalog包含全部对象与数据，支持独立恢复。"
+
+[[mapping]]
+requirement = "REQ-002"
+test = "TST-FILE-003"
+role = "POSITIVE"
+rationale = "Full全量恢复内容与元数据一致。"
+
+[[mapping]]
+requirement = "REQ-002"
+test = "TST-VOL-005"
+role = "NEGATIVE"
+rationale = "缺必要中间卷时明确列出受影响对象。"
+
+[[mapping]]
+requirement = "REQ-002"
+test = "TST-SAL-003"
+role = "POSITIVE"
+rationale = "缺卷时不引用缺卷的数据仍可选择性恢复。"
+
+[[mapping]]
+requirement = "REQ-003"
+test = "TST-DIFF-001"
+role = "POSITIVE"
+rationale = "Diff仅保存变化数据并呈现当前Catalog。"
+
+[[mapping]]
+requirement = "REQ-003"
+test = "TST-DIFF-002"
+role = "POSITIVE"
+rationale = "指定Full与Diff组合恢复当前状态。"
+
+[[mapping]]
+requirement = "REQ-003"
+test = "TST-DIFF-003"
+role = "POSITIVE"
+rationale = "删除其他Diff不影响本Diff对Full的依赖。"
+
+[[mapping]]
+requirement = "REQ-003"
+test = "TST-DIFF-004"
+role = "NEGATIVE"
+rationale = "错误Full的ID或根哈希不匹配时拒绝。"
+
+[[mapping]]
+requirement = "REQ-003"
+test = "TST-DIFF-005"
+role = "FAULT"
+rationale = "变化日志失效时回退扫描或Full，避免遗漏。"
+
+[[mapping]]
+requirement = "REQ-003"
+test = "TST-DIFF-006"
+role = "POSITIVE"
+rationale = "仅元数据变化时仍只依赖指定Full。"
+
+[[mapping]]
+requirement = "REQ-004"
+test = "TST-FILE-002"
+role = "POSITIVE"
+rationale = "删除外部Cache后仍能从归档浏览和恢复。"
+
+[[mapping]]
+requirement = "REQ-004"
+test = "TST-FMT-011"
+role = "NEGATIVE"
+rationale = "Manifest错误引用不能作为恢复真相打开。"
+
+[[mapping]]
+requirement = "REQ-004"
+test = "TST-SAL-001"
+role = "NEGATIVE"
+rationale = "尾部截断时仅从归档内密封边界识别可救对象。"
+
+[[mapping]]
+requirement = "REQ-004"
+test = "TST-SAL-002"
+role = "NEGATIVE"
+rationale = "Catalog损坏时正常打开失败且只进入显式Salvage。"
+
+[[mapping]]
+requirement = "REQ-005"
+test = "TST-CRY-008"
+role = "POSITIVE"
+rationale = "密码变更输出新归档且原归档字节不变。"
+
+[[mapping]]
+requirement = "REQ-005"
+test = "TST-SAL-004"
+role = "POSITIVE"
+rationale = "Salvage写入新NWB并记录来源，不原位修复。"
+
+[[mapping]]
+requirement = "REQ-005"
+test = "TST-SAL-005"
+role = "FAULT"
+rationale = "Salvage空间不足或取消时原归档不变。"
+
+[[mapping]]
+requirement = "REQ-005"
+test = "TST-FAULT-003"
+role = "FAULT"
+rationale = "介质拔出时已发布卷不被重写。"
+
+[[mapping]]
+requirement = "REQ-005"
+test = "TST-FAULT-004"
+role = "FAULT"
+rationale = "SMB中断仅从安全密封边界继续或重启。"
+
+[[mapping]]
+requirement = "REQ-005"
+test = "TST-FAULT-007"
+role = "FAULT"
+rationale = "Cache失败时已提交归档保持COMMITTED。"
+
+[[mapping]]
+requirement = "REQ-005"
+test = "TST-FAULT-008"
+role = "FAULT"
+rationale = "陈旧锁与孤儿临时卷不会导致误删有效归档。"
+
+[[mapping]]
+requirement = "REQ-007"
+test = "TST-FMT-001"
+role = "POSITIVE"
+rationale = "Header编码验证64位长度与偏移字段的正常表示。"
+
+[[mapping]]
+requirement = "REQ-007"
+test = "TST-FMT-005"
+role = "NEGATIVE"
+rationale = "长度溢出与越界被checked arithmetic拒绝。"
+
+[[mapping]]
+requirement = "REQ-007"
+test = "TST-SEC-004"
+role = "NEGATIVE"
+rationale = "超大长度和数量受64位checked arithmetic与资源上限约束。"
+
+[[mapping]]
+requirement = "REQ-008"
+test = "TST-VER-001"
+role = "POSITIVE"
+rationale = "正常归档Quick与Full Verify通过。"
+
+[[mapping]]
+requirement = "REQ-008"
+test = "TST-VER-002"
+role = "NEGATIVE"
+rationale = "单Chunk篡改被定位到精确对象与范围。"
+
+[[mapping]]
+requirement = "REQ-008"
+test = "TST-VER-003"
+role = "NEGATIVE"
+rationale = "多处损坏全部报告且不被早退掩盖。"
+
+[[mapping]]
+requirement = "REQ-008"
+test = "TST-CRY-004"
+role = "SECURITY"
+rationale = "密文、Tag或AAD篡改时认证失败且不释放数据。"
+
+[[mapping]]
+requirement = "REQ-008"
+test = "TST-CRY-005"
+role = "NEGATIVE"
+rationale = "损坏Key Slot失败且不破坏其他合法Slot。"
+
+[[mapping]]
+requirement = "REQ-008"
+test = "TST-CRY-006"
+role = "POSITIVE"
+rationale = "同一DEK下Nonce保持唯一以维持真实性。"
+
+[[mapping]]
+requirement = "REQ-008"
+test = "TST-FMT-012"
+role = "POSITIVE"
+rationale = "独立Checker验证字段和全部根哈希一致。"
+
+[[mapping]]
+requirement = "REQ-009"
+test = "TST-FMT-004"
+role = "POSITIVE"
+rationale = "未知Optional Feature可安全跳过并报告。"
+
+[[mapping]]
+requirement = "REQ-009"
+test = "TST-FMT-003"
+role = "NEGATIVE"
+rationale = "未知Required Feature被明确拒绝。"
+
+[[mapping]]
+requirement = "REQ-009"
+test = "TST-FMT-005"
+role = "NEGATIVE"
+rationale = "非法长度、溢出与越界被拒绝。"
+
+[[mapping]]
+requirement = "REQ-009"
+test = "TST-SEC-004"
+role = "NEGATIVE"
+rationale = "超大长度与数量被有界拒绝。"
+
+[[mapping]]
+requirement = "REQ-009"
+test = "TST-SEC-007"
+role = "SECURITY"
+rationale = "Record、Page与Manifest模糊输入不得导致崩溃或越界。"
+
+[[mapping]]
+requirement = "REQ-011"
+test = "TST-BMR-L-001"
+role = "POSITIVE"
+rationale = "Linux BMR场景直接验证第一版BMR或异机恢复能力边界。"
+
+[[mapping]]
+requirement = "REQ-011"
+test = "TST-BMR-L-002"
+role = "POSITIVE"
+rationale = "Linux BMR场景直接验证第一版BMR或异机恢复能力边界。"
+
+[[mapping]]
+requirement = "REQ-011"
+test = "TST-BMR-L-003"
+role = "POSITIVE"
+rationale = "Linux BMR场景直接验证第一版BMR或异机恢复能力边界。"
+
+[[mapping]]
+requirement = "REQ-011"
+test = "TST-BMR-L-004"
+role = "POSITIVE"
+rationale = "Linux BMR场景直接验证第一版BMR或异机恢复能力边界。"
+
+[[mapping]]
+requirement = "REQ-011"
+test = "TST-BMR-L-005"
+role = "POSITIVE"
+rationale = "Linux BMR场景直接验证第一版BMR或异机恢复能力边界。"
+
+[[mapping]]
+requirement = "REQ-011"
+test = "TST-BMR-L-006"
+role = "NEGATIVE"
+rationale = "Linux BMR场景直接验证第一版BMR或异机恢复能力边界。"
+
+[[mapping]]
+requirement = "REQ-011"
+test = "TST-BMR-L-007"
+role = "POSITIVE"
+rationale = "Linux BMR场景直接验证第一版BMR或异机恢复能力边界。"
+
+[[mapping]]
+requirement = "REQ-011"
+test = "TST-BMR-L-008"
+role = "NEGATIVE"
+rationale = "Linux BMR场景直接验证第一版BMR或异机恢复能力边界。"
+
+[[mapping]]
+requirement = "REQ-012"
+test = "TST-BMR-W-001"
+role = "POSITIVE"
+rationale = "Windows BMR场景直接验证批准的UEFI/GPT恢复能力或阻断边界。"
+
+[[mapping]]
+requirement = "REQ-012"
+test = "TST-BMR-W-002"
+role = "POSITIVE"
+rationale = "Windows BMR场景直接验证批准的UEFI/GPT恢复能力或阻断边界。"
+
+[[mapping]]
+requirement = "REQ-012"
+test = "TST-BMR-W-003"
+role = "POSITIVE"
+rationale = "Windows BMR场景直接验证批准的UEFI/GPT恢复能力或阻断边界。"
+
+[[mapping]]
+requirement = "REQ-012"
+test = "TST-BMR-W-004"
+role = "POSITIVE"
+rationale = "Windows BMR场景直接验证批准的UEFI/GPT恢复能力或阻断边界。"
+
+[[mapping]]
+requirement = "REQ-012"
+test = "TST-BMR-W-005"
+role = "POSITIVE"
+rationale = "Windows BMR场景直接验证批准的UEFI/GPT恢复能力或阻断边界。"
+
+[[mapping]]
+requirement = "REQ-012"
+test = "TST-BMR-W-006"
+role = "NEGATIVE"
+rationale = "Windows BMR场景直接验证批准的UEFI/GPT恢复能力或阻断边界。"
+
+[[mapping]]
+requirement = "REQ-012"
+test = "TST-BMR-W-007"
+role = "POSITIVE"
+rationale = "Windows BMR场景直接验证批准的UEFI/GPT恢复能力或阻断边界。"
+
+[[mapping]]
+requirement = "REQ-012"
+test = "TST-BMR-W-008"
+role = "POSITIVE"
+rationale = "Windows BMR场景直接验证批准的UEFI/GPT恢复能力或阻断边界。"
+
+[[mapping]]
+requirement = "REQ-015"
+test = "TST-VOL-001"
+role = "POSITIVE"
+rationale = "多卷创建与恢复证明结构在合法卷边界内完成。"
+
+[[mapping]]
+requirement = "REQ-015"
+test = "TST-VOL-002"
+role = "NEGATIVE"
+rationale = "Segment接近边界时提前密封而不跨卷。"
+
+[[mapping]]
+requirement = "REQ-015"
+test = "TST-VOL-003"
+role = "NEGATIVE"
+rationale = "Catalog Page接近边界时保持单卷完整。"
+
+[[mapping]]
+requirement = "REQ-015"
+test = "TST-FMT-007"
+role = "NEGATIVE"
+rationale = "截断Segment不进入正常Catalog。"
+
+[[mapping]]
+requirement = "REQ-016"
+test = "TST-VOL-001"
+role = "POSITIVE"
+rationale = "合法多卷集合创建并恢复成功。"
+
+[[mapping]]
+requirement = "REQ-016"
+test = "TST-VOL-004"
+role = "POSITIVE"
+rationale = "重命名与乱序后仍由Set身份识别。"
+
+[[mapping]]
+requirement = "REQ-016"
+test = "TST-VOL-005"
+role = "NEGATIVE"
+rationale = "缺中间卷时不形成完整恢复点。"
+
+[[mapping]]
+requirement = "REQ-016"
+test = "TST-VOL-006"
+role = "NEGATIVE"
+rationale = "缺Final Volume时不得视为已提交。"
+
+[[mapping]]
+requirement = "REQ-016"
+test = "TST-VOL-007"
+role = "NEGATIVE"
+rationale = "混入其他Set卷时哈希链或Set ID拒绝。"
+
+[[mapping]]
+requirement = "REQ-016"
+test = "TST-VOL-009"
+role = "FAULT"
+rationale = "空间不足时不产生伪Commit。"
+
+[[mapping]]
+requirement = "REQ-017"
+test = "TST-REG-001"
+role = "POSITIVE"
+rationale = "Format Registry自测直接验证ID唯一性、快照或生成一致性。"
+
+[[mapping]]
+requirement = "REQ-017"
+test = "TST-REG-002"
+role = "NEGATIVE"
+rationale = "Format Registry自测直接验证ID唯一性、快照或生成一致性。"
+
+[[mapping]]
+requirement = "REQ-017"
+test = "TST-REG-003"
+role = "POSITIVE"
+rationale = "Format Registry自测直接验证ID唯一性、快照或生成一致性。"
+
+[[mapping]]
+requirement = "REQ-017"
+test = "TST-REG-004"
+role = "NEGATIVE"
+rationale = "Format Registry自测直接验证ID唯一性、快照或生成一致性。"
+
+[[mapping]]
+requirement = "REQ-017"
+test = "TST-REG-005"
+role = "POSITIVE"
+rationale = "Format Registry自测直接验证ID唯一性、快照或生成一致性。"
+
+[[mapping]]
+requirement = "REQ-017"
+test = "TST-REG-006"
+role = "POSITIVE"
+rationale = "Format Registry自测直接验证ID唯一性、快照或生成一致性。"
+
+[[mapping]]
+requirement = "REQ-017"
+test = "TST-REG-007"
+role = "NEGATIVE"
+rationale = "Format Registry自测直接验证ID唯一性、快照或生成一致性。"
+
+[[mapping]]
+requirement = "REQ-018"
+test = "TST-TRC-001"
+role = "POSITIVE"
+rationale = "Traceability Checker自测直接验证Registry、映射、来源、定位器或CLI强检。"
+
+[[mapping]]
+requirement = "REQ-018"
+test = "TST-TRC-002"
+role = "POSITIVE"
+rationale = "Traceability Checker自测直接验证Registry、映射、来源、定位器或CLI强检。"
+
+[[mapping]]
+requirement = "REQ-018"
+test = "TST-TRC-003"
+role = "NEGATIVE"
+rationale = "Traceability Checker自测直接验证Registry、映射、来源、定位器或CLI强检。"
+
+[[mapping]]
+requirement = "REQ-018"
+test = "TST-TRC-004"
+role = "NEGATIVE"
+rationale = "Traceability Checker自测直接验证Registry、映射、来源、定位器或CLI强检。"
+
+[[mapping]]
+requirement = "REQ-018"
+test = "TST-TRC-005"
+role = "NEGATIVE"
+rationale = "Traceability Checker自测直接验证Registry、映射、来源、定位器或CLI强检。"
+
+[[mapping]]
+requirement = "REQ-018"
+test = "TST-TRC-006"
+role = "NEGATIVE"
+rationale = "Traceability Checker自测直接验证Registry、映射、来源、定位器或CLI强检。"
+
+[[mapping]]
+requirement = "REQ-018"
+test = "TST-TRC-007"
+role = "NEGATIVE"
+rationale = "Traceability Checker自测直接验证Registry、映射、来源、定位器或CLI强检。"
+
+[[mapping]]
+requirement = "REQ-018"
+test = "TST-TRC-008"
+role = "NEGATIVE"
+rationale = "Traceability Checker自测直接验证Registry、映射、来源、定位器或CLI强检。"
+
+[[mapping]]
+requirement = "REQ-018"
+test = "TST-TRC-009"
+role = "NEGATIVE"
+rationale = "Traceability Checker自测直接验证Registry、映射、来源、定位器或CLI强检。"
+
+[[mapping]]
+requirement = "REQ-018"
+test = "TST-TRC-010"
+role = "NEGATIVE"
+rationale = "Traceability Checker自测直接验证Registry、映射、来源、定位器或CLI强检。"
+
+[[mapping]]
+requirement = "REQ-018"
+test = "TST-TRC-011"
+role = "NEGATIVE"
+rationale = "Traceability Checker自测直接验证Registry、映射、来源、定位器或CLI强检。"
+
+[[mapping]]
+requirement = "REQ-018"
+test = "TST-TRC-012"
+role = "NEGATIVE"
+rationale = "Traceability Checker自测直接验证Registry、映射、来源、定位器或CLI强检。"
+
+[[mapping]]
+requirement = "REQ-018"
+test = "TST-TRC-013"
+role = "NEGATIVE"
+rationale = "Traceability Checker自测直接验证Registry、映射、来源、定位器或CLI强检。"
+
+[[mapping]]
+requirement = "REQ-018"
+test = "TST-TRC-014"
+role = "NEGATIVE"
+rationale = "Traceability Checker自测直接验证Registry、映射、来源、定位器或CLI强检。"
+
+[[mapping]]
+requirement = "REQ-018"
+test = "TST-TRC-015"
+role = "NEGATIVE"
+rationale = "Traceability Checker自测直接验证Registry、映射、来源、定位器或CLI强检。"
+
+[[mapping]]
+requirement = "REQ-018"
+test = "TST-TRC-016"
+role = "NEGATIVE"
+rationale = "Traceability Checker自测直接验证Registry、映射、来源、定位器或CLI强检。"
+
+[[mapping]]
+requirement = "FMT-001"
+test = "TST-FMT-001"
+role = "POSITIVE"
+rationale = "Header按Little Endian规范编码解码。"
+
+[[mapping]]
+requirement = "FMT-001"
+test = "TST-FMT-013"
+role = "NEGATIVE"
+rationale = "Endian Swap或Big Endian规范输入被拒绝。"
+
+[[mapping]]
+requirement = "FMT-002"
+test = "TST-FMT-001"
+role = "POSITIVE"
+rationale = "正常Header编码覆盖无符号64位偏移、长度与计数。"
+
+[[mapping]]
+requirement = "FMT-002"
+test = "TST-FMT-005"
+role = "NEGATIVE"
+rationale = "超大长度、溢出和越界输入被拒绝。"
+
+[[mapping]]
+requirement = "FMT-002"
+test = "TST-SEC-004"
+role = "NEGATIVE"
+rationale = "超大长度和数量触发checked arithmetic与资源上限。"
+
+[[mapping]]
+requirement = "FMT-003"
+test = "TST-FMT-006"
+role = "POSITIVE"
+rationale = "Segment按追加流程正常密封。"
+
+[[mapping]]
+requirement = "FMT-003"
+test = "TST-FMT-014"
+role = "NEGATIVE"
+rationale = "密封或提交后重写被拒绝且原字节不变。"
+
+[[mapping]]
+requirement = "FMT-004"
+test = "TST-DIFF-002"
+role = "POSITIVE"
+rationale = "Full与其绑定Diff组合恢复当前状态。"
+
+[[mapping]]
+requirement = "FMT-004"
+test = "TST-DIFF-004"
+role = "NEGATIVE"
+rationale = "替换为错误Full时ID与根哈希绑定拒绝。"
+
+[[mapping]]
+requirement = "FMT-005"
+test = "TST-VOL-001"
+role = "POSITIVE"
+rationale = "合法多卷创建恢复证明卷边界布局可用。"
+
+[[mapping]]
+requirement = "FMT-005"
+test = "TST-FMT-015"
+role = "NEGATIVE"
+rationale = "跨卷Chunk、Record、Page或Segment被Reader拒绝。"
+
+[[mapping]]
+requirement = "FMT-006"
+test = "TST-FMT-008"
+role = "POSITIVE"
+rationale = "Commit A损坏时合法B仍构成可识别提交。"
+
+[[mapping]]
+requirement = "FMT-006"
+test = "TST-FMT-009"
+role = "NEGATIVE"
+rationale = "两份Commit均损坏时不得正常打开。"
+
+[[mapping]]
+requirement = "FMT-006"
+test = "TST-FMT-010"
+role = "NEGATIVE"
+rationale = "两份合法但不一致的Commit被拒绝。"
+
+[[mapping]]
+requirement = "FMT-006"
+test = "TST-FAULT-001"
+role = "FAULT"
+rationale = "进程强杀后只接受完整Commit。"
+
+[[mapping]]
+requirement = "FMT-006"
+test = "TST-FAULT-002"
+role = "FAULT"
+rationale = "ENOSPC时保持INCOMPLETE且无伪Commit。"
+
+[[mapping]]
+requirement = "FMT-007"
+test = "TST-FILE-002"
+role = "POSITIVE"
+rationale = "删除外部Cache后Reader仍从归档列出和恢复。"
+
+[[mapping]]
+requirement = "FMT-007"
+test = "TST-DIFF-004"
+role = "NEGATIVE"
+rationale = "外部同名错误Full不能绕过ID与根哈希校验。"
+
+[[mapping]]
+requirement = "FMT-007"
+test = "TST-FMT-005"
+role = "NEGATIVE"
+rationale = "未经校验的非法偏移与长度被拒绝。"
+
+[[mapping]]
+requirement = "FMT-007"
+test = "TST-FMT-011"
+role = "NEGATIVE"
+rationale = "Manifest错误引用被拒绝。"
+
+[[mapping]]
+requirement = "FMT-007"
+test = "TST-SEC-007"
+role = "SECURITY"
+rationale = "Fuzz输入证明Reader不信任Record、Page或Manifest。"
+
+[[mapping]]
+requirement = "FMT-008"
+test = "TST-FMT-004"
+role = "POSITIVE"
+rationale = "未知Optional Feature被安全跳过。"
+
+[[mapping]]
+requirement = "FMT-008"
+test = "TST-FMT-003"
+role = "NEGATIVE"
+rationale = "未知Required Feature导致拒绝打开。"
+
+[[mapping]]
+requirement = "FMT-009"
+test = "TST-CRY-002"
+role = "POSITIVE"
+rationale = "正确密码完成Catalog与数据恢复。"
+
+[[mapping]]
+requirement = "FMT-009"
+test = "TST-CRY-003"
+role = "NEGATIVE"
+rationale = "错误密码不输出明文并返回确定错误。"
+
+[[mapping]]
+requirement = "FMT-009"
+test = "TST-CRY-004"
+role = "SECURITY"
+rationale = "认证失败前不释放被篡改密文。"
+
+[[mapping]]
+requirement = "FMT-010"
+test = "TST-FMT-001"
+role = "POSITIVE"
+rationale = "Header往返证明显式长度、版本与校验。"
+
+[[mapping]]
+requirement = "FMT-010"
+test = "TST-FMT-002"
+role = "NEGATIVE"
+rationale = "坏Magic、CRC或SHA输入被明确拒绝。"
+
+[[mapping]]
+requirement = "FMT-010"
+test = "TST-FMT-005"
+role = "NEGATIVE"
+rationale = "非法结构长度与越界被拒绝。"
+
+[[mapping]]
+requirement = "PRV-001"
+test = "TST-PRV-001"
+role = "POSITIVE"
+rationale = "Provider仅提交逻辑数据且Core创建物理Record。"
+
+[[mapping]]
+requirement = "PRV-001"
+test = "TST-PRV-002"
+role = "NEGATIVE"
+rationale = "Provider直接操作物理Record被拒绝。"
+
+[[mapping]]
+requirement = "PRV-002"
+test = "TST-PRV-003"
+role = "POSITIVE"
+rationale = "批准的逻辑对象、元数据、流、范围、依赖与状态正常提交。"
+
+[[mapping]]
+requirement = "PRV-002"
+test = "TST-PRV-004"
+role = "NEGATIVE"
+rationale = "物理Offset、Record或未声明对象类型被拒绝。"
+
+[[mapping]]
+requirement = "PRV-003"
+test = "TST-PRV-005"
+role = "POSITIVE"
+rationale = "Core独占格式、Codec、Catalog、Commit与分卷。"
+
+[[mapping]]
+requirement = "PRV-003"
+test = "TST-PRV-006"
+role = "NEGATIVE"
+rationale = "Provider指定物理布局、密文、Commit或绕过Core失败。"
+
+[[mapping]]
+requirement = "PRV-004"
+test = "TST-PRV-007"
+role = "POSITIVE"
+rationale = "不透明接口完成且Provider不接触凭据。"
+
+[[mapping]]
+requirement = "PRV-004"
+test = "TST-PRV-008"
+role = "SECURITY"
+rationale = "凭据Canary不出现在Provider边界或日志。"
+
+[[mapping]]
+requirement = "PRV-004"
+test = "TST-SEC-006"
+role = "SECURITY"
+rationale = "恶意或崩溃Provider不能取得或泄露Core密钥。"
+
+[[mapping]]
+requirement = "PRV-005"
+test = "TST-PRV-009"
+role = "POSITIVE"
+rationale = "Provider正常结束后Core才允许Commit。"
+
+[[mapping]]
+requirement = "PRV-005"
+test = "TST-PRV-010"
+role = "FAULT"
+rationale = "Provider任一生命周期崩溃均不提交且不报成功。"
+
+[[mapping]]
+requirement = "PRV-005"
+test = "TST-SEC-006"
+role = "FAULT"
+rationale = "恶意或崩溃Provider不能使Core提交。"
+
+[[mapping]]
+requirement = "PRV-006"
+test = "TST-PRV-011"
+role = "POSITIVE"
+rationale = "公共Envelope与Schema版本往返一致。"
+
+[[mapping]]
+requirement = "PRV-006"
+test = "TST-PRV-012"
+role = "NEGATIVE"
+rationale = "缺Envelope、非法长度、未知Required Schema或坏Hash被拒绝。"
+
+[[mapping]]
+requirement = "PRV-007"
+test = "TST-PRV-013"
+role = "POSITIVE"
+rationale = "合法Nüwa签名Provider可加载。"
+
+[[mapping]]
+requirement = "PRV-007"
+test = "TST-PRV-014"
+role = "SECURITY"
+rationale = "无签名、错误签名或篡改Provider被拒绝。"
+
+[[mapping]]
+requirement = "PRV-008"
+test = "TST-PRV-015"
+role = "POSITIVE"
+rationale = "Archive只保存Provider Metadata且Reader不执行。"
+
+[[mapping]]
+requirement = "PRV-008"
+test = "TST-PRV-016"
+role = "SECURITY"
+rationale = "嵌入可执行内容按非执行数据拒绝或忽略。"
