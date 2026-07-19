@@ -1,1 +1,83 @@
-# Nüwa Backup — Project Engineering Memory**Version:** 0.9.0**Last Updated:** 2026-07-18**Status:** CURRENT REFERENCE SNAPSHOT**Baseline Reviewed:** d550907**Latest Code-Bearing Commit:** d5509071a5300e6c13c26c527b8015ff4bc322c4---## 1. Authority BoundaryThis document is a **current cross-phase operational snapshot**. It is derived from authoritative contracts, evidence records, and repository state. It cannot override:- AGENTS.md — general engineering governance and safety rules- docs/project/DOCUMENT_INDEX.md — authoritative document classification- NWB Engineering Document Set (contract documents #1–6 per README §2)- Real source code, real test results, and committed repository stateIn case of conflict, resolve by the authority order defined in docs/project/DOCUMENT_INDEX.md.---## 2. Project IdentityNüwa Backup is a **local-first, single-machine** backup and disaster recovery product for Windows Workstation, Windows Server, power users, small offices, PC repair shops, and edge nodes.### Core engineering priority (immutable)1. Data recoverability2. Crash consistency and data integrity3. User data safety and misoperation prevention4. Format compatibility and verifiability5. Clear error semantics and observability6. Maintainability and testability7. Performance, convenience, feature count---## 3. Current Product Baseline: NWB Storage Engine**Architecture authority:** Contract documents #1–6 of the NWB Engineering Document Set, in the authority order defined by README §2, define the current storage architecture. The Test Result Record (#7) and EVDs (#8–9) are evidence records only.**Code baseline d550907:** Implements an initial **crates/nwb-format Registry** — the format-registration and type-system foundation, including RecordType, FeatureBit, HeaderEnum, and ErrorId.**Important:** crates/nwb-format is **not** a complete NWB Storage Engine. It is one component (the Registry) of the larger NWB architecture, which also requires Writer, Reader, Catalog, Chunk engine, Crypto, Verify/Salvage, and Provider abstractions.### Key design properties- Each successful **Full** or **Differential** backup produces an **immutable, self-describing logical NWB archive**- The archive is the unit of restore, verify, retention, and transfer- The system does **not** depend on the superseded Repository architecture (Phase S: repo.db, BlockStore, block-map.db, backup-objects, external transaction journal)### Code reality- crates/nwb-format exists and contains the format registry: RecordType (18), FeatureBit (5), BackupKind (5), PlatformHint (3), ErrorId (9)- Registry TOML files (record_types, feature_bits, header_enums, error_ids)- Registry tests (13 unit/integration + 1 trybuild compile-fail)- No generic Chunk structure, Chunk codec, or complete archive format implementation exists- The following have **not yet been implemented** as a complete closed loop:  - NWB Writer  - NWB Reader / Restore Reader  - Archive production (Full / Differential)  - Catalog engine targeting NWB archives  - Chunk engine for the NWB path  - Crypto (encryption / signing)  - Verify / Salvage  - Provider abstraction (file, volume, network)- src/ still contains pp/, main.rs, cli.rs, config.rs, history.rs, scheduler.rs and other modules; they are **not yet wired** to a complete NWB engine- src-tauri/ and ui/ exist but contain **old Repository semantic residuals** that must be cleaned in a dedicated task- The following **root-level modules no longer exist**: ackup.rs,estore.rs, erify.rs, manifest.rs, storage.rs, prune.rs. They must not be described as "frozen baselines" or "current implementations".---## 4. Historical Baselines| Phase | Scope | Authority Classification ||-------|-------|--------------------------|| Phase 0 | Project setup, MVP boundary, guardrails | HISTORICAL || Phase 1 | File-level backup/restore CLI | HISTORICAL / ACCEPTED BASELINE || Phase 2 | CLI usability + egui GUI | HISTORICAL / ACCEPTED BASELINE || Phase 2.5 | Tauri 2 desktop GUI + React frontend + Application Layer | HISTORICAL / ACCEPTED BASELINE |These phases are **closed**. Their closing reports, acceptance records, and test evidence are retained for traceability. Their architecture (flat-file backup, old Repository engine) is **not** the current implementation target.The old Phase 3–6 roadmap (NTFS volume image, VSS, system recovery, BMR, disk clone, encryption, differential backup) is **superseded**. The execution model is now **GATE-0 through GATE-9** as defined in the NWB Implementation Plan v1.0.---## 5. Current Execution Model: Gates and IMPs### Gate Roadmap| Gate | Purpose | Status ||------|---------|--------|| GATE-0 | Engineering and contract baseline: workspace/CI, registry, traceability, errors/logging, fixtures, and draft version policy | IN_PROGRESS |### Implementation Package Status| IMP | Title | Status ||-----|-------|--------|| IMP-000 | Workspace (build, CI, scaffolding) | CLOSED / PASS / ACCEPTANCE MET || IMP-001 | Format Registry (nwb-format crate) | CLOSED (v1.0, d550907) -> REOPENED / IN_PROGRESS (Generator Remediation, 2026-07-18) || IMP-002 | Requirements–Test Traceability Matrix | NOT_RUN / not authorized || IMP-003 through IMP-005 | Defined remaining GATE-0 work packages | NOT_RUN - execute per dependency and authorization || IMP-006 through IMP-009 | Not defined in current implementation plan | NOT_STARTED - must not start until defined || IMP-100 and later | Post-GATE-0 work | FORBIDDEN |IMP-000 evidence chain closed. IMP-001 evidence chain: v1.0 closed at d550907 (CI run 29471690977) -> REOPENED by Generator Remediation (RIR-005, 2026-07-18). Current working tree (HEAD 48830039, uncommitted): 170/170 PASS local, CI NOT_RUN.---## 6. Build and Test Evidence Status### Rust build — IMP-001 final (commit d550907)- CI pipeline established: .github/workflows/nwb-workspace-ci.yml (Windows + Ubuntu, 5 quality gates)- Final CI run: **29471690977** on commit **d550907** — ALL PASS  - Windows (job 87535962228): rustc 1.97.0 — Format/PASS, Clippy/PASS, Test/PASS, Build/PASS  - Ubuntu (job 87535962221): rustc 1.97.0 — Format/PASS, Clippy/PASS, Test/PASS, Build/PASS- Local Windows (rustc 1.96.1): all quality gates pass  - cargo test -p nwb-format: 13 PASS  - cargo test --workspace: all PASS  - cargo clippy --workspace --all-targets -- -D warnings: PASS### Test countDo not read a fixed number from this document. The authoritative test count and results must come from the corrected evidence documents. The IMP-001 EVD records 13 nwb-format tests and 1 trybuild compile-fail test, all PASS.### pnpm / UI buildThe frontend pnpm build is **known to fail** at this baseline:- ui/src/components/common/BackupTreeView.tsx contains garbled characters that break syntax- ui/src/pages/Backup.tsx contains JSX structural errorsThese are pre-existing defects, not introduced by this work package.---## 7. Known Limitations1. Complete NWB write/read/restore closed loop not yet implemented2. IMP-000 closed; IMP-001 v1.0 closed (d550907) -> REOPENED by Generator Remediation (2026-07-18), awaiting CI and PM final check. IMP-002+ not yet authorized3. Linux CI established (ubuntu-latest via GitHub Actions) — RESOLVED4. Frontend fails production build (BackupTreeView.tsx, Backup.tsx)5. Old Repository semantic residuals remain in UI/API layer6. Volume, disk, BMR, and system restore capability not yet authorized or implemented7. CI workflow established (.github/workflows/nwb-workspace-ci.yml) — RESOLVED8. Provider SDK scope (file, volume, network) not implemented9. Generator/build.rs generation chain not implemented — registry consistency maintained via automated tests---## 8. Next Authorized Actions (ordered)1. PM pre-commit final check on IMP-001 Generator Remediation evidence2. Plan and authorize IMP-002 (Requirements–Test Traceability Matrix)3. IMP-003–005 within GATE-0, execute per dependency and authorization4. IMP-006–009 not defined and must not start until defined5. Only IMP-100 and later must wait for GATE-0 closure
+# Nüwa Backup — Project Engineering Memory
+
+**Version:** 1.0.0
+**Last Updated:** 2026-07-19
+**Status:** CURRENT REFERENCE SNAPSHOT
+**Latest verified code commit:** `3bceb34b4697a7552bccf9863b821a5b9d63e4b4`
+
+---
+
+## 1. Authority Boundary
+
+This file is a derived operational snapshot. It cannot override:
+
+1. `AGENTS.md` for engineering governance;
+2. `docs/project/DOCUMENT_INDEX.md` for document classification;
+3. the NWB Engineering Document Set contract documents #1–6;
+4. committed source code and current evidence records.
+
+## 2. Product and Architecture Baseline
+
+Nüwa Backup is a local-first, single-machine backup and disaster recovery product. The active implementation target is the NWB Storage Engine, not the superseded Repository architecture.
+
+Each successful Full or Differential backup is intended to produce an immutable, self-describing logical NWB archive. This remains an architecture target; the complete archive write/read/restore loop has not yet been implemented.
+
+## 3. Current Code Reality
+
+The verified IMP-001 baseline contains:
+
+- a Format Registry generator with `check` and `generate` paths;
+- four authoritative TOML registries;
+- generated Rust definitions for RecordType, FeatureBit, BackupKind, PlatformHint and ErrorId;
+- exact runtime, TOML and generated-source contract tests;
+- duplicate/out-of-range semantic validation with exit code 4;
+- CI enforcement of generator freshness before Rust quality gates.
+
+It does not yet contain a complete NWB Writer, Reader, Catalog, Chunk engine, Crypto subsystem, Verify/Salvage implementation, Provider implementation or recovery loop. Existing `src-tauri/` and `ui/` code still contains old Repository-semantic residuals and is outside IMP-001.
+
+## 4. Gate and Work Package Status
+
+| Gate / IMP | Status | Evidence |
+|---|---|---|
+| GATE-0 | IN_PROGRESS | Remaining GATE-0 work is not closed |
+| IMP-000 | CLOSED / PASS / ACCEPTANCE MET | `e1f1adb`, run `29426443433` |
+| IMP-001 | CLOSED / PASS / ACCEPTANCE MET | `3bceb34`, run `29684903853`, EVD v1.2 |
+| IMP-002 | NOT_RUN / NOT_STARTED | Next planned GATE-0 package; not automatically authorized |
+| IMP-003–005 | NOT_RUN | Execute only after dependency and scope authorization |
+| IMP-006–009 | NOT_DEFINED / NOT_STARTED | Must be defined before work starts |
+| IMP-100+ | FORBIDDEN UNTIL GATE-0 CLOSES | Post-GATE-0 work |
+
+## 5. IMP-001 Evidence Snapshot
+
+| Item | Result |
+|---|---|
+| Verified commit | `3bceb34b4697a7552bccf9863b821a5b9d63e4b4` |
+| GitHub Actions | run `29684903853` — SUCCESS |
+| Windows | job `88187397699` — all gates PASS |
+| Ubuntu | job `88187397701` — all gates PASS |
+| Toolchain | rustc/cargo 1.97.1 |
+| Workspace tests | 172 passed / 0 failed / 0 ignored on both platforms |
+| Code review | APPROVED |
+| Independent validation | VALIDATION_PASS |
+| Recovery integrity | RECOVERY_INTEGRITY_APPROVED |
+
+The failed formatting run `29684808801` on `1033f9f` is retained as failure evidence. Commit `3bceb34` applied only the Rustfmt layout and then passed the full matrix.
+
+## 6. Current Evidence Sources
+
+- `IMP-001_EVD_Test_Result_Evidence_v1.2.md` — current IMP-001 evidence;
+- `Nuwa_NWB_Test_Result_Record_v1.1.md` — current result and acceptance record;
+- the v1.0 IMP-001 EVD and v1.0 Test Result Record are historical, superseded, malformed source files retained only for traceability.
+
+## 7. Known Boundaries and Risks
+
+1. Bare `cargo build` does not parse Registry TOML. The required engineering gate runs Generator `check` first.
+2. RIR-001 (`BackupKind Invalid=0`) remains deferred by architecture ruling.
+3. RIR-003 (non-atomic `generate` writes) remains deferred; `check` is read-only.
+4. Writer/Reader and real backup/restore verification are not implemented or accepted.
+5. UI production build defects are pre-existing and outside IMP-001.
+6. Support certification, Format Freeze and product release remain NOT_RUN.
+
+## 8. Next Authorized Planning Point
+
+IMP-001 is closed. The next planned work package is IMP-002, the Requirements–Test Traceability Matrix. It must receive its own bounded scope and role assignments before implementation. Closing IMP-001 does not itself authorize changes for IMP-002.

@@ -1,8 +1,8 @@
 # Nüwa NWB Backup Storage Engine Engineering Document Set v1.0
 
-**文档状态：** EXECUTION BASELINE  
-**发布日期：** 2026-07-12  
-**适用项目：** Nüwa Backup 单机版  
+**文档状态：** EXECUTION BASELINE
+**发布日期：** 2026-07-12
+**适用项目：** Nüwa Backup 单机版
 **目标读者：** 产品负责人、架构师、Codex、研发、测试、安全与发布负责人
 
 ---
@@ -31,7 +31,7 @@
 | 4 | `Nuwa_NWB_Product_Support_Matrix_v1.0.md` | 首版正式支持、有限支持与不支持范围 |
 | 5 | `Nuwa_NWB_Implementation_Plan_v1.0.md` | 工作包、依赖、里程碑、退出条件和交付物 |
 | 6 | `Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md` | 测试设计、质量门、验收标准与故障注入 |
-| 7 | `Nuwa_NWB_Test_Result_Record_v1.0.md` | 实际执行结果、证据、缺陷和签署记录 |
+| 7 | `Nuwa_NWB_Test_Result_Record_v1.1.md` | 当前实际执行结果、证据、缺陷和签署记录 |
 
 发生冲突时，后面的实施文档不得改变前面的格式或架构原则。确需改变时，必须先新增 ADR，再修改所有受影响文档和测试。
 
@@ -165,19 +165,20 @@ Codex执行本项目时必须遵守：
 
 ## 11. 当前真实性声明
 
-本README是执行入口，不替代任何详细规范。以下为截至2026-07-16的实际工程状态：
+本README是执行入口，不替代任何详细规范。以下为截至2026-07-19的实际工程状态：
 
 | 项 | 状态 |
 |---|---|
 | GATE-0 | IN_PROGRESS |
 | IMP-000 (Workspace) | CLOSED / PASS / ACCEPTANCE MET |
-| IMP-001 (Format Registry) | CLOSED (v1.0, d550907) -> REOPENED / IN_PROGRESS (Generator Remediation 2026-07-18); local 170/170 PASS, CI PENDING_POST_COMMIT |
-| IMP-002 | NOT_RUN |
+| IMP-001 (Format Registry) | CLOSED / PASS / ACCEPTANCE MET；最终被测提交 3bceb34，CI run 29684903853，Windows/Ubuntu 172/172 PASS |
+| IMP-002 | NOT_RUN / NOT_STARTED；下一计划工作包，未自动授权 |
 
-- IMP-000已关闭为CLOSED / PASS / ACCEPTANCE MET。IMP-001原关闭状态（d550907）已因Generator Remediation重新打开，当前为IN_PROGRESS
-- Test Result Record和IMP-001 EVD已更新为反映IMP-001关闭状态
+- IMP-000与IMP-001均已关闭为CLOSED / PASS / ACCEPTANCE MET；GATE-0仍为IN_PROGRESS
+- 当前证据为`Nuwa_NWB_Test_Result_Record_v1.1.md`与`IMP-001_EVD_Test_Result_Evidence_v1.2.md`
+- v1.0 Test Result Record和v1.0 IMP-001 EVD已标记为HISTORICAL / SUPERSEDED / MALFORMED_SOURCE_RETAINED_FOR_TRACEABILITY
 - 任何工作包只有同时具备设计、实现、自动测试、恢复验证和证据记录才允许标记为ACCEPTED
-- IMP-002 remains NOT_RUN until explicitly authorized
+- IMP-002 remains NOT_RUN / NOT_STARTED until a bounded work package is authorized
 - IMP-003–005 execute within GATE-0 according to dependencies and authorization
 - IMP-006–009 are undefined and must not start until defined
 - Only IMP-100 and later must wait for GATE-0 closure

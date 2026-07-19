@@ -1,6 +1,6 @@
 # Nüwa Backup — Document Index
 
-**Last Updated:** 2026-07-18 (IMP-001 evidence remediation - Generator Remediation reopen)
+**Last Updated:** 2026-07-19 (IMP-001 Generator Remediation evidence closure)
 
 ---
 
@@ -128,11 +128,13 @@ This directory contains the **current storage engine implementation authority**.
 
 | # | Document | Classification | Purpose |
 |---|----------|----------------|---------|
-| 7 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Test_Result_Record_v1.0.md | REFERENCE | Current result record; IMP-000 and IMP-001 both CLOSED/PASS |
-| 8 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/IMP-000_EVD_Build_Evidence_v1.0.md | REFERENCE | Corrected evidence; closed, acceptance met |
-| 9 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/IMP-001_EVD_Test_Result_Evidence_v1.0.md | REFERENCE | Corrected v1.0 evidence; CLOSED at d550907 -> REOPENED by Generator Remediation (2026-07-18); current working tree: 170/170 local, CI PENDING_POST_COMMIT |
+| 7 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Test_Result_Record_v1.1.md | REFERENCE | Current result record; IMP-001 closes at 3bceb34 / run 29684903853 |
+| 8 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/IMP-000_EVD_Build_Evidence_v1.0.md | REFERENCE | IMP-000 evidence; closed, acceptance met |
+| 9 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/IMP-001_EVD_Test_Result_Evidence_v1.2.md | REFERENCE | Current IMP-001 evidence; CLOSED / PASS / ACCEPTANCE MET at 3bceb34 / run 29684903853 |
 | 10 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Engineering_Document_Set_README_v1.0.md | REFERENCE | Document set README and reading order |
-| 11 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Engineering_Document_Set_Manifest_v1.0.md | REFERENCE | Current 10-document SHA-256 inventory |
+| 11 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Engineering_Document_Set_Manifest_v1.0.md | REFERENCE | Current 12-document SHA-256 inventory |
+| 12 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Test_Result_Record_v1.0.md | HISTORICAL / SUPERSEDED | Malformed source retained for traceability; contains control bytes and old d550907 state; never cite as current |
+| 13 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/IMP-001_EVD_Test_Result_Evidence_v1.0.md | HISTORICAL / SUPERSEDED | Malformed source retained for traceability; v1.1 addendum is stale; never cite as current |
 
 ---
 
@@ -142,8 +144,8 @@ This directory contains the **current storage engine implementation authority**.
 |-----------|--------|
 | **Gate** | GATE-0 — IN_PROGRESS |
 | **IMP-000** (Workspace) | CLOSED / PASS / ACCEPTANCE MET |
-| **IMP-001** (Format Registry) | CLOSED / PASS / ACCEPTANCE MET — evidence closed with ErrorId, trybuild, CI cross-platform (d550907, run 29471690977) |
-| **IMP-002** (Requirements–Test Traceability Matrix) | NOT_RUN — not yet authorized to start |
+| **IMP-001** (Format Registry) | CLOSED / PASS / ACCEPTANCE MET — Generator remediation closed at 3bceb34, run 29684903853, 172/172 on Windows and Ubuntu |
+| **IMP-002** (Requirements–Test Traceability Matrix) | NOT_RUN / NOT_STARTED — next planned package; not automatically authorized |
 | **IMP-100 and later** | NOT_STARTED / FORBIDDEN UNTIL GATE-0 — must not be initiated before GATE-0 is closed and IMP-002 is planned and authorized |
 
 ### Key Constraints
@@ -166,10 +168,11 @@ This directory contains the **current storage engine implementation authority**.
 ## Revision
 
 - **Version:** 1.0
-- **Task:** IMP-001 evidence closure
+- **Task:** IMP-001 Generator Remediation evidence closure
 - **Purpose:** Rebuild document index to reflect real filesystem state, correct authority levels, and current project status
 - **Previous version:** 2026-07-15 (IMP-000 evidence closure)
 - **Closure IMP-000:** IMP-000-EVIDENCE-CLOSURE-1 closed IMP-000 as PASS/ACCEPTANCE MET with full CI evidence (e1f1adb, run 29426443433)
 - **Closure IMP-001 (v1.0):** IMP-001 evidence closed as PASS/ACCEPTANCE MET at d550907 (CI run 29471690977)
-- **Reopened IMP-001 (v1.1):** IMP-001 reopened by Generator Remediation (RIR-005, 2026-07-18). Current working tree (HEAD 48830039, uncommitted): Code Review APPROVED, Validation 170/170 PASS, Recovery Integrity APPROVED. GitHub CI PENDING_POST_COMMIT. IMP-001 overall status: IN_PROGRESS. Next: PM pre-commit check.
+- **Historical reopen checkpoint (v1.1, superseded):** IMP-001 was reopened by Generator Remediation (RIR-005, 2026-07-18). That intermediate snapshot is retained only in the historical EVD and is not a current status source.
+- **Closure IMP-001 (v1.2):** Generator remediation closed at 3bceb34 with Code Review APPROVED, Validation PASS (172/172 on Windows and Ubuntu), Recovery Integrity APPROVED and CI run 29684903853 SUCCESS. Current evidence is EVD v1.2 and TRR v1.1. Old malformed v1.0 records are HISTORICAL / SUPERSEDED.
 - **Maintenance:** Update when documents are added, removed, reclassified, or when project gate status changes

@@ -32,14 +32,15 @@ The current implementation target is the **NWB Storage Engine**:
 
 ## Current Implementation Status
 
-crates/nwb-format currently contains an initial Registry:
+The current IMP-001 baseline contains a verified Format Registry and Generator:
 
 - RecordType identifiers (18 variants)
 - Feature-bit constants (5 constants)
 - Header enums (BackupKind 5, PlatformHint 3)
 - ErrorId identifiers (9 variants)
 - Registry TOML files (4)
-- Registry tests (13 unit/integration + 1 trybuild compile-fail)
+- `format-registry-generator` with `check` and `generate` paths
+- Registry contract tests, Generator negative tests, and trybuild compile-fail coverage
 
 It is not a complete NWB Storage Engine. The following have not yet been implemented as a complete closed loop:
 
@@ -61,11 +62,11 @@ src-tauri/ and ui/ exist but contain old Repository semantic residuals that have
 ## Quality Status
 
 - IMP-000: CI evidence complete (e1f1adb, run 29426443433) — PASS / ACCEPTANCE MET
-- IMP-001: CI evidence complete (d550907, run 29471690977) — PASS / ACCEPTANCE MET
+- IMP-001: Generator remediation evidence complete (3bceb34, run 29684903853) — PASS / ACCEPTANCE MET; 172/172 workspace tests passed on Windows and Ubuntu
 - pnpm build is known to fail:
   - ui/src/components/common/BackupTreeView.tsx — garbled characters
   - ui/src/pages/Backup.tsx — JSX structural errors
-- Do not read a fixed test count from this document; the authoritative test count must come from corrected evidence documents
+- Current acceptance evidence: `IMP-001_EVD_Test_Result_Evidence_v1.2.md` and `Nuwa_NWB_Test_Result_Record_v1.1.md`
 
 ---
 
@@ -75,7 +76,7 @@ src-tauri/ and ui/ exist but contain old Repository semantic residuals that have
 |-----|-------|--------|
 | IMP-000 | Workspace (build, CI, scaffolding) | CLOSED / PASS / ACCEPTANCE MET |
 | IMP-001 | Format Registry (nwb-format crate) | CLOSED / PASS / ACCEPTANCE MET |
-| IMP-002 | Requirements-Test Traceability Matrix | NOT_RUN / not authorized |
+| IMP-002 | Requirements-Test Traceability Matrix | NOT_RUN / NOT_STARTED; next planned package, not automatically authorized |
 | IMP-003-005 | Defined remaining GATE-0 work packages | NOT_RUN |
 | IMP-006-009 | Not defined in current plan | NOT_STARTED |
 | IMP-100+ | Post-GATE-0 work | FORBIDDEN until GATE-0 closes |
