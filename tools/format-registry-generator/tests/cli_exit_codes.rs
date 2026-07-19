@@ -133,6 +133,87 @@ value = 0x0001
 description = "Test error id"
 "#;
 
+const DUPLICATE_RECORD_TYPES: &str = r#"
+[meta]
+schema_version = 1
+kind = "discriminant"
+enum_name = "RecordType"
+
+[entries.FIRST]
+rust_name = "First"
+value = 0x0001
+description = "First record type"
+
+[entries.SECOND]
+rust_name = "Second"
+value = 0x0001
+description = "Duplicate record type value"
+"#;
+
+const DUPLICATE_ERROR_IDS: &str = r#"
+[meta]
+schema_version = 1
+kind = "discriminant"
+enum_name = "ErrorId"
+
+[entries.FIRST]
+rust_name = "First"
+value = 0x0001
+description = "First error id"
+
+[entries.SECOND]
+rust_name = "Second"
+value = 0x0001
+description = "Duplicate error id value"
+"#;
+
+const DUPLICATE_FEATURE_BITS: &str = r#"
+[meta]
+schema_version = 1
+kind = "bit"
+
+[entries.FIRST]
+rust_name = "FIRST"
+bit = 1
+description = "First feature bit"
+
+[entries.SECOND]
+rust_name = "SECOND"
+bit = 1
+description = "Duplicate feature bit"
+"#;
+
+const OUT_OF_RANGE_FEATURE_BIT: &str = r#"
+[meta]
+schema_version = 1
+kind = "bit"
+
+[entries.TOO_HIGH]
+rust_name = "TOO_HIGH"
+bit = 64
+description = "Feature bit outside the 64-bit mask"
+"#;
+
+const DUPLICATE_HEADER_ENUM_VALUES: &str = r#"
+[meta]
+schema_version = 1
+kind = "enum_set"
+
+[enums.TestKind]
+rust_name = "TestKind"
+repr = "u8"
+
+[enums.TestKind.entries.A]
+rust_name = "A"
+value = 1
+description = "First variant"
+
+[enums.TestKind.entries.B]
+rust_name = "B"
+value = 1
+description = "Duplicate enum value"
+"#;
+
 /// Write all four valid registry TOML files into `base/registry/` and
 /// ensure `base/src/registry/` exists for generated output.
 fn write_valid_tomls(base: &Path) {
@@ -143,6 +224,32 @@ fn write_valid_tomls(base: &Path) {
     std::fs::write(base.join("registry/feature_bits.toml"), VALID_FEATURE_BITS).unwrap();
     std::fs::write(base.join("registry/header_enums.toml"), VALID_HEADER_ENUMS).unwrap();
     std::fs::write(base.join("registry/error_ids.toml"), VALID_ERROR_IDS).unwrap();
+}
+
+fn assert_semantic_exit_4(command: &str, bad_file: &str, bad_toml: &str, diagnostic: &str) {
+    let exe = generator_exe();
+    let dir = TestDir::new();
+    write_valid_tomls(dir.path());
+    std::fs::write(dir.path().join("registry").join(bad_file), bad_toml).unwrap();
+
+    let output = Command::new(&exe)
+        .arg(command)
+        .arg("--manifest-path")
+        .arg(dir.path())
+        .output()
+        .unwrap_or_else(|e| panic!("failed to spawn generator {command}: {e}"));
+
+    let code = output.status.code();
+    let stderr = String::from_utf8_lossy(&output.stderr);
+    assert_eq!(
+        code,
+        Some(4),
+        "{command} must classify {bad_file} as SEMANTIC_ERROR; stderr: {stderr}"
+    );
+    assert!(
+        stderr.contains(diagnostic),
+        "{command} diagnostic for {bad_file} must contain {diagnostic:?}; stderr: {stderr}"
+    );
 }
 
 // =========================================================================
@@ -343,75 +450,44 @@ description = "foo"
 }
 
 // =========================================================================
-// Test: exit code 4 -- SEMANTIC_ERROR (duplicate enum_set values)
+// Test: exit code 4 -- SEMANTIC_ERROR for every registry kind
 // =========================================================================
 
 #[test]
-fn cli_exit_4_semantic_error() {
-    let exe = generator_exe();
-    let dir = TestDir::new();
-    let manifest = dir.path().to_path_buf();
+fn cli_exit_4_semantic_errors_match_for_check_and_generate() {
+    let cases = [
+        (
+            "record_types.toml",
+            DUPLICATE_RECORD_TYPES,
+            "duplicate value",
+        ),
+        (
+            "error_ids.toml",
+            DUPLICATE_ERROR_IDS,
+            "duplicate value",
+        ),
+        (
+            "feature_bits.toml",
+            DUPLICATE_FEATURE_BITS,
+            "duplicate value",
+        ),
+        (
+            "feature_bits.toml",
+            OUT_OF_RANGE_FEATURE_BIT,
+            "bit 64 out of range",
+        ),
+        (
+            "header_enums.toml",
+            DUPLICATE_HEADER_ENUM_VALUES,
+            "duplicate value",
+        ),
+    ];
 
-    // Write all 4 TOML files, but header_enums.toml has duplicate values.
-    // Semantic errors (ParseError::SemanticValidation -> exit 4) only come from
-    // enum_set kind validation; discriminant and bit use ParseError::Validation instead.
-    std::fs::create_dir_all(manifest.join("registry")).unwrap();
-    std::fs::create_dir_all(manifest.join("src/registry")).unwrap();
-
-    // record_types.toml must be valid so processing reaches header_enums.toml
-    std::fs::write(
-        manifest.join("registry/record_types.toml"),
-        VALID_RECORD_TYPES,
-    )
-    .unwrap();
-    std::fs::write(
-        manifest.join("registry/feature_bits.toml"),
-        VALID_FEATURE_BITS,
-    )
-    .unwrap();
-    std::fs::write(manifest.join("registry/error_ids.toml"), VALID_ERROR_IDS).unwrap();
-
-    // Bad TOML: enum_set with duplicate variant values
-    let bad_toml = r#"
-[meta]
-schema_version = 1
-kind = "enum_set"
-
-[enums.TestKind]
-rust_name = "TestKind"
-repr = "u8"
-
-[enums.TestKind.entries.A]
-rust_name = "A"
-value = 1
-description = "first"
-
-[enums.TestKind.entries.B]
-rust_name = "B"
-value = 1
-description = "duplicate value"
-"#;
-    std::fs::write(manifest.join("registry/header_enums.toml"), bad_toml).unwrap();
-
-    let check = Command::new(&exe)
-        .arg("check")
-        .arg("--manifest-path")
-        .arg(&manifest)
-        .output()
-        .expect("check");
-
-    let code = check.status.code();
-    let stderr = String::from_utf8_lossy(&check.stderr);
-    assert_eq!(
-        code,
-        Some(4),
-        "semantic error should exit 4, got: {:?}\\nstderr: {stderr}",
-        code
-    );
-    assert!(
-        stderr.contains("duplicate value") || stderr.contains("duplicate"),
-        "stderr should mention duplicate value, got: {stderr}"
-    );
+    for command in ["check", "generate"] {
+        for (bad_file, bad_toml, diagnostic) in cases {
+            assert_semantic_exit_4(command, bad_file, bad_toml, diagnostic);
+        }
+    }
 }
 
 // =========================================================================

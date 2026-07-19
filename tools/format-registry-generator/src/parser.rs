@@ -274,7 +274,7 @@ fn parse_discriminant(toml_str: &str) -> Result<ParsedRegistry, ParseError> {
             enum_name,
             entries,
         })),
-        Err(errors) => Err(ParseError::Validation(
+        Err(errors) => Err(ParseError::SemanticValidation(
             crate::schema::format_validation_errors(&errors),
         )),
     }
@@ -323,7 +323,7 @@ fn parse_bit(toml_str: &str) -> Result<ParsedRegistry, ParseError> {
 
     match crate::schema::validate_bit_entries(&entries) {
         Ok(()) => Ok(ParsedRegistry::Bit(entries)),
-        Err(errors) => Err(ParseError::Validation(
+        Err(errors) => Err(ParseError::SemanticValidation(
             crate::schema::format_validation_errors(&errors),
         )),
     }
