@@ -1,6 +1,6 @@
 # Nüwa Backup — Document Index
 
-**Last Updated:** 2026-07-19 (IMP-001 Generator Remediation evidence closure)
+**Last Updated:** 2026-07-19 (IMP-002 requirements–test traceability evidence closure)
 
 ---
 
@@ -15,6 +15,7 @@ This index lists every Markdown file in the docs/ hierarchy with its purpose and
 | Level | Meaning |
 |-------|---------|
 | **AUTHORITATIVE** | Must be followed. Active contract for implementation, architecture, or governance. |
+| **TRACEABILITY AUTHORITY** | Authoritative only for requirement/test IDs, priorities, source bindings, mappings and traceability dispositions. Cannot override implementation contracts. |
 | **REFERENCE** | Informational context. Not binding for implementation decisions. |
 | **HISTORICAL** | Superseded. Entries marked **ACCEPTED BASELINE** record formally accepted phase outcomes. |
 | **SUPERSEDED** | Replaced by later decisions or documents. Do not cite as current authority. |
@@ -24,9 +25,10 @@ This index lists every Markdown file in the docs/ hierarchy with its purpose and
 
 1. **AGENTS.md** at project root is the highest-priority general engineering governance document. It governs execution discipline, safety boundaries, and multi-agent collaboration. It does not define storage format, implementation plans, or phase-specific contracts.
 2. **NWB Engineering Document Set** (docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/) is the current storage engine implementation authority. Its Architecture, Format Specification, Provider SDK, Product Support Matrix, Implementation Plan, and Verification/Acceptance/Test Plan are **AUTHORITATIVE**.
-3. **Test Result Record** and **Evidence Documents** (EVD) record actual test evidence only. They cannot modify architecture contracts.
-4. **Phase closing reports and their test evidence** are classified as **HISTORICAL / ACCEPTED BASELINE** — formally accepted phase outcomes that serve as traceability anchors.
-5. Documents for directories or files that no longer exist on disk must not be listed.
+3. `Nuwa_NWB_Traceability_Registry_v1.0.toml` is **TRACEABILITY AUTHORITY** only for ID, priority, test, source and mapping governance. It cannot change the meaning of contract documents #1–6. Its generated Markdown Matrix is **REFERENCE**.
+4. **Test Result Record** and **Evidence Documents** (EVD) record actual test evidence only. They cannot modify architecture contracts.
+5. **Phase closing reports and their test evidence** are classified as **HISTORICAL / ACCEPTED BASELINE** — formally accepted phase outcomes that serve as traceability anchors.
+6. Documents for directories or files that no longer exist on disk must not be listed.
 
 ---
 
@@ -111,7 +113,7 @@ All Phase 0 documents are **HISTORICAL**. They guided initial project setup but 
 
 ## docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/ — Current NWB Storage Engine Authority
 
-This directory contains the **current storage engine implementation authority**. Contract documents #1–6 follow the authority order defined by the Engineering Document Set README §2. Evidence and metadata documents are listed afterward and cannot override implementation contracts.
+This directory contains the **current storage engine implementation authority**. Contract documents #1–6 follow the authority order defined by the Engineering Document Set README §2. Traceability authority, generated references, evidence and metadata are listed afterward and cannot override implementation contracts.
 
 ### AUTHORITATIVE Documents (implementation contracts)
 
@@ -124,17 +126,26 @@ This directory contains the **current storage engine implementation authority**.
 | 5 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Implementation_Plan_v1.0.md | Implementation plan and Gate roadmap |
 | 6 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md | Verification, acceptance, and test plan |
 
+### TRACEABILITY AUTHORITY
+
+| Document | Scope of authority |
+|---|---|
+| docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Traceability_Registry_v1.0.toml | Canonical requirement/test IDs, priorities, authority-source bindings, mappings and `MAPPED` / `SOURCE_SCOPED` dispositions. Cannot override documents #1–6 |
+
 ### REFERENCE Documents (evidence records, metadata)
 
 | # | Document | Classification | Purpose |
 |---|----------|----------------|---------|
-| 7 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Test_Result_Record_v1.1.md | REFERENCE | Current result record; IMP-001 closes at 3bceb34 / run 29684903853 |
-| 8 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/IMP-000_EVD_Build_Evidence_v1.0.md | REFERENCE | IMP-000 evidence; closed, acceptance met |
-| 9 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/IMP-001_EVD_Test_Result_Evidence_v1.2.md | REFERENCE | Current IMP-001 evidence; CLOSED / PASS / ACCEPTANCE MET at 3bceb34 / run 29684903853 |
-| 10 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Engineering_Document_Set_README_v1.0.md | REFERENCE | Document set README and reading order |
-| 11 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Engineering_Document_Set_Manifest_v1.0.md | REFERENCE | Current 12-document SHA-256 inventory |
-| 12 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Test_Result_Record_v1.0.md | HISTORICAL / SUPERSEDED | Malformed source retained for traceability; contains control bytes and old d550907 state; never cite as current |
-| 13 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/IMP-001_EVD_Test_Result_Evidence_v1.0.md | HISTORICAL / SUPERSEDED | Malformed source retained for traceability; v1.1 addendum is stale; never cite as current |
+| 7 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Requirements_Test_Traceability_Matrix_v1.0.md | GENERATED REFERENCE | Deterministic rendering of the Traceability Registry; do not edit manually |
+| 8 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Test_Result_Record_v1.2.md | REFERENCE / CURRENT | Current result record; IMP-002 closes at 8b2a68b / run 29691731514 |
+| 9 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/IMP-000_EVD_Build_Evidence_v1.0.md | REFERENCE / CURRENT FOR IMP-000 | IMP-000 evidence; closed, acceptance met |
+| 10 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/IMP-001_EVD_Test_Result_Evidence_v1.2.md | REFERENCE / CURRENT FOR IMP-001 | IMP-001 evidence; CLOSED / PASS / ACCEPTANCE MET at 3bceb34 / run 29684903853 |
+| 11 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/IMP-002_EVD_Requirements_Traceability_Evidence_v1.0.md | REFERENCE / CURRENT FOR IMP-002 | IMP-002 evidence; CLOSED / PASS / ACCEPTANCE MET at 8b2a68b / run 29691731514 |
+| 12 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Engineering_Document_Set_README_v1.0.md | REFERENCE / CURRENT | Document set README and reading order |
+| 13 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Engineering_Document_Set_Manifest_v1.0.md | REFERENCE / CURRENT | Current 16-file SHA-256 inventory; manifest excludes itself |
+| 14 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Test_Result_Record_v1.1.md | HISTORICAL / SUPERSEDED | Replaced by Test Result Record v1.2; retains the accepted IMP-001 snapshot |
+| 15 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Test_Result_Record_v1.0.md | HISTORICAL / SUPERSEDED | Malformed source retained for traceability; contains control bytes and old d550907 state; never cite as current |
+| 16 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/IMP-001_EVD_Test_Result_Evidence_v1.0.md | HISTORICAL / SUPERSEDED | Malformed source retained for traceability; stale state; never cite as current |
 
 ---
 
@@ -145,8 +156,9 @@ This directory contains the **current storage engine implementation authority**.
 | **Gate** | GATE-0 — IN_PROGRESS |
 | **IMP-000** (Workspace) | CLOSED / PASS / ACCEPTANCE MET |
 | **IMP-001** (Format Registry) | CLOSED / PASS / ACCEPTANCE MET — Generator remediation closed at 3bceb34, run 29684903853, 172/172 on Windows and Ubuntu |
-| **IMP-002** (Requirements–Test Traceability Matrix) | NOT_RUN / NOT_STARTED — next planned package; not automatically authorized |
-| **IMP-100 and later** | NOT_STARTED / FORBIDDEN UNTIL GATE-0 — must not be initiated before GATE-0 is closed and IMP-002 is planned and authorized |
+| **IMP-002** (Requirements–Test Traceability Matrix) | CLOSED / PASS / ACCEPTANCE MET — final tested commit 8b2a68b, run 29691731514, 188/188 on Windows and Ubuntu |
+| **IMP-003–005** | NOT_RUN — remaining defined GATE-0 work packages |
+| **IMP-100 and later** | NOT_STARTED / FORBIDDEN UNTIL GATE-0 — must not be initiated before GATE-0 is closed |
 
 ### Key Constraints
 
@@ -168,11 +180,12 @@ This directory contains the **current storage engine implementation authority**.
 ## Revision
 
 - **Version:** 1.0
-- **Task:** IMP-001 Generator Remediation evidence closure
-- **Purpose:** Rebuild document index to reflect real filesystem state, correct authority levels, and current project status
-- **Previous version:** 2026-07-15 (IMP-000 evidence closure)
+- **Task:** IMP-002 requirements–test traceability evidence closure
+- **Purpose:** Register the traceability authority, generated Matrix, current evidence and actual Gate status
+- **Previous update:** 2026-07-19 (IMP-001 Generator Remediation evidence closure)
 - **Closure IMP-000:** IMP-000-EVIDENCE-CLOSURE-1 closed IMP-000 as PASS/ACCEPTANCE MET with full CI evidence (e1f1adb, run 29426443433)
 - **Closure IMP-001 (v1.0):** IMP-001 evidence closed as PASS/ACCEPTANCE MET at d550907 (CI run 29471690977)
 - **Historical reopen checkpoint (v1.1, superseded):** IMP-001 was reopened by Generator Remediation (RIR-005, 2026-07-18). That intermediate snapshot is retained only in the historical EVD and is not a current status source.
 - **Closure IMP-001 (v1.2):** Generator remediation closed at 3bceb34 with Code Review APPROVED, Validation PASS (172/172 on Windows and Ubuntu), Recovery Integrity APPROVED and CI run 29684903853 SUCCESS. Current evidence is EVD v1.2 and TRR v1.1. Old malformed v1.0 records are HISTORICAL / SUPERSEDED.
+- **Closure IMP-002:** Requirements–test traceability closed at 8b2a68b with final Code Review APPROVED, dual-platform CI 188/188 PASS, Recovery Integrity APPROVED and CI run 29691731514 SUCCESS. Current evidence is IMP-002 EVD v1.0 and TRR v1.2; TRR v1.1 is historical/superseded.
 - **Maintenance:** Update when documents are added, removed, reclassified, or when project gate status changes

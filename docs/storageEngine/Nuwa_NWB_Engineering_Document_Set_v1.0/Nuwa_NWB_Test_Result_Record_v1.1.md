@@ -1,6 +1,6 @@
 # Nüwa NWB Test Result and Acceptance Record v1.1
 
-**记录状态：** CURRENT
+**记录状态：** HISTORICAL / SUPERSEDED（由 v1.2 取代）
 **更新日期：** 2026-07-19
 **项目状态：** GATE-0 IN_PROGRESS；IMP-000、IMP-001 CLOSED / PASS / ACCEPTANCE MET
 
@@ -20,7 +20,7 @@
 | 验证角色 | `nwb_validation_engineer` |
 | 复核角色 | `nwb_code_reviewer`、`nwb_recovery_integrity_reviewer` |
 
-历史 v1.0 记录含控制字符并绑定旧基线，现分类为 `HISTORICAL / SUPERSEDED / MALFORMED_SOURCE_RETAINED_FOR_TRACEABILITY`。本文件是当前唯一 Test Result Record。
+历史 v1.0 记录含控制字符并绑定旧基线，现分类为 `HISTORICAL / SUPERSEDED / MALFORMED_SOURCE_RETAINED_FOR_TRACEABILITY`。本文件保留 IMP-001 关闭时的历史快照；当前唯一 Test Result Record 为 `Nuwa_NWB_Test_Result_Record_v1.2.md`。
 
 ## 2. 测试环境
 
