@@ -1,6 +1,6 @@
 # Nüwa Backup — Document Index
 
-**Last Updated:** 2026-07-19 (IMP-002 requirements–test traceability evidence closure)
+**Last Updated:** 2026-07-19 (IMP-003 structured diagnostics implementation candidate)
 
 ---
 
@@ -15,6 +15,7 @@ This index lists every Markdown file in the docs/ hierarchy with its purpose and
 | Level | Meaning |
 |-------|---------|
 | **AUTHORITATIVE** | Must be followed. Active contract for implementation, architecture, or governance. |
+| **DERIVED IMPLEMENTATION STANDARD** | Binding implementation rule for its approved work-package scope; subordinate to the authoritative contract documents and cannot change them. |
 | **TRACEABILITY AUTHORITY** | Authoritative only for requirement/test IDs, priorities, source bindings, mappings and traceability dispositions. Cannot override implementation contracts. |
 | **REFERENCE** | Informational context. Not binding for implementation decisions. |
 | **HISTORICAL** | Superseded. Entries marked **ACCEPTED BASELINE** record formally accepted phase outcomes. |
@@ -24,7 +25,7 @@ This index lists every Markdown file in the docs/ hierarchy with its purpose and
 ### Classification Rules
 
 1. **AGENTS.md** at project root is the highest-priority general engineering governance document. It governs execution discipline, safety boundaries, and multi-agent collaboration. It does not define storage format, implementation plans, or phase-specific contracts.
-2. **NWB Engineering Document Set** (docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/) is the current storage engine implementation authority. Its Architecture, Format Specification, Provider SDK, Product Support Matrix, Implementation Plan, and Verification/Acceptance/Test Plan are **AUTHORITATIVE**.
+2. **NWB Engineering Document Set** (docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/) is the current storage engine implementation authority. Its Architecture, Format Specification, Provider SDK, Product Support Matrix, Implementation Plan, and Verification/Acceptance/Test Plan are **AUTHORITATIVE**. Approved derived implementation standards are binding only inside their named work-package scope and remain subordinate to documents #1–6.
 3. `Nuwa_NWB_Traceability_Registry_v1.0.toml` is **TRACEABILITY AUTHORITY** only for ID, priority, test, source and mapping governance. It cannot change the meaning of contract documents #1–6. Its generated Markdown Matrix is **REFERENCE**.
 4. **Test Result Record** and **Evidence Documents** (EVD) record actual test evidence only. They cannot modify architecture contracts.
 5. **Phase closing reports and their test evidence** are classified as **HISTORICAL / ACCEPTED BASELINE** — formally accepted phase outcomes that serve as traceability anchors.
@@ -132,6 +133,12 @@ This directory contains the **current storage engine implementation authority**.
 |---|---|
 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Traceability_Registry_v1.0.toml | Canonical requirement/test IDs, priorities, authority-source bindings, mappings and `MAPPED` / `SOURCE_SCOPED` dispositions. Cannot override documents #1–6 |
 
+### DERIVED IMPLEMENTATION STANDARDS
+
+| Document | Scope and boundary |
+|---|---|
+| docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Structured_Error_and_Logging_Specification_v1.0.md | IMP-003 structured error, secret handling and JSON logging contract. Subordinate to documents #1–6; cannot alter ErrorId values, binary format, recovery semantics or support scope |
+
 ### REFERENCE Documents (evidence records, metadata)
 
 | # | Document | Classification | Purpose |
@@ -157,7 +164,8 @@ This directory contains the **current storage engine implementation authority**.
 | **IMP-000** (Workspace) | CLOSED / PASS / ACCEPTANCE MET |
 | **IMP-001** (Format Registry) | CLOSED / PASS / ACCEPTANCE MET — Generator remediation closed at 3bceb34, run 29684903853, 172/172 on Windows and Ubuntu |
 | **IMP-002** (Requirements–Test Traceability Matrix) | CLOSED / PASS / ACCEPTANCE MET — final tested commit 8b2a68b, run 29691731514, 188/188 on Windows and Ubuntu |
-| **IMP-003–005** | NOT_RUN — remaining defined GATE-0 work packages |
+| **IMP-003** | IMPLEMENTED / PENDING_CI_AND_REVIEW — candidate code and tests exist; no acceptance claim |
+| **IMP-004–005** | NOT_RUN — remaining defined GATE-0 work packages |
 | **IMP-100 and later** | NOT_STARTED / FORBIDDEN UNTIL GATE-0 — must not be initiated before GATE-0 is closed |
 
 ### Key Constraints
@@ -180,7 +188,7 @@ This directory contains the **current storage engine implementation authority**.
 ## Revision
 
 - **Version:** 1.0
-- **Task:** IMP-002 requirements–test traceability evidence closure
+- **Task:** IMP-003 structured diagnostics implementation candidate
 - **Purpose:** Register the traceability authority, generated Matrix, current evidence and actual Gate status
 - **Previous update:** 2026-07-19 (IMP-001 Generator Remediation evidence closure)
 - **Closure IMP-000:** IMP-000-EVIDENCE-CLOSURE-1 closed IMP-000 as PASS/ACCEPTANCE MET with full CI evidence (e1f1adb, run 29426443433)
@@ -188,4 +196,5 @@ This directory contains the **current storage engine implementation authority**.
 - **Historical reopen checkpoint (v1.1, superseded):** IMP-001 was reopened by Generator Remediation (RIR-005, 2026-07-18). That intermediate snapshot is retained only in the historical EVD and is not a current status source.
 - **Closure IMP-001 (v1.2):** Generator remediation closed at 3bceb34 with Code Review APPROVED, Validation PASS (172/172 on Windows and Ubuntu), Recovery Integrity APPROVED and CI run 29684903853 SUCCESS. Current evidence is EVD v1.2 and TRR v1.1. Old malformed v1.0 records are HISTORICAL / SUPERSEDED.
 - **Closure IMP-002:** Requirements–test traceability closed at 8b2a68b with final Code Review APPROVED, dual-platform CI 188/188 PASS, Recovery Integrity APPROVED and CI run 29691731514 SUCCESS. Current evidence is IMP-002 EVD v1.0 and TRR v1.2; TRR v1.1 is historical/superseded.
+- **IMP-003 candidate:** Structured diagnostics, secret-safe logging, six TST-ERR contracts and REQ-019 traceability are implemented locally; CI, independent review, validation and evidence closure remain pending.
 - **Maintenance:** Update when documents are added, removed, reclassified, or when project gate status changes

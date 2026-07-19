@@ -356,6 +356,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "nwb-diagnostics"
+version = "0.1.0"
+dependencies = [
+ "nwb-format",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
 name = "nwb-format"
 version = "0.1.0"
 dependencies = [

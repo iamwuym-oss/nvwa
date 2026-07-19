@@ -59,6 +59,9 @@ jobs:
       - name: Requirements traceability check
         run: cargo run --locked -p traceability-checker -- check
 
+      - name: Secret canary check
+        run: cargo test --locked -p nwb-diagnostics secret_canary
+
       - name: Clippy
         run: cargo clippy --workspace --all-targets --locked -- -D warnings
 

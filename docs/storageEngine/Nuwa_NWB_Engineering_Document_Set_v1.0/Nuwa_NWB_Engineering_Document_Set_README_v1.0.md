@@ -31,11 +31,12 @@
 | 4 | `Nuwa_NWB_Product_Support_Matrix_v1.0.md` | 首版正式支持、有限支持与不支持范围 |
 | 5 | `Nuwa_NWB_Implementation_Plan_v1.0.md` | 工作包、依赖、里程碑、退出条件和交付物 |
 | 6 | `Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md` | 测试设计、质量门、验收标准与故障注入 |
+| 派生实施标准 | `Nuwa_NWB_Structured_Error_and_Logging_Specification_v1.0.md` | IMP-003 结构化错误、Secret 与日志契约；服从 #1–6，不得改变其技术语义 |
 | 追溯权威 | `Nuwa_NWB_Traceability_Registry_v1.0.toml` | 需求/测试 ID、优先级、来源、映射与处置；不得覆盖 #1–6 技术语义 |
 | 生成参考 | `Nuwa_NWB_Requirements_Test_Traceability_Matrix_v1.0.md` | Registry 的确定性 Markdown 展示；不得手工编辑 |
 | 当前结果 | `Nuwa_NWB_Test_Result_Record_v1.2.md` | 当前实际执行结果、证据、缺陷和签署记录 |
 
-发生冲突时，后面的实施文档不得改变前面的格式或架构原则。Traceability Registry 只管理追溯元数据，不能创建或修改产品、架构、格式、Provider、支持或测试契约。确需改变技术契约时，必须先新增 ADR，再修改所有受影响文档和测试。
+发生冲突时，后面的实施文档不得改变前面的格式或架构原则。派生实施标准只在已批准工作包范围内具有约束力，并始终服从 #1–6。Traceability Registry 只管理追溯元数据，不能创建或修改产品、架构、格式、Provider、支持或测试契约。确需改变技术契约时，必须先新增 ADR，再修改所有受影响文档和测试。
 
 ## 3. 已冻结的产品决策
 
@@ -175,15 +176,16 @@ Codex执行本项目时必须遵守：
 | IMP-000 (Workspace) | CLOSED / PASS / ACCEPTANCE MET |
 | IMP-001 (Format Registry) | CLOSED / PASS / ACCEPTANCE MET；最终被测提交 3bceb34，CI run 29684903853，Windows/Ubuntu 172/172 PASS |
 | IMP-002 (Requirements–Test Traceability) | CLOSED / PASS / ACCEPTANCE MET；最终被测提交 8b2a68b，CI run 29691731514，Windows/Ubuntu 188/188 PASS |
-| IMP-003–005 | NOT_RUN |
+| IMP-003 (Structured Diagnostics) | IMPLEMENTED / PENDING_CI_AND_REVIEW；候选代码与6项契约测试已建立，尚未验收 |
+| IMP-004–005 | NOT_RUN |
 
 - IMP-000、IMP-001与IMP-002均已关闭为CLOSED / PASS / ACCEPTANCE MET；GATE-0仍为IN_PROGRESS
 - 当前结果记录为`Nuwa_NWB_Test_Result_Record_v1.2.md`；当前工作包证据包括`IMP-001_EVD_Test_Result_Evidence_v1.2.md`与`IMP-002_EVD_Requirements_Traceability_Evidence_v1.0.md`
 - Test Result Record v1.1已标记为HISTORICAL / SUPERSEDED；v1.0 Test Result Record和v1.0 IMP-001 EVD继续保留为HISTORICAL / SUPERSEDED / MALFORMED_SOURCE_RETAINED_FOR_TRACEABILITY
-- IMP-002 Registry登记36项需求、138项正式测试与141条映射；115项测试仍为PLANNED，不能视为已执行
+- 当前Registry登记37项需求、144项正式测试与147条映射；其中IMP-003新增的6项测试仅为候选实现，必须以最终双平台CI证据确认执行结果
 - IMP-002只证明追溯治理与CI检查通过；真实Backup/Restore、BMR和故障注入仍为N/A / NOT_RUN
 - 任何工作包只有同时具备设计、实现、自动测试、恢复验证和证据记录才允许标记为ACCEPTED
-- IMP-003–005按依赖和授权在GATE-0内另行执行
+- IMP-003已进入候选实现阶段，CI、独立审查、验证和证据闭环完成前不得标记为ACCEPTED；IMP-004–005按依赖和授权在GATE-0内另行执行
 - IMP-006–009尚未定义，不得启动
 - IMP-100及以后工作必须等待GATE-0关闭
 - PR #1仍为Draft且未合并；Format Freeze、支持认证与产品发布仍为NOT_RUN / NOT_APPROVED

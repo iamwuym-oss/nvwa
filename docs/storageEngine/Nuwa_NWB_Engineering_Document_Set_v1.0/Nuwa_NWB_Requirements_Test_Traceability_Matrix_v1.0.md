@@ -6,15 +6,15 @@
 
 | 指标 | 数量 |
 |---|---:|
-| 正式需求 | 36 |
-| P0需求 | 33 |
+| 正式需求 | 37 |
+| P0需求 | 34 |
 | P1需求 | 3 |
-| 正式测试 | 138 |
-| 已实现测试 | 23 |
+| 正式测试 | 144 |
+| 已实现测试 | 29 |
 | 计划测试 | 115 |
-| 已映射测试 | 119 |
+| 已映射测试 | 125 |
 | Source-scoped测试 | 19 |
-| 唯一映射 | 141 |
+| 唯一映射 | 147 |
 
 ## 2. 需求到测试
 
@@ -56,6 +56,7 @@
 | REQ-016 | P0 | P-16 | 多分卷归档以Final Volume提交为有效恢复点 | TST-VOL-001, TST-VOL-004, TST-VOL-005, TST-VOL-006, TST-VOL-007, TST-VOL-009 |
 | REQ-017 | P0 | IMP-001 | Format Registry ID唯一且生成一致 | TST-REG-001, TST-REG-002, TST-REG-003, TST-REG-004, TST-REG-005, TST-REG-006, TST-REG-007 |
 | REQ-018 | P0 | IMP-002 | P0需求100%映射且CI拒绝孤儿 | TST-TRC-001, TST-TRC-002, TST-TRC-003, TST-TRC-004, TST-TRC-005, TST-TRC-006, TST-TRC-007, TST-TRC-008, TST-TRC-009, TST-TRC-010, TST-TRC-011, TST-TRC-012, TST-TRC-013, TST-TRC-014, TST-TRC-015, TST-TRC-016 |
+| REQ-019 | P0 | IMP-003 | 结构化错误与日志不得泄露密钥或密码 | TST-ERR-001, TST-ERR-002, TST-ERR-003, TST-ERR-004, TST-ERR-005, TST-ERR-006 |
 
 ## 3. 测试登记
 
@@ -100,6 +101,12 @@
 | TST-DIFF-004 | NEGATIVE | PLANNED | MAPPED | 错Full同名替换 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md |
 | TST-DIFF-005 | POSITIVE | PLANNED | MAPPED | 变化日志回绕/丢失 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md |
 | TST-DIFF-006 | POSITIVE | PLANNED | MAPPED | 只改元数据 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md |
+| TST-ERR-001 | POSITIVE | IMPLEMENTED | MAPPED | 结构化错误使用Error Registry身份 | crates/nwb-diagnostics/tests/diagnostics_contracts.rs |
+| TST-ERR-002 | NEGATIVE | IMPLEMENTED | MAPPED | 保留Invalid ErrorId拒绝 | crates/nwb-diagnostics/tests/diagnostics_contracts.rs |
+| TST-ERR-003 | POSITIVE | IMPLEMENTED | MAPPED | 结构化JSON日志确定性与单LF | crates/nwb-diagnostics/tests/diagnostics_contracts.rs |
+| TST-ERR-004 | SECURITY | IMPLEMENTED | MAPPED | Secret Canary格式化脱敏 | crates/nwb-diagnostics/tests/diagnostics_contracts.rs |
+| TST-ERR-005 | SECURITY | IMPLEMENTED | MAPPED | Secret Canary日志写入错误不泄漏 | crates/nwb-diagnostics/tests/diagnostics_contracts.rs |
+| TST-ERR-006 | SECURITY | IMPLEMENTED | MAPPED | 日志Schema无自由文本路径或载荷字段 | crates/nwb-diagnostics/tests/diagnostics_contracts.rs |
 | TST-FAULT-001 | FAULT | PLANNED | MAPPED | 进程强杀 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md |
 | TST-FAULT-002 | FAULT | PLANNED | MAPPED | ENOSPC | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md |
 | TST-FAULT-003 | FAULT | PLANNED | MAPPED | USB拔出 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md |
@@ -204,25 +211,25 @@
 
 | Test | Authority source | Anchor | Justification |
 |---|---|---|---|
-| TST-VOL-008 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Binary_Format_Specification_v1.0_Draft.md | - `AUTO`：探测文件系统限制 | 当前36项正式需求未为该测试主题分配独立Requirement ID；保留为权威来源范围内计划测试，不计入需求覆盖。 |
-| TST-CRY-001 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Binary_Format_Specification_v1.0_Draft.md | Writer对压缩收益不足的Chunk写`NONE` | 当前36项正式需求未为该测试主题分配独立Requirement ID；保留为权威来源范围内计划测试，不计入需求覆盖。 |
-| TST-CRY-007 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Implementation_Plan_v1.0.md | \| `IMP-303` \| | 当前36项正式需求未为该测试主题分配独立Requirement ID；保留为权威来源范围内计划测试，不计入需求覆盖。 |
-| TST-FAULT-005 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Provider_SDK_Specification_v1.0_Draft.md | 无论成功、失败、取消或超时 | 当前36项正式需求未为该测试主题分配独立Requirement ID；保留为权威来源范围内计划测试，不计入需求覆盖。 |
-| TST-FAULT-006 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Storage_Engine_Architecture_v2.0.md | 失败、取消和超时都必须释放Snapshot | 当前36项正式需求未为该测试主题分配独立Requirement ID；保留为权威来源范围内计划测试，不计入需求覆盖。 |
-| TST-BLK-001 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Implementation_Plan_v1.0.md | \| `IMP-500` \| | 当前36项正式需求未为该测试主题分配独立Requirement ID；保留为权威来源范围内计划测试，不计入需求覆盖。 |
-| TST-BLK-002 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Implementation_Plan_v1.0.md | \| `IMP-503` \| | 当前36项正式需求未为该测试主题分配独立Requirement ID；保留为权威来源范围内计划测试，不计入需求覆盖。 |
-| TST-BLK-003 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Implementation_Plan_v1.0.md | \| `IMP-502` \| | 当前36项正式需求未为该测试主题分配独立Requirement ID；保留为权威来源范围内计划测试，不计入需求覆盖。 |
-| TST-BLK-004 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Implementation_Plan_v1.0.md | \| `IMP-502` \| | 当前36项正式需求未为该测试主题分配独立Requirement ID；保留为权威来源范围内计划测试，不计入需求覆盖。 |
-| TST-BLK-005 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Implementation_Plan_v1.0.md | \| `IMP-504` \| | 当前36项正式需求未为该测试主题分配独立Requirement ID；保留为权威来源范围内计划测试，不计入需求覆盖。 |
-| TST-BLK-006 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Implementation_Plan_v1.0.md | \| `IMP-504` \| | 当前36项正式需求未为该测试主题分配独立Requirement ID；保留为权威来源范围内计划测试，不计入需求覆盖。 |
-| TST-BLK-007 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Implementation_Plan_v1.0.md | \| `IMP-504` \| | 当前36项正式需求未为该测试主题分配独立Requirement ID；保留为权威来源范围内计划测试，不计入需求覆盖。 |
-| TST-BLK-008 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Implementation_Plan_v1.0.md | \| `IMP-500` \| | 当前36项正式需求未为该测试主题分配独立Requirement ID；保留为权威来源范围内计划测试，不计入需求覆盖。 |
-| TST-BLK-009 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Implementation_Plan_v1.0.md | \| `IMP-505` \| | 当前36项正式需求未为该测试主题分配独立Requirement ID；保留为权威来源范围内计划测试，不计入需求覆盖。 |
-| TST-SEC-001 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Binary_Format_Specification_v1.0_Draft.md | 恢复路径必须经过包含性检查 | 当前36项正式需求未为该测试主题分配独立Requirement ID；保留为权威来源范围内计划测试，不计入需求覆盖。 |
-| TST-SEC-002 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Binary_Format_Specification_v1.0_Draft.md | 符号链接/Reparse Point最后创建 | 当前36项正式需求未为该测试主题分配独立Requirement ID；保留为权威来源范围内计划测试，不计入需求覆盖。 |
-| TST-SEC-003 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Binary_Format_Specification_v1.0_Draft.md | Reader必须验证页内偏移、Key排序、重复Key策略和树层级 | 当前36项正式需求未为该测试主题分配独立Requirement ID；保留为权威来源范围内计划测试，不计入需求覆盖。 |
-| TST-SEC-005 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Binary_Format_Specification_v1.0_Draft.md | - 最大解压比例和单Chunk明文长度 | 当前36项正式需求未为该测试主题分配独立Requirement ID；保留为权威来源范围内计划测试，不计入需求覆盖。 |
-| TST-SEC-008 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Provider_SDK_Specification_v1.0_Draft.md | 块恢复接口必须暴露目标稳定ID | 当前36项正式需求未为该测试主题分配独立Requirement ID；保留为权威来源范围内计划测试，不计入需求覆盖。 |
+| TST-VOL-008 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Binary_Format_Specification_v1.0_Draft.md | - `AUTO`：探测文件系统限制 | 当前37项正式需求未为该测试主题分配独立Requirement ID；保留为权威来源范围内计划测试，不计入需求覆盖。 |
+| TST-CRY-001 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Binary_Format_Specification_v1.0_Draft.md | Writer对压缩收益不足的Chunk写`NONE` | 当前37项正式需求未为该测试主题分配独立Requirement ID；保留为权威来源范围内计划测试，不计入需求覆盖。 |
+| TST-CRY-007 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Implementation_Plan_v1.0.md | \| `IMP-303` \| | 当前37项正式需求未为该测试主题分配独立Requirement ID；保留为权威来源范围内计划测试，不计入需求覆盖。 |
+| TST-FAULT-005 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Provider_SDK_Specification_v1.0_Draft.md | 无论成功、失败、取消或超时 | 当前37项正式需求未为该测试主题分配独立Requirement ID；保留为权威来源范围内计划测试，不计入需求覆盖。 |
+| TST-FAULT-006 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Storage_Engine_Architecture_v2.0.md | 失败、取消和超时都必须释放Snapshot | 当前37项正式需求未为该测试主题分配独立Requirement ID；保留为权威来源范围内计划测试，不计入需求覆盖。 |
+| TST-BLK-001 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Implementation_Plan_v1.0.md | \| `IMP-500` \| | 当前37项正式需求未为该测试主题分配独立Requirement ID；保留为权威来源范围内计划测试，不计入需求覆盖。 |
+| TST-BLK-002 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Implementation_Plan_v1.0.md | \| `IMP-503` \| | 当前37项正式需求未为该测试主题分配独立Requirement ID；保留为权威来源范围内计划测试，不计入需求覆盖。 |
+| TST-BLK-003 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Implementation_Plan_v1.0.md | \| `IMP-502` \| | 当前37项正式需求未为该测试主题分配独立Requirement ID；保留为权威来源范围内计划测试，不计入需求覆盖。 |
+| TST-BLK-004 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Implementation_Plan_v1.0.md | \| `IMP-502` \| | 当前37项正式需求未为该测试主题分配独立Requirement ID；保留为权威来源范围内计划测试，不计入需求覆盖。 |
+| TST-BLK-005 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Implementation_Plan_v1.0.md | \| `IMP-504` \| | 当前37项正式需求未为该测试主题分配独立Requirement ID；保留为权威来源范围内计划测试，不计入需求覆盖。 |
+| TST-BLK-006 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Implementation_Plan_v1.0.md | \| `IMP-504` \| | 当前37项正式需求未为该测试主题分配独立Requirement ID；保留为权威来源范围内计划测试，不计入需求覆盖。 |
+| TST-BLK-007 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Implementation_Plan_v1.0.md | \| `IMP-504` \| | 当前37项正式需求未为该测试主题分配独立Requirement ID；保留为权威来源范围内计划测试，不计入需求覆盖。 |
+| TST-BLK-008 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Implementation_Plan_v1.0.md | \| `IMP-500` \| | 当前37项正式需求未为该测试主题分配独立Requirement ID；保留为权威来源范围内计划测试，不计入需求覆盖。 |
+| TST-BLK-009 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Implementation_Plan_v1.0.md | \| `IMP-505` \| | 当前37项正式需求未为该测试主题分配独立Requirement ID；保留为权威来源范围内计划测试，不计入需求覆盖。 |
+| TST-SEC-001 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Binary_Format_Specification_v1.0_Draft.md | 恢复路径必须经过包含性检查 | 当前37项正式需求未为该测试主题分配独立Requirement ID；保留为权威来源范围内计划测试，不计入需求覆盖。 |
+| TST-SEC-002 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Binary_Format_Specification_v1.0_Draft.md | 符号链接/Reparse Point最后创建 | 当前37项正式需求未为该测试主题分配独立Requirement ID；保留为权威来源范围内计划测试，不计入需求覆盖。 |
+| TST-SEC-003 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Binary_Format_Specification_v1.0_Draft.md | Reader必须验证页内偏移、Key排序、重复Key策略和树层级 | 当前37项正式需求未为该测试主题分配独立Requirement ID；保留为权威来源范围内计划测试，不计入需求覆盖。 |
+| TST-SEC-005 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Binary_Format_Specification_v1.0_Draft.md | - 最大解压比例和单Chunk明文长度 | 当前37项正式需求未为该测试主题分配独立Requirement ID；保留为权威来源范围内计划测试，不计入需求覆盖。 |
+| TST-SEC-008 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Provider_SDK_Specification_v1.0_Draft.md | 块恢复接口必须暴露目标稳定ID | 当前37项正式需求未为该测试主题分配独立Requirement ID；保留为权威来源范围内计划测试，不计入需求覆盖。 |
 
 ## 5. 逐边证明语义
 
@@ -369,6 +376,12 @@
 | REQ-018 | TST-TRC-014 | NEGATIVE | Traceability Checker自测直接验证Registry、映射、来源、定位器或CLI强检。 |
 | REQ-018 | TST-TRC-015 | NEGATIVE | Traceability Checker自测直接验证Registry、映射、来源、定位器或CLI强检。 |
 | REQ-018 | TST-TRC-016 | NEGATIVE | Traceability Checker自测直接验证Registry、映射、来源、定位器或CLI强检。 |
+| REQ-019 | TST-ERR-001 | POSITIVE | 结构化诊断绑定唯一Error Registry ID与固定恢复语义字段。 |
+| REQ-019 | TST-ERR-002 | NEGATIVE | 保留的零ErrorId不能形成有效诊断或日志记录。 |
+| REQ-019 | TST-ERR-003 | POSITIVE | 确定性JSON Line证明结构化日志可机器处理且边界明确。 |
+| REQ-019 | TST-ERR-004 | SECURITY | 密码与密钥Canary在Secret的Debug和Display路径中保持脱敏。 |
+| REQ-019 | TST-ERR-005 | SECURITY | 底层I/O错误即使携带Canary文本也不会被二次输出。 |
+| REQ-019 | TST-ERR-006 | SECURITY | Wire Schema没有自由文本、路径、载荷或底层错误文本入口。 |
 
 ## 6. 旧测试库存（非正式追溯分母）
 

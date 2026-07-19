@@ -18,12 +18,14 @@ const EXPECTED_SOURCES: &[&str] = &[
     "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Implementation_Plan_v1.0.md",
     TEST_PLAN_PATH,
     "crates/nwb-format/tests/registry_tests.rs",
+    "crates/nwb-diagnostics/tests/diagnostics_contracts.rs",
     "tools/traceability-checker/tests/traceability_tests.rs",
     REGISTRY_PATH,
 ];
 
 const EXPECTED_CODE_ID_SOURCES: &[&str] = &[
     "crates/nwb-format/tests/registry_tests.rs",
+    "crates/nwb-diagnostics/tests/diagnostics_contracts.rs",
     "tools/traceability-checker/tests/traceability_tests.rs",
 ];
 
@@ -680,6 +682,9 @@ fn validate_test_denominator(
     let expected_traceability: BTreeSet<_> = (1..=16)
         .map(|number| format!("TST-TRC-{number:03}"))
         .collect();
+    let expected_diagnostics: BTreeSet<_> = (1..=6)
+        .map(|number| format!("TST-ERR-{number:03}"))
+        .collect();
     let registry_planned: BTreeSet<_> = EXPECTED_REGISTRY_PLANNED_TEST_IDS
         .iter()
         .map(|id| (*id).to_owned())
@@ -689,6 +694,7 @@ fn validate_test_denominator(
     let mut expected = planned_ids.clone();
     expected.extend(expected_registry.iter().cloned());
     expected.extend(expected_traceability.iter().cloned());
+    expected.extend(expected_diagnostics.iter().cloned());
     let actual: BTreeSet<_> = tests.keys().cloned().collect();
     if actual != expected {
         return semantic(format_set_difference(
@@ -697,9 +703,9 @@ fn validate_test_denominator(
             &actual,
         ));
     }
-    if actual.len() != 138 {
+    if actual.len() != 144 {
         return semantic(format!(
-            "formal test denominator is {}; expected 138",
+            "formal test denominator is {}; expected 144",
             actual.len()
         ));
     }
@@ -1149,7 +1155,7 @@ fn validate_test_dispositions(
             _ => unreachable!("traceability disposition was validated earlier"),
         }
     }
-    if mapped != 119 || scoped != 19 {
+    if mapped != 125 || scoped != 19 {
         return semantic(format!(
             "test disposition counts mismatch; mapped={mapped}, source_scoped={scoped}"
         ));
@@ -1185,6 +1191,17 @@ fn validate_exact_mappings(registry: &Registry) -> Result<(), CheckError> {
         (
             "REQ-014",
             &[("TST-REQ-008", "POSITIVE"), ("TST-REQ-009", "NEGATIVE")],
+        ),
+        (
+            "REQ-019",
+            &[
+                ("TST-ERR-001", "POSITIVE"),
+                ("TST-ERR-002", "NEGATIVE"),
+                ("TST-ERR-003", "POSITIVE"),
+                ("TST-ERR-004", "SECURITY"),
+                ("TST-ERR-005", "SECURITY"),
+                ("TST-ERR-006", "SECURITY"),
+            ],
         ),
         (
             "FMT-001",
@@ -1304,6 +1321,14 @@ fn expected_requirements() -> BTreeMap<String, (String, String, String)> {
         (
             "P0".to_owned(),
             "IMP-002".to_owned(),
+            implementation.to_owned(),
+        ),
+    );
+    expected.insert(
+        "REQ-019".to_owned(),
+        (
+            "P0".to_owned(),
+            "IMP-003".to_owned(),
             implementation.to_owned(),
         ),
     );
