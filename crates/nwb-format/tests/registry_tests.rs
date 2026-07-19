@@ -237,10 +237,7 @@ fn test_registry_snapshot() {
 
     lines.push("=== FeatureBit (u8) ===".into());
     let feature_bits: &[(&str, u8)] = &[
-        (
-            "COMPRESSION_ZSTD",
-            registry::feature_bit::COMPRESSION_ZSTD,
-        ),
+        ("COMPRESSION_ZSTD", registry::feature_bit::COMPRESSION_ZSTD),
         (
             "ENCRYPTION_AES256_GCM",
             registry::feature_bit::ENCRYPTION_AES256_GCM,
@@ -402,7 +399,10 @@ fn test_authoritative_toml_registry_snapshot() {
         ParsedRegistry::EnumSet(mut enums) => {
             assert_eq!(enums.len(), 2);
             assert_eq!(
-                enums.iter().map(|definition| definition.entries.len()).sum::<usize>(),
+                enums
+                    .iter()
+                    .map(|definition| definition.entries.len())
+                    .sum::<usize>(),
                 5
             );
             enums.sort_by(|left, right| left.canonical_name.cmp(&right.canonical_name));
@@ -427,10 +427,7 @@ fn test_authoritative_toml_registry_snapshot() {
                 for entry in definition.entries {
                     lines.push(format!(
                         "HeaderEnumEntry|enum={}|canonical={}|rust={}|value={}",
-                        definition.rust_name,
-                        entry.canonical_name,
-                        entry.rust_name,
-                        entry.value
+                        definition.rust_name, entry.canonical_name, entry.rust_name, entry.value
                     ));
                 }
             }
@@ -521,12 +518,13 @@ fn test_generated_registry_repr_and_constant_types() {
         .filter(|line| line.starts_with("#[repr("))
         .collect();
     assert_eq!(record_repr.as_slice(), &["#[repr(u16)]"]);
-    assert_eq!(record_type_source.matches("pub enum RecordType {").count(), 1);
+    assert_eq!(
+        record_type_source.matches("pub enum RecordType {").count(),
+        1
+    );
     assert_eq!(
         record_type_source
-            .matches(
-                "#[repr(u16)]\n#[allow(clippy::upper_case_acronyms)]\npub enum RecordType {",
-            )
+            .matches("#[repr(u16)]\n#[allow(clippy::upper_case_acronyms)]\npub enum RecordType {",)
             .count(),
         1
     );
@@ -548,10 +546,7 @@ fn test_generated_registry_repr_and_constant_types() {
         .lines()
         .filter(|line| line.starts_with("#[repr("))
         .collect();
-    assert_eq!(
-        header_repr.as_slice(),
-        &["#[repr(u8)]", "#[repr(u8)]"],
-    );
+    assert_eq!(header_repr.as_slice(), &["#[repr(u8)]", "#[repr(u8)]"],);
     assert_eq!(
         header_enums_source
             .matches("#[repr(u8)]\npub enum BackupKind {")

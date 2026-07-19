@@ -461,11 +461,7 @@ fn cli_exit_4_semantic_errors_match_for_check_and_generate() {
             DUPLICATE_RECORD_TYPES,
             "duplicate value",
         ),
-        (
-            "error_ids.toml",
-            DUPLICATE_ERROR_IDS,
-            "duplicate value",
-        ),
+        ("error_ids.toml", DUPLICATE_ERROR_IDS, "duplicate value"),
         (
             "feature_bits.toml",
             DUPLICATE_FEATURE_BITS,
