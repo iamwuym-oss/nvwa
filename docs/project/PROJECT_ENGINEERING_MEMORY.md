@@ -1,9 +1,9 @@
 # Nüwa Backup — Project Engineering Memory
 
-**Version:** 1.1.0
-**Last Updated:** 2026-07-19
+**Version:** 1.2.0
+**Last Updated:** 2026-07-25
 **Status:** CURRENT REFERENCE SNAPSHOT
-**Latest verified code commit:** `8b2a68b0528d37587636774eb76bc196b94dd59a`
+**Latest verified code commit:** `d08a92baf289a9ae4eb1cb6cb668fed474ccdc5c`
 
 ---
 
@@ -33,62 +33,67 @@ The verified baseline contains:
 - the IMP-002 machine-readable Traceability Registry;
 - a deterministic generated Requirements–Test Traceability Matrix;
 - a Rust `traceability-checker` that validates identifiers, authority sources, mappings, P0 coverage, implementation locators and Matrix drift;
-- CI enforcement of Format Registry freshness and requirements traceability before the remaining Rust quality gates.
+- the IMP-003 `nwb-diagnostics` crate with generated ErrorId identity, fixed structured fields, deterministic JSON Lines, sanitized writer failures and redacted `Secret`;
+- CI enforcement of Format Registry freshness, requirements traceability and dedicated Secret Canary tests before the remaining Rust quality gates.
 
-The IMP-002 traceability inventory contains 36 requirements, 138 formal tests and 141 mappings. Of the formal tests, 23 are `IMPLEMENTED` and 115 are `PLANNED`; 119 are `MAPPED` and 19 are `SOURCE_SCOPED`. The 115 planned tests have not been executed merely because they are registered.
+The current traceability inventory contains 37 requirements, 145 formal tests and 148 mappings. Of the formal tests, 30 are `IMPLEMENTED` and 115 are `PLANNED`. The 115 planned tests have not been executed merely because they are registered.
 
-The repository still does not contain a complete NWB Writer, Reader, Catalog, Chunk engine, Crypto subsystem, Verify/Salvage implementation, Provider implementation or recovery loop. Existing `src-tauri/` and `ui/` code contains old Repository-semantic residuals and remains outside the accepted IMP-000–002 storage-engine scope.
+The repository still does not contain a complete NWB Writer, Reader, Catalog, Chunk engine, Crypto subsystem, Verify/Salvage implementation, Provider implementation or recovery loop. Existing `src-tauri/` and `ui/` code contains old Repository-semantic residuals and remains outside the accepted IMP-000–003 storage-engine scope.
 
 ## 4. Gate and Work Package Status
 
 | Gate / IMP | Status | Evidence |
 |---|---|---|
-| GATE-0 | IN_PROGRESS | IMP-003–005 remain NOT_RUN |
+| GATE-0 | IN_PROGRESS | IMP-004–005 remain NOT_RUN |
 | IMP-000 | CLOSED / PASS / ACCEPTANCE MET | `e1f1adb`, run `29426443433` |
 | IMP-001 | CLOSED / PASS / ACCEPTANCE MET | `3bceb34`, run `29684903853`, EVD v1.2 |
 | IMP-002 | CLOSED / PASS / ACCEPTANCE MET | `8b2a68b`, run `29691731514`, EVD v1.0 |
-| IMP-003–005 | NOT_RUN | Execute only with bounded scope and role authorization |
+| IMP-003 | CLOSED / PASS / ACCEPTANCE MET | `d08a92b`, run `30184529945`, EVD v1.0 |
+| IMP-004–005 | NOT_RUN | Execute only with bounded scope and role authorization |
 | IMP-006–009 | NOT_DEFINED / NOT_STARTED | Must be defined before work starts |
 | IMP-100+ | FORBIDDEN UNTIL GATE-0 CLOSES | Post-GATE-0 work |
 
-## 5. IMP-002 Evidence Snapshot
+## 5. IMP-003 Evidence Snapshot
 
 | Item | Result |
 |---|---|
-| Implementation commit | `c61b17e4a6ade9499c36e77598c689240792109f` |
-| Final tested commit | `8b2a68b0528d37587636774eb76bc196b94dd59a` |
-| GitHub Actions | run `29691731514` — SUCCESS |
-| Ubuntu | job `88205559857` — all gates PASS |
-| Windows | job `88205559861` — all gates PASS |
+| Initial implementation | `539b796110782629cefa6d5680da2dab2c61d7ff` |
+| Review remediation | `2e262394d2410387e5878b3d98e4cb9687654f39` |
+| Final tested PR head | `d08a92baf289a9ae4eb1cb6cb668fed474ccdc5c` |
+| GitHub Actions | run `30184529945` — SUCCESS |
+| Ubuntu | job `89746726215` — all gates PASS |
+| Windows | job `89746726158` — all gates PASS |
 | Toolchain | rustc/cargo 1.97.1 |
-| Workspace tests | 188 passed / 0 failed / 0 ignored on both platforms |
-| Checker result | 36 requirements / 138 tests / 141 mappings / 33 P0 |
-| P0 coverage | 33 / 33 with positive and negative/fault/security roles |
-| P1 coverage | 3 / 3 with at least one test |
-| Code review | APPROVED after three rounds |
-| Independent validation | Final-commit dual-platform CI evidence verified; local Cargo NOT_RUN / BLOCKED_BY_ENVIRONMENT |
-| Recovery integrity | APPROVED; recovery execution N/A |
+| Workspace tests | 195 passed / 0 failed / 0 ignored on both platforms |
+| Secret Canary | 2 passed / 0 failed in a dedicated step on both platforms |
+| Checker result | 37 requirements / 145 tests / 148 mappings / 34 P0 |
+| IMP-003 contracts | `TST-ERR-001`–`TST-ERR-007` PASS |
+| Code review | CHANGES_REQUIRED, remediated, final APPROVED |
+| Final format delta review | APPROVED; no behavior, Schema, assertion or traceability change |
+| Independent validation | Final-commit dual-platform CI evidence verified |
+| Recovery integrity | N/A; no recovery execution or persistent format change |
 | Pull Request | PR #1 remains Draft and unmerged |
 
 ## 6. Current Evidence Sources
 
-- `Nuwa_NWB_Test_Result_Record_v1.2.md` — current result and acceptance record;
+- `Nuwa_NWB_Test_Result_Record_v1.3.md` — current result and acceptance record;
+- `IMP-003_EVD_Structured_Diagnostics_Evidence_v1.0.md` — current IMP-003 evidence;
 - `IMP-002_EVD_Requirements_Traceability_Evidence_v1.0.md` — current IMP-002 evidence;
 - `IMP-001_EVD_Test_Result_Evidence_v1.2.md` — current IMP-001 evidence;
-- Test Result Record v1.1 is historical/superseded;
+- Test Result Record v1.2 and v1.1 are historical/superseded;
 - the v1.0 IMP-001 EVD and v1.0 Test Result Record are historical, superseded malformed source files retained only for traceability.
 
 ## 7. Known Boundaries and Risks
 
 1. Traceability `PASS` proves registry consistency, coverage policy and CI enforcement; it does not prove planned product tests passed.
-2. 115 formal tests remain `PLANNED / NOT_RUN`; 19 of them are `SOURCE_SCOPED` rather than mapped to the current 36 requirements.
-3. Real Backup/Restore, fault injection, Verify/Salvage, block restore and BMR startup remain `N/A / NOT_RUN` for IMP-002.
+2. 115 formal tests remain `PLANNED / NOT_RUN`.
+3. Real Backup/Restore, fault injection, Verify/Salvage, block restore and BMR startup remain `N/A / NOT_RUN` for IMP-003.
 4. Bare `cargo build` does not parse Registry TOML; the CI sequence runs both dedicated checkers first.
 5. RIR-001 (`BackupKind Invalid=0`) and RIR-003 (non-atomic Registry `generate`) remain deferred under their prior rulings.
-6. UI production build defects are pre-existing and outside IMP-002.
+6. `Secret` evidence does not cover crash dumps, swap, process memory scans or future real key hierarchies; `TST-CRY-007` remains planned.
 7. Support certification, Format Freeze and product release remain `NOT_RUN / NOT_APPROVED`.
 8. PR #1 remains Draft and has not been merged.
 
 ## 8. Next Authorized Planning Point
 
-IMP-002 is closed. GATE-0 remains open because IMP-003–005 are still `NOT_RUN`. The next work package must be selected and authorized with a bounded scope; closing IMP-002 does not authorize IMP-003 or any post-GATE-0 implementation.
+IMP-003 is closed. GATE-0 remains open because IMP-004–005 are still `NOT_RUN`. The next work package must be selected and authorized with a bounded scope; closing IMP-003 does not authorize IMP-004, IMP-005 or any post-GATE-0 implementation.

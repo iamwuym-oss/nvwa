@@ -1,6 +1,6 @@
 # Nüwa Backup — Document Index
 
-**Last Updated:** 2026-07-19 (IMP-003 structured diagnostics implementation candidate)
+**Last Updated:** 2026-07-25 (IMP-003 evidence closure)
 
 ---
 
@@ -144,15 +144,17 @@ This directory contains the **current storage engine implementation authority**.
 | # | Document | Classification | Purpose |
 |---|----------|----------------|---------|
 | 7 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Requirements_Test_Traceability_Matrix_v1.0.md | GENERATED REFERENCE | Deterministic rendering of the Traceability Registry; do not edit manually |
-| 8 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Test_Result_Record_v1.2.md | REFERENCE / CURRENT | Current result record; IMP-002 closes at 8b2a68b / run 29691731514 |
+| 8 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Test_Result_Record_v1.3.md | REFERENCE / CURRENT | Current result record; IMP-003 closes at d08a92b / run 30184529945 |
 | 9 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/IMP-000_EVD_Build_Evidence_v1.0.md | REFERENCE / CURRENT FOR IMP-000 | IMP-000 evidence; closed, acceptance met |
 | 10 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/IMP-001_EVD_Test_Result_Evidence_v1.2.md | REFERENCE / CURRENT FOR IMP-001 | IMP-001 evidence; CLOSED / PASS / ACCEPTANCE MET at 3bceb34 / run 29684903853 |
 | 11 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/IMP-002_EVD_Requirements_Traceability_Evidence_v1.0.md | REFERENCE / CURRENT FOR IMP-002 | IMP-002 evidence; CLOSED / PASS / ACCEPTANCE MET at 8b2a68b / run 29691731514 |
-| 12 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Engineering_Document_Set_README_v1.0.md | REFERENCE / CURRENT | Document set README and reading order |
-| 13 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Engineering_Document_Set_Manifest_v1.0.md | REFERENCE / CURRENT | Current 17-file SHA-256 inventory; manifest excludes itself |
-| 14 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Test_Result_Record_v1.1.md | HISTORICAL / SUPERSEDED | Replaced by Test Result Record v1.2; retains the accepted IMP-001 snapshot |
-| 15 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Test_Result_Record_v1.0.md | HISTORICAL / SUPERSEDED | Malformed source retained for traceability; contains control bytes and old d550907 state; never cite as current |
-| 16 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/IMP-001_EVD_Test_Result_Evidence_v1.0.md | HISTORICAL / SUPERSEDED | Malformed source retained for traceability; stale state; never cite as current |
+| 12 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/IMP-003_EVD_Structured_Diagnostics_Evidence_v1.0.md | REFERENCE / CURRENT FOR IMP-003 | IMP-003 evidence; CLOSED / PASS / ACCEPTANCE MET at d08a92b / run 30184529945 |
+| 13 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Engineering_Document_Set_README_v1.0.md | REFERENCE / CURRENT | Document set README and reading order |
+| 14 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Engineering_Document_Set_Manifest_v1.0.md | REFERENCE / CURRENT | Current 19-file SHA-256 inventory; manifest excludes itself |
+| 15 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Test_Result_Record_v1.2.md | HISTORICAL / SUPERSEDED | Replaced by Test Result Record v1.3; retains the accepted IMP-002 snapshot |
+| 16 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Test_Result_Record_v1.1.md | HISTORICAL / SUPERSEDED | Replaced by Test Result Record v1.2; retains the accepted IMP-001 snapshot |
+| 17 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Test_Result_Record_v1.0.md | HISTORICAL / SUPERSEDED | Malformed source retained for traceability; contains control bytes and old d550907 state; never cite as current |
+| 18 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/IMP-001_EVD_Test_Result_Evidence_v1.0.md | HISTORICAL / SUPERSEDED | Malformed source retained for traceability; stale state; never cite as current |
 
 ---
 
@@ -164,7 +166,7 @@ This directory contains the **current storage engine implementation authority**.
 | **IMP-000** (Workspace) | CLOSED / PASS / ACCEPTANCE MET |
 | **IMP-001** (Format Registry) | CLOSED / PASS / ACCEPTANCE MET — Generator remediation closed at 3bceb34, run 29684903853, 172/172 on Windows and Ubuntu |
 | **IMP-002** (Requirements–Test Traceability Matrix) | CLOSED / PASS / ACCEPTANCE MET — final tested commit 8b2a68b, run 29691731514, 188/188 on Windows and Ubuntu |
-| **IMP-003** | IMPLEMENTED / PENDING_CI_AND_REVIEW — candidate code and tests exist; no acceptance claim |
+| **IMP-003** (Structured Diagnostics) | CLOSED / PASS / ACCEPTANCE MET — final PR head d08a92b, run 30184529945, 195/195 plus Canary 2/2 on Windows and Ubuntu |
 | **IMP-004–005** | NOT_RUN — remaining defined GATE-0 work packages |
 | **IMP-100 and later** | NOT_STARTED / FORBIDDEN UNTIL GATE-0 — must not be initiated before GATE-0 is closed |
 
@@ -188,7 +190,7 @@ This directory contains the **current storage engine implementation authority**.
 ## Revision
 
 - **Version:** 1.0
-- **Task:** IMP-003 structured diagnostics implementation candidate
+- **Task:** IMP-003 structured diagnostics evidence closure
 - **Purpose:** Register the traceability authority, generated Matrix, current evidence and actual Gate status
 - **Previous update:** 2026-07-19 (IMP-001 Generator Remediation evidence closure)
 - **Closure IMP-000:** IMP-000-EVIDENCE-CLOSURE-1 closed IMP-000 as PASS/ACCEPTANCE MET with full CI evidence (e1f1adb, run 29426443433)
@@ -196,5 +198,5 @@ This directory contains the **current storage engine implementation authority**.
 - **Historical reopen checkpoint (v1.1, superseded):** IMP-001 was reopened by Generator Remediation (RIR-005, 2026-07-18). That intermediate snapshot is retained only in the historical EVD and is not a current status source.
 - **Closure IMP-001 (v1.2):** Generator remediation closed at 3bceb34 with Code Review APPROVED, Validation PASS (172/172 on Windows and Ubuntu), Recovery Integrity APPROVED and CI run 29684903853 SUCCESS. Current evidence is EVD v1.2 and TRR v1.1. Old malformed v1.0 records are HISTORICAL / SUPERSEDED.
 - **Closure IMP-002:** Requirements–test traceability closed at 8b2a68b with final Code Review APPROVED, dual-platform CI 188/188 PASS, Recovery Integrity APPROVED and CI run 29691731514 SUCCESS. Current evidence is IMP-002 EVD v1.0 and TRR v1.2; TRR v1.1 is historical/superseded.
-- **IMP-003 candidate:** Structured diagnostics, secret-safe logging, seven TST-ERR contracts and REQ-019 traceability are implemented locally; remediation CI, independent re-review, validation and evidence closure remain pending.
+- **Closure IMP-003:** Structured diagnostics closed at PR head d08a92b with independent remediation review APPROVED, final rustfmt delta review APPROVED, dual-platform CI 195/195 plus Canary 2/2 PASS and run 30184529945 SUCCESS. Current evidence is IMP-003 EVD v1.0 and TRR v1.3; TRR v1.2 is historical/superseded.
 - **Maintenance:** Update when documents are added, removed, reclassified, or when project gate status changes

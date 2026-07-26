@@ -1,6 +1,8 @@
 # Nüwa NWB Test Result and Acceptance Record v1.2
 
-**记录状态：** CURRENT
+> **HISTORICAL / SUPERSEDED：** 本记录已由 `Nuwa_NWB_Test_Result_Record_v1.3.md` 取代。正文保留 IMP-002 关闭时的已验收快照，不得作为当前项目状态来源。
+
+**记录状态：** HISTORICAL / SUPERSEDED
 **更新日期：** 2026-07-19
 **项目状态：** GATE-0 IN_PROGRESS；IMP-000、IMP-001、IMP-002 CLOSED / PASS / ACCEPTANCE MET
 
