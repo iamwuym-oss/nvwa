@@ -66,13 +66,10 @@ fn structured_error_uses_registry_identity() {
             RecoveryImpact::None,
         )
         .expect("a non-reserved ErrorId must build");
-        let line = LogEvent::from_diagnostic(
-            1_721_234_567_890,
-            EventKind::OperationFailed,
-            diagnostic,
-        )
-        .to_json_line()
-        .expect("event must encode");
+        let line =
+            LogEvent::from_diagnostic(1_721_234_567_890, EventKind::OperationFailed, diagnostic)
+                .to_json_line()
+                .expect("event must encode");
         let value: Value = serde_json::from_slice(&line).expect("JSON line must parse");
 
         assert_eq!(value["diagnostic"]["error_name"], expected_name);
@@ -222,13 +219,9 @@ fn diagnostic_event_derives_severity_and_stage() {
         RecoveryImpact::BlocksCommit,
     )
     .expect("a non-reserved ErrorId must build");
-    let line = LogEvent::from_diagnostic(
-        1_721_234_567_890,
-        EventKind::OperationFailed,
-        diagnostic,
-    )
-    .to_json_line()
-    .expect("event must encode");
+    let line = LogEvent::from_diagnostic(1_721_234_567_890, EventKind::OperationFailed, diagnostic)
+        .to_json_line()
+        .expect("event must encode");
     let value: Value = serde_json::from_slice(&line).expect("JSON line must parse");
 
     assert_eq!(value["level"], value["diagnostic"]["severity"]);

@@ -440,9 +440,7 @@ impl LogWriteError {
 impl fmt::Display for LogWriteError {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self.kind {
-            LogWriteErrorKind::Encoding => {
-                formatter.write_str("structured log encoding failed")
-            }
+            LogWriteErrorKind::Encoding => formatter.write_str("structured log encoding failed"),
             LogWriteErrorKind::Io(_) => formatter.write_str("structured log write failed"),
         }
     }
