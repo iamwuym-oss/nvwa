@@ -168,7 +168,7 @@ This directory contains the **current storage engine implementation authority**.
 | **IMP-001** (Format Registry) | CLOSED / PASS / ACCEPTANCE MET — Generator remediation closed at 3bceb34, run 29684903853, 172/172 on Windows and Ubuntu |
 | **IMP-002** (Requirements–Test Traceability Matrix) | CLOSED / PASS / ACCEPTANCE MET — final tested commit 8b2a68b, run 29691731514, 188/188 on Windows and Ubuntu |
 | **IMP-003** (Structured Diagnostics) | CLOSED / PASS / ACCEPTANCE MET — final PR head d08a92b, run 30184529945, 195/195 plus Canary 2/2 on Windows and Ubuntu |
-| **IMP-004** (Deterministic Fixture Generator) | IN_PROGRESS — Windows local validation PASS (independent code review APPROVED, Rust tests/builds PASS); Linux and GitHub CI NOT_RUN |
+| **IMP-004** (Deterministic Fixture Generator) | CLOSED / PASS / ACCEPTANCE MET — commit `f89cad8`, run `30430862143` |
 | **IMP-005** | NOT_RUN — remaining defined GATE-0 work package |
 | **IMP-100 and later** | NOT_STARTED / FORBIDDEN UNTIL GATE-0 — must not be initiated before GATE-0 is closed |
 

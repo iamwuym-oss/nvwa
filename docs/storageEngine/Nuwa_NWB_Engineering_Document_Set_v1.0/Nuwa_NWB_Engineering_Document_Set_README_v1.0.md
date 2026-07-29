@@ -178,7 +178,7 @@ Codex执行本项目时必须遵守：
 | IMP-001 (Format Registry) | CLOSED / PASS / ACCEPTANCE MET；最终被测提交 3bceb34，CI run 29684903853，Windows/Ubuntu 172/172 PASS |
 | IMP-002 (Requirements–Test Traceability) | CLOSED / PASS / ACCEPTANCE MET；最终被测提交 8b2a68b，CI run 29691731514，Windows/Ubuntu 188/188 PASS |
 | IMP-003 (Structured Diagnostics) | CLOSED / PASS / ACCEPTANCE MET；最终被测 PR head d08a92b，CI run 30184529945，Windows/Ubuntu 195/195 与 Canary 2/2 PASS |
-| IMP-004 (Deterministic Fixture Generator) | IN_PROGRESS — Windows本地验证已通过（独立审查APPROVED，Rust门禁全部PASS）；Linux和CI NOT_RUN |
+| IMP-004 (Deterministic Fixture Generator) | CLOSED / PASS / ACCEPTANCE MET — commit `f89cad8`, run `30430862143` |
 | IMP-005 | NOT_RUN |
 
 - IMP-000至IMP-003均已关闭为CLOSED / PASS / ACCEPTANCE MET；GATE-0仍为IN_PROGRESS

@@ -1,9 +1,9 @@
 # Nüwa Backup — Project Engineering Memory
 
-**Version:** 1.2.0
-**Last Updated:** 2026-07-25
+**Version:** 1.3.0
+**Last Updated:** 2026-07-29
 **Status:** CURRENT REFERENCE SNAPSHOT
-**Latest verified code commit:** `d08a92baf289a9ae4eb1cb6cb668fed474ccdc5c`
+**Latest verified code commit:** `f89cad8faad574fe27a2709522776c31307dc52a`
 
 ---
 
@@ -36,7 +36,7 @@ The verified baseline contains:
 - the IMP-003 `nwb-diagnostics` crate with generated ErrorId identity, fixed structured fields, deterministic JSON Lines, sanitized writer failures and redacted `Secret`;
 - CI enforcement of Format Registry freshness, requirements traceability and dedicated Secret Canary tests before the remaining Rust quality gates.
 
-The current working-tree traceability inventory for IMP-004 contains 38 requirements, 150 formal tests and 153 mappings. Of the formal tests, 35 are `IMPLEMENTED` and 115 are `PLANNED`. These IMP-004 changes are not committed, independently reviewed or accepted; the 115 planned tests have not been executed merely because they are registered.
+IMP-004 committed as `f89cad8`. The committed traceability inventory contains 38 requirements, 150 formal tests and 153 mappings (35 P0). Of the formal tests, 35 are `IMPLEMENTED` and 115 are `PLANNED`. The 115 planned tests have not been executed merely because they are registered.
 
 The repository still does not contain a complete NWB Writer, Reader, Catalog, Chunk engine, Crypto subsystem, Verify/Salvage implementation, Provider implementation or recovery loop. Existing `src-tauri/` and `ui/` code contains old Repository-semantic residuals and remains outside the accepted IMP-000–003 storage-engine scope.
 
@@ -49,7 +49,7 @@ The repository still does not contain a complete NWB Writer, Reader, Catalog, Ch
 | IMP-001 | CLOSED / PASS / ACCEPTANCE MET | `3bceb34`, run `29684903853`, EVD v1.2 |
 | IMP-002 | CLOSED / PASS / ACCEPTANCE MET | `8b2a68b`, run `29691731514`, EVD v1.0 |
 | IMP-003 | CLOSED / PASS / ACCEPTANCE MET | `d08a92b`, run `30184529945`, EVD v1.0 |
-| IMP-004 | IN_PROGRESS | Windows local validation PASS (independent code review APPROVED, all Rust gates PASS); Linux and GitHub CI NOT_RUN |
+| IMP-004 | CLOSED / PASS / ACCEPTANCE MET | `f89cad8`, run `30430862143` |
 | IMP-005 | NOT_RUN | Execute only with bounded scope and role authorization |
 | IMP-006–009 | NOT_DEFINED / NOT_STARTED | Must be defined before work starts |
 | IMP-100+ | FORBIDDEN UNTIL GATE-0 CLOSES | Post-GATE-0 work |
@@ -75,10 +75,47 @@ The repository still does not contain a complete NWB Writer, Reader, Catalog, Ch
 | Recovery integrity | N/A; no recovery execution or persistent format change |
 | Pull Request | PR #1 remains Draft and unmerged |
 
+
+## 5b. IMP-004 Evidence Snapshot
+
+| Item | Result |
+|---|---|
+| Implementation commit | `f89cad8faad574fe27a2709522776c31307dc52a` |
+| Commit title | `feat(storage): add deterministic fixture generator` |
+| GitHub Actions Workflow | `NWB Workspace CI` |
+| Implementation CI Run | `30430862143` |
+| Implementation CI URL | https://github.com/iamwuym-oss/nvwa/actions/runs/30430862143 |
+| Windows Job | `90507558164` — all gates PASS (4m00s) |
+| Ubuntu Job | `90507558201` — all gates PASS (2m03s) |
+| Toolchain (Windows) | rustc/cargo 1.97.1, target x86_64-pc-windows-msvc |
+| Toolchain (Ubuntu) | rustc/cargo 1.97.1, target x86_64-unknown-linux-gnu |
+| Workspace tests | 200 passed / 0 failed / 0 ignored on both platforms |
+| Secret Canary | 2 passed / 0 failed in a dedicated step on both platforms |
+| Checker result | 38 requirements / 150 tests / 153 mappings / 35 P0 |
+| Fixed fixture root hash | `8ce810bd57473b4af044855996291c7ba34860606b6f6ae9a3e98aa774bc7222` |
+| TST-FIX-001 (determinism) | PASS on both platforms |
+| TST-FIX-002 (approved dataset) | PASS on both platforms |
+| TST-FIX-003 (content tamper) | PASS on both platforms |
+| TST-FIX-004 (extra files) | PASS on both platforms |
+| TST-FIX-005 (path traversal + co-tamper) | PASS on both platforms |
+| Format check | PASS on both platforms |
+| Format Registry check | PASS on both platforms |
+| Requirements traceability check | PASS on both platforms |
+| Secret canary check | PASS on both platforms |
+| Clippy with `-D warnings` | PASS on both platforms |
+| Build (debug) | PASS on both platforms |
+| Build (release) | PASS on both platforms |
+| Independent code review | APPROVED at IMP-004-LOCAL-VALIDATION-1 |
+| Independent closure review | APPROVED_FOR_CLOSURE at IMP-004-FINAL-CLOSURE-REVIEW-1 |
+| Fixture CLI hash evidence | Pre-commit Windows local validation; verified by TST-FIX-001/002 in CI |
+| PR #1 | Remains Draft and unmerged |
+| IMP-005 | NOT_RUN |
+
 ## 6. Current Evidence Sources
 
 - `Nuwa_NWB_Test_Result_Record_v1.3.md` — current result and acceptance record;
 - `IMP-003_EVD_Structured_Diagnostics_Evidence_v1.0.md` — current IMP-003 evidence;
+- Implementation commit `f89cad8` with IMP-004 CI run `30430862143` — current IMP-004 evidence (no separate EVD created; evidence is in committed CI, ENGINEERING_MEMORY, Manifest and closed DOCUMENT_INDEX);
 - `IMP-002_EVD_Requirements_Traceability_Evidence_v1.0.md` — current IMP-002 evidence;
 - `IMP-001_EVD_Test_Result_Evidence_v1.2.md` — current IMP-001 evidence;
 - Test Result Record v1.2 and v1.1 are historical/superseded;
@@ -87,7 +124,7 @@ The repository still does not contain a complete NWB Writer, Reader, Catalog, Ch
 ## 7. Known Boundaries and Risks
 
 1. Traceability `PASS` proves registry consistency, coverage policy and CI enforcement; it does not prove planned product tests passed.
-2. 115 formal tests remain `PLANNED / NOT_RUN`.
+2. 115 formal tests remain `PLANNED / NOT_RUN` (IMP-004 only added 5 IMPLEMENTED Fixture tests; the 115 figure is the same denominator from IMP-002/003).
 3. Real Backup/Restore, fault injection, Verify/Salvage, block restore and BMR startup remain `N/A / NOT_RUN` for IMP-003.
 4. Bare `cargo build` does not parse Registry TOML; the CI sequence runs both dedicated checkers first.
 5. RIR-001 (`BackupKind Invalid=0`) and RIR-003 (non-atomic Registry `generate`) remain deferred under their prior rulings.
@@ -97,4 +134,4 @@ The repository still does not contain a complete NWB Writer, Reader, Catalog, Ch
 
 ## 8. Next Authorized Planning Point
 
-IMP-003 is closed. IMP-004 reimplementation is authorized and present only in the current working tree. It must not be marked PASS or CLOSED before independent review, Rust validation, dual-platform CI and evidence closure. Commit, Push and Merge remain unauthorized. IMP-005 and all post-GATE-0 implementation remain unauthorized.
+IMP-003 and IMP-004 are CLOSED. GATE-0 remains IN_PROGRESS because IMP-005 is NOT_RUN. The next work package must be selected and authorized with a bounded scope. IMP-005 and all post-GATE-0 implementation remain unauthorized.
