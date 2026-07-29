@@ -36,7 +36,7 @@ The verified baseline contains:
 - the IMP-003 `nwb-diagnostics` crate with generated ErrorId identity, fixed structured fields, deterministic JSON Lines, sanitized writer failures and redacted `Secret`;
 - CI enforcement of Format Registry freshness, requirements traceability and dedicated Secret Canary tests before the remaining Rust quality gates.
 
-The current traceability inventory contains 37 requirements, 145 formal tests and 148 mappings. Of the formal tests, 30 are `IMPLEMENTED` and 115 are `PLANNED`. The 115 planned tests have not been executed merely because they are registered.
+The current working-tree traceability inventory for IMP-004 contains 38 requirements, 150 formal tests and 153 mappings. Of the formal tests, 35 are `IMPLEMENTED` and 115 are `PLANNED`. These IMP-004 changes are not committed, independently reviewed or accepted; the 115 planned tests have not been executed merely because they are registered.
 
 The repository still does not contain a complete NWB Writer, Reader, Catalog, Chunk engine, Crypto subsystem, Verify/Salvage implementation, Provider implementation or recovery loop. Existing `src-tauri/` and `ui/` code contains old Repository-semantic residuals and remains outside the accepted IMP-000–003 storage-engine scope.
 
@@ -44,12 +44,13 @@ The repository still does not contain a complete NWB Writer, Reader, Catalog, Ch
 
 | Gate / IMP | Status | Evidence |
 |---|---|---|
-| GATE-0 | IN_PROGRESS | IMP-004–005 remain NOT_RUN |
+| GATE-0 | IN_PROGRESS | IMP-004 is implemented locally but not accepted; IMP-005 remains NOT_RUN |
 | IMP-000 | CLOSED / PASS / ACCEPTANCE MET | `e1f1adb`, run `29426443433` |
 | IMP-001 | CLOSED / PASS / ACCEPTANCE MET | `3bceb34`, run `29684903853`, EVD v1.2 |
 | IMP-002 | CLOSED / PASS / ACCEPTANCE MET | `8b2a68b`, run `29691731514`, EVD v1.0 |
 | IMP-003 | CLOSED / PASS / ACCEPTANCE MET | `d08a92b`, run `30184529945`, EVD v1.0 |
-| IMP-004–005 | NOT_RUN | Execute only with bounded scope and role authorization |
+| IMP-004 | IN_PROGRESS | Windows local validation PASS (independent code review APPROVED, all Rust gates PASS); Linux and GitHub CI NOT_RUN |
+| IMP-005 | NOT_RUN | Execute only with bounded scope and role authorization |
 | IMP-006–009 | NOT_DEFINED / NOT_STARTED | Must be defined before work starts |
 | IMP-100+ | FORBIDDEN UNTIL GATE-0 CLOSES | Post-GATE-0 work |
 
@@ -96,4 +97,4 @@ The repository still does not contain a complete NWB Writer, Reader, Catalog, Ch
 
 ## 8. Next Authorized Planning Point
 
-IMP-003 is closed. GATE-0 remains open because IMP-004–005 are still `NOT_RUN`. The next work package must be selected and authorized with a bounded scope; closing IMP-003 does not authorize IMP-004, IMP-005 or any post-GATE-0 implementation.
+IMP-003 is closed. IMP-004 reimplementation is authorized and present only in the current working tree. It must not be marked PASS or CLOSED before independent review, Rust validation, dual-platform CI and evidence closure. Commit, Push and Merge remain unauthorized. IMP-005 and all post-GATE-0 implementation remain unauthorized.

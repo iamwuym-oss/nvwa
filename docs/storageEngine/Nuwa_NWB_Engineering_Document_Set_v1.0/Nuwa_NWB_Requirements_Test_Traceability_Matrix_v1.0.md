@@ -6,15 +6,15 @@
 
 | 指标 | 数量 |
 |---|---:|
-| 正式需求 | 37 |
-| P0需求 | 34 |
+| 正式需求 | 38 |
+| P0需求 | 35 |
 | P1需求 | 3 |
-| 正式测试 | 145 |
-| 已实现测试 | 30 |
+| 正式测试 | 150 |
+| 已实现测试 | 35 |
 | 计划测试 | 115 |
-| 已映射测试 | 126 |
+| 已映射测试 | 131 |
 | Source-scoped测试 | 19 |
-| 唯一映射 | 148 |
+| 唯一映射 | 153 |
 
 ## 2. 需求到测试
 
@@ -57,6 +57,7 @@
 | REQ-017 | P0 | IMP-001 | Format Registry ID唯一且生成一致 | TST-REG-001, TST-REG-002, TST-REG-003, TST-REG-004, TST-REG-005, TST-REG-006, TST-REG-007 |
 | REQ-018 | P0 | IMP-002 | P0需求100%映射且CI拒绝孤儿 | TST-TRC-001, TST-TRC-002, TST-TRC-003, TST-TRC-004, TST-TRC-005, TST-TRC-006, TST-TRC-007, TST-TRC-008, TST-TRC-009, TST-TRC-010, TST-TRC-011, TST-TRC-012, TST-TRC-013, TST-TRC-014, TST-TRC-015, TST-TRC-016 |
 | REQ-019 | P0 | IMP-003 | 结构化错误与日志不得泄露密钥或密码 | TST-ERR-001, TST-ERR-002, TST-ERR-003, TST-ERR-004, TST-ERR-005, TST-ERR-006, TST-ERR-007 |
+| REQ-020 | P0 | IMP-004 | 测试Fixture可重复且Manifest固定并可自校验 | TST-FIX-001, TST-FIX-002, TST-FIX-003, TST-FIX-004, TST-FIX-005 |
 
 ## 3. 测试登记
 
@@ -119,6 +120,11 @@
 | TST-FILE-001 | POSITIVE | PLANNED | MAPPED | FILE-01 Full | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md |
 | TST-FILE-002 | POSITIVE | PLANNED | MAPPED | 删除外部Cache后浏览 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md |
 | TST-FILE-003 | POSITIVE | PLANNED | MAPPED | Full全量恢复 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md |
+| TST-FIX-001 | POSITIVE | IMPLEMENTED | MAPPED | 相同Seed与Dataset版本生成相同Manifest | tools/fixture-generator/tests/fixture_contracts.rs |
+| TST-FIX-002 | POSITIVE | IMPLEMENTED | MAPPED | 批准的边界与路径数据集生成后可自校验 | tools/fixture-generator/tests/fixture_contracts.rs |
+| TST-FIX-003 | NEGATIVE | IMPLEMENTED | MAPPED | 文件内容篡改被自校验拒绝 | tools/fixture-generator/tests/fixture_contracts.rs |
+| TST-FIX-004 | NEGATIVE | IMPLEMENTED | MAPPED | 非空生成目标与额外文件被拒绝 | tools/fixture-generator/tests/fixture_contracts.rs |
+| TST-FIX-005 | SECURITY | IMPLEMENTED | MAPPED | 危险路径与Manifest数据协同篡改被拒绝 | tools/fixture-generator/tests/fixture_contracts.rs |
 | TST-FMT-001 | POSITIVE | PLANNED | MAPPED | Header编码解码 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md |
 | TST-FMT-002 | NEGATIVE | PLANNED | MAPPED | 坏Magic/CRC/SHA | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md |
 | TST-FMT-003 | NEGATIVE | PLANNED | MAPPED | 未知Required Feature | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md |
@@ -384,6 +390,11 @@
 | REQ-019 | TST-ERR-005 | SECURITY | 底层I/O错误即使携带Canary文本也不会被二次输出。 |
 | REQ-019 | TST-ERR-006 | SECURITY | Wire Schema没有自由文本、路径、载荷或底层错误文本入口。 |
 | REQ-019 | TST-ERR-007 | NEGATIVE | 诊断事件从Diagnostic派生顶层严重度与阶段，消除同一日志内的冲突语义。 |
+| REQ-020 | TST-FIX-001 | POSITIVE | 两次独立生成的结构与Manifest字节一致，直接证明确定性。 |
+| REQ-020 | TST-FIX-002 | POSITIVE | 批准的数据边界与路径覆盖生成后由真实验证器自校验。 |
+| REQ-020 | TST-FIX-003 | NEGATIVE | 内容篡改导致长度或SHA-256不一致并明确失败。 |
+| REQ-020 | TST-FIX-004 | NEGATIVE | 非空目标不被覆盖，额外文件不能静默进入Fixture。 |
+| REQ-020 | TST-FIX-005 | SECURITY | 危险路径与同时篡改数据及Manifest均不能绕过批准数据集校验。 |
 
 ## 6. 旧测试库存（非正式追溯分母）
 

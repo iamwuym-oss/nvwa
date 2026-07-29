@@ -19,6 +19,7 @@ const EXPECTED_SOURCES: &[&str] = &[
     TEST_PLAN_PATH,
     "crates/nwb-format/tests/registry_tests.rs",
     "crates/nwb-diagnostics/tests/diagnostics_contracts.rs",
+    "tools/fixture-generator/tests/fixture_contracts.rs",
     "tools/traceability-checker/tests/traceability_tests.rs",
     REGISTRY_PATH,
 ];
@@ -26,6 +27,7 @@ const EXPECTED_SOURCES: &[&str] = &[
 const EXPECTED_CODE_ID_SOURCES: &[&str] = &[
     "crates/nwb-format/tests/registry_tests.rs",
     "crates/nwb-diagnostics/tests/diagnostics_contracts.rs",
+    "tools/fixture-generator/tests/fixture_contracts.rs",
     "tools/traceability-checker/tests/traceability_tests.rs",
 ];
 
@@ -685,6 +687,9 @@ fn validate_test_denominator(
     let expected_diagnostics: BTreeSet<_> = (1..=7)
         .map(|number| format!("TST-ERR-{number:03}"))
         .collect();
+    let expected_fixture: BTreeSet<_> = (1..=5)
+        .map(|number| format!("TST-FIX-{number:03}"))
+        .collect();
     let registry_planned: BTreeSet<_> = EXPECTED_REGISTRY_PLANNED_TEST_IDS
         .iter()
         .map(|id| (*id).to_owned())
@@ -695,6 +700,7 @@ fn validate_test_denominator(
     expected.extend(expected_registry.iter().cloned());
     expected.extend(expected_traceability.iter().cloned());
     expected.extend(expected_diagnostics.iter().cloned());
+    expected.extend(expected_fixture.iter().cloned());
     let actual: BTreeSet<_> = tests.keys().cloned().collect();
     if actual != expected {
         return semantic(format_set_difference(
@@ -703,9 +709,9 @@ fn validate_test_denominator(
             &actual,
         ));
     }
-    if actual.len() != 145 {
+    if actual.len() != 150 {
         return semantic(format!(
-            "formal test denominator is {}; expected 145",
+            "formal test denominator is {}; expected 150",
             actual.len()
         ));
     }
@@ -1155,7 +1161,7 @@ fn validate_test_dispositions(
             _ => unreachable!("traceability disposition was validated earlier"),
         }
     }
-    if mapped != 126 || scoped != 19 {
+    if mapped != 131 || scoped != 19 {
         return semantic(format!(
             "test disposition counts mismatch; mapped={mapped}, source_scoped={scoped}"
         ));
@@ -1330,6 +1336,14 @@ fn expected_requirements() -> BTreeMap<String, (String, String, String)> {
         (
             "P0".to_owned(),
             "IMP-003".to_owned(),
+            implementation.to_owned(),
+        ),
+    );
+    expected.insert(
+        "REQ-020".to_owned(),
+        (
+            "P0".to_owned(),
+            "IMP-004".to_owned(),
             implementation.to_owned(),
         ),
     );

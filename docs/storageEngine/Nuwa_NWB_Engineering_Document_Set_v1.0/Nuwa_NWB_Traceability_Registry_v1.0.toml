@@ -9,12 +9,14 @@ source_allowlist = [
   "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md",
   "crates/nwb-format/tests/registry_tests.rs",
   "crates/nwb-diagnostics/tests/diagnostics_contracts.rs",
+  "tools/fixture-generator/tests/fixture_contracts.rs",
   "tools/traceability-checker/tests/traceability_tests.rs",
   "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Traceability_Registry_v1.0.toml",
 ]
 code_test_id_sources = [
   "crates/nwb-format/tests/registry_tests.rs",
   "crates/nwb-diagnostics/tests/diagnostics_contracts.rs",
+  "tools/fixture-generator/tests/fixture_contracts.rs",
   "tools/traceability-checker/tests/traceability_tests.rs",
 ]
 
@@ -193,6 +195,15 @@ priority = "P0"
 source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Implementation_Plan_v1.0.md"
 anchor = "| `IMP-003` |"
 excerpt = "建立结构化错误和日志 | 无密钥/密码泄露"
+
+[[requirement]]
+id = "REQ-020"
+source_id = "IMP-004"
+title = "测试Fixture可重复且Manifest固定并可自校验"
+priority = "P0"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Implementation_Plan_v1.0.md"
+anchor = "| `IMP-004` |"
+excerpt = "建立测试Fixture生成器 | Fixture可重复、Manifest固定"
 
 [[requirement]]
 id = "FMT-001"
@@ -1605,6 +1616,56 @@ anchor = "// TST-ERR-007:"
 excerpt = "fn diagnostic_event_derives_severity_and_stage"
 
 [[test]]
+id = "TST-FIX-001"
+title = "相同Seed与Dataset版本生成相同Manifest"
+kind = "POSITIVE"
+status = "IMPLEMENTED"
+traceability = "MAPPED"
+source = "tools/fixture-generator/tests/fixture_contracts.rs"
+anchor = "// TST-FIX-001:"
+excerpt = "fn deterministic_generation_produces_identical_manifests"
+
+[[test]]
+id = "TST-FIX-002"
+title = "批准的边界与路径数据集生成后可自校验"
+kind = "POSITIVE"
+status = "IMPLEMENTED"
+traceability = "MAPPED"
+source = "tools/fixture-generator/tests/fixture_contracts.rs"
+anchor = "// TST-FIX-002:"
+excerpt = "fn generated_dataset_covers_approved_cases_and_self_verifies"
+
+[[test]]
+id = "TST-FIX-003"
+title = "文件内容篡改被自校验拒绝"
+kind = "NEGATIVE"
+status = "IMPLEMENTED"
+traceability = "MAPPED"
+source = "tools/fixture-generator/tests/fixture_contracts.rs"
+anchor = "// TST-FIX-003:"
+excerpt = "fn verification_rejects_content_tampering"
+
+[[test]]
+id = "TST-FIX-004"
+title = "非空生成目标与额外文件被拒绝"
+kind = "NEGATIVE"
+status = "IMPLEMENTED"
+traceability = "MAPPED"
+source = "tools/fixture-generator/tests/fixture_contracts.rs"
+anchor = "// TST-FIX-004:"
+excerpt = "fn generation_and_verification_reject_unexpected_files"
+
+[[test]]
+id = "TST-FIX-005"
+title = "危险路径与Manifest数据协同篡改被拒绝"
+kind = "SECURITY"
+status = "IMPLEMENTED"
+traceability = "MAPPED"
+source = "tools/fixture-generator/tests/fixture_contracts.rs"
+anchor = "// TST-FIX-005:"
+excerpt = "fn verification_rejects_unsafe_or_unapproved_manifests"
+
+[[test]]
 id = "TST-PRV-001"
 title = "Provider只提交逻辑数据且Core创建物理Record"
 kind = "POSITIVE"
@@ -2073,6 +2134,36 @@ kind = "rust_test"
 path = "crates/nwb-diagnostics/tests/diagnostics_contracts.rs"
 symbol = "diagnostic_event_derives_severity_and_stage"
 
+[[locator]]
+test = "TST-FIX-001"
+kind = "rust_test"
+path = "tools/fixture-generator/tests/fixture_contracts.rs"
+symbol = "deterministic_generation_produces_identical_manifests"
+
+[[locator]]
+test = "TST-FIX-002"
+kind = "rust_test"
+path = "tools/fixture-generator/tests/fixture_contracts.rs"
+symbol = "generated_dataset_covers_approved_cases_and_self_verifies"
+
+[[locator]]
+test = "TST-FIX-003"
+kind = "rust_test"
+path = "tools/fixture-generator/tests/fixture_contracts.rs"
+symbol = "verification_rejects_content_tampering"
+
+[[locator]]
+test = "TST-FIX-004"
+kind = "rust_test"
+path = "tools/fixture-generator/tests/fixture_contracts.rs"
+symbol = "generation_and_verification_reject_unexpected_files"
+
+[[locator]]
+test = "TST-FIX-005"
+kind = "rust_test"
+path = "tools/fixture-generator/tests/fixture_contracts.rs"
+symbol = "verification_rejects_unsafe_or_unapproved_manifests"
+
 
 [[mapping]]
 requirement = "REQ-019"
@@ -2115,6 +2206,36 @@ requirement = "REQ-019"
 test = "TST-ERR-007"
 role = "NEGATIVE"
 rationale = "诊断事件从Diagnostic派生顶层严重度与阶段，消除同一日志内的冲突语义。"
+
+[[mapping]]
+requirement = "REQ-020"
+test = "TST-FIX-001"
+role = "POSITIVE"
+rationale = "两次独立生成的结构与Manifest字节一致，直接证明确定性。"
+
+[[mapping]]
+requirement = "REQ-020"
+test = "TST-FIX-002"
+role = "POSITIVE"
+rationale = "批准的数据边界与路径覆盖生成后由真实验证器自校验。"
+
+[[mapping]]
+requirement = "REQ-020"
+test = "TST-FIX-003"
+role = "NEGATIVE"
+rationale = "内容篡改导致长度或SHA-256不一致并明确失败。"
+
+[[mapping]]
+requirement = "REQ-020"
+test = "TST-FIX-004"
+role = "NEGATIVE"
+rationale = "非空目标不被覆盖，额外文件不能静默进入Fixture。"
+
+[[mapping]]
+requirement = "REQ-020"
+test = "TST-FIX-005"
+role = "SECURITY"
+rationale = "危险路径与同时篡改数据及Manifest均不能绕过批准数据集校验。"
 
 [[mapping]]
 requirement = "REQ-001"

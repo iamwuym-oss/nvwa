@@ -32,6 +32,7 @@
 | 5 | `Nuwa_NWB_Implementation_Plan_v1.0.md` | 工作包、依赖、里程碑、退出条件和交付物 |
 | 6 | `Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md` | 测试设计、质量门、验收标准与故障注入 |
 | 派生实施标准 | `Nuwa_NWB_Structured_Error_and_Logging_Specification_v1.0.md` | IMP-003 结构化错误、Secret 与日志契约；服从 #1–6，不得改变其技术语义 |
+| 派生实施标准 | `ADR-IMP-004_Deterministic_Fixture_Contract_v1.0.md` | IMP-004 普通文件Fixture最小契约；不授权NWB格式或备份恢复实现 |
 | 追溯权威 | `Nuwa_NWB_Traceability_Registry_v1.0.toml` | 需求/测试 ID、优先级、来源、映射与处置；不得覆盖 #1–6 技术语义 |
 | 生成参考 | `Nuwa_NWB_Requirements_Test_Traceability_Matrix_v1.0.md` | Registry 的确定性 Markdown 展示；不得手工编辑 |
 | 当前结果 | `Nuwa_NWB_Test_Result_Record_v1.3.md` | 当前实际执行结果、证据、缺陷和签署记录 |
@@ -177,7 +178,8 @@ Codex执行本项目时必须遵守：
 | IMP-001 (Format Registry) | CLOSED / PASS / ACCEPTANCE MET；最终被测提交 3bceb34，CI run 29684903853，Windows/Ubuntu 172/172 PASS |
 | IMP-002 (Requirements–Test Traceability) | CLOSED / PASS / ACCEPTANCE MET；最终被测提交 8b2a68b，CI run 29691731514，Windows/Ubuntu 188/188 PASS |
 | IMP-003 (Structured Diagnostics) | CLOSED / PASS / ACCEPTANCE MET；最终被测 PR head d08a92b，CI run 30184529945，Windows/Ubuntu 195/195 与 Canary 2/2 PASS |
-| IMP-004–005 | NOT_RUN |
+| IMP-004 (Deterministic Fixture Generator) | IN_PROGRESS — Windows本地验证已通过（独立审查APPROVED，Rust门禁全部PASS）；Linux和CI NOT_RUN |
+| IMP-005 | NOT_RUN |
 
 - IMP-000至IMP-003均已关闭为CLOSED / PASS / ACCEPTANCE MET；GATE-0仍为IN_PROGRESS
 - 当前结果记录为`Nuwa_NWB_Test_Result_Record_v1.3.md`；当前工作包证据包括`IMP-001_EVD_Test_Result_Evidence_v1.2.md`、`IMP-002_EVD_Requirements_Traceability_Evidence_v1.0.md`与`IMP-003_EVD_Structured_Diagnostics_Evidence_v1.0.md`

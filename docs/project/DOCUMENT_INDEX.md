@@ -138,6 +138,7 @@ This directory contains the **current storage engine implementation authority**.
 | Document | Scope and boundary |
 |---|---|
 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Structured_Error_and_Logging_Specification_v1.0.md | IMP-003 structured error, secret handling and JSON logging contract. Subordinate to documents #1–6; cannot alter ErrorId values, binary format, recovery semantics or support scope |
+| docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/ADR-IMP-004_Deterministic_Fixture_Contract_v1.0.md | IMP-004 deterministic ordinary-file Fixture contract. Excludes NWB archives, Writer/Reader, platform metadata, block data and BMR |
 
 ### REFERENCE Documents (evidence records, metadata)
 
@@ -150,7 +151,7 @@ This directory contains the **current storage engine implementation authority**.
 | 11 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/IMP-002_EVD_Requirements_Traceability_Evidence_v1.0.md | REFERENCE / CURRENT FOR IMP-002 | IMP-002 evidence; CLOSED / PASS / ACCEPTANCE MET at 8b2a68b / run 29691731514 |
 | 12 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/IMP-003_EVD_Structured_Diagnostics_Evidence_v1.0.md | REFERENCE / CURRENT FOR IMP-003 | IMP-003 evidence; CLOSED / PASS / ACCEPTANCE MET at d08a92b / run 30184529945 |
 | 13 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Engineering_Document_Set_README_v1.0.md | REFERENCE / CURRENT | Document set README and reading order |
-| 14 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Engineering_Document_Set_Manifest_v1.0.md | REFERENCE / CURRENT | Current 19-file SHA-256 inventory; manifest excludes itself |
+| 14 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Engineering_Document_Set_Manifest_v1.0.md | REFERENCE / CURRENT | Current 20-file SHA-256 inventory; manifest excludes itself |
 | 15 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Test_Result_Record_v1.2.md | HISTORICAL / SUPERSEDED | Replaced by Test Result Record v1.3; retains the accepted IMP-002 snapshot |
 | 16 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Test_Result_Record_v1.1.md | HISTORICAL / SUPERSEDED | Replaced by Test Result Record v1.2; retains the accepted IMP-001 snapshot |
 | 17 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Test_Result_Record_v1.0.md | HISTORICAL / SUPERSEDED | Malformed source retained for traceability; contains control bytes and old d550907 state; never cite as current |
@@ -167,7 +168,8 @@ This directory contains the **current storage engine implementation authority**.
 | **IMP-001** (Format Registry) | CLOSED / PASS / ACCEPTANCE MET — Generator remediation closed at 3bceb34, run 29684903853, 172/172 on Windows and Ubuntu |
 | **IMP-002** (Requirements–Test Traceability Matrix) | CLOSED / PASS / ACCEPTANCE MET — final tested commit 8b2a68b, run 29691731514, 188/188 on Windows and Ubuntu |
 | **IMP-003** (Structured Diagnostics) | CLOSED / PASS / ACCEPTANCE MET — final PR head d08a92b, run 30184529945, 195/195 plus Canary 2/2 on Windows and Ubuntu |
-| **IMP-004–005** | NOT_RUN — remaining defined GATE-0 work packages |
+| **IMP-004** (Deterministic Fixture Generator) | IN_PROGRESS — Windows local validation PASS (independent code review APPROVED, Rust tests/builds PASS); Linux and GitHub CI NOT_RUN |
+| **IMP-005** | NOT_RUN — remaining defined GATE-0 work package |
 | **IMP-100 and later** | NOT_STARTED / FORBIDDEN UNTIL GATE-0 — must not be initiated before GATE-0 is closed |
 
 ### Key Constraints

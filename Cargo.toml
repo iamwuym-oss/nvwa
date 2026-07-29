@@ -4,6 +4,7 @@ members = [
     "crates/*",
     ".",
     "tools/format-registry-generator",
+    "tools/fixture-generator",
     "tools/traceability-checker",
 ]
 exclude = ["src-tauri"]
