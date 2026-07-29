@@ -6,15 +6,15 @@
 
 | 指标 | 数量 |
 |---|---:|
-| 正式需求 | 38 |
-| P0需求 | 35 |
+| 正式需求 | 39 |
+| P0需求 | 36 |
 | P1需求 | 3 |
-| 正式测试 | 150 |
-| 已实现测试 | 35 |
+| 正式测试 | 155 |
+| 已实现测试 | 40 |
 | 计划测试 | 115 |
-| 已映射测试 | 131 |
+| 已映射测试 | 136 |
 | Source-scoped测试 | 19 |
-| 唯一映射 | 153 |
+| 唯一映射 | 158 |
 
 ## 2. 需求到测试
 
@@ -58,6 +58,7 @@
 | REQ-018 | P0 | IMP-002 | P0需求100%映射且CI拒绝孤儿 | TST-TRC-001, TST-TRC-002, TST-TRC-003, TST-TRC-004, TST-TRC-005, TST-TRC-006, TST-TRC-007, TST-TRC-008, TST-TRC-009, TST-TRC-010, TST-TRC-011, TST-TRC-012, TST-TRC-013, TST-TRC-014, TST-TRC-015, TST-TRC-016 |
 | REQ-019 | P0 | IMP-003 | 结构化错误与日志不得泄露密钥或密码 | TST-ERR-001, TST-ERR-002, TST-ERR-003, TST-ERR-004, TST-ERR-005, TST-ERR-006, TST-ERR-007 |
 | REQ-020 | P0 | IMP-004 | 测试Fixture可重复且Manifest固定并可自校验 | TST-FIX-001, TST-FIX-002, TST-FIX-003, TST-FIX-004, TST-FIX-005 |
+| REQ-021 | P0 | IMP-005 | 0.x Draft格式仅接受精确0.1版本且CLI明确显示Draft限制 | TST-VSN-001, TST-VSN-002, TST-VSN-003, TST-VSN-004, TST-VSN-005 |
 
 ## 3. 测试登记
 
@@ -213,6 +214,11 @@
 | TST-VOL-007 | NEGATIVE | PLANNED | MAPPED | 混入其他Set卷 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md |
 | TST-VOL-008 | POSITIVE | PLANNED | SOURCE_SCOPED | FAT32真实目标 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md |
 | TST-VOL-009 | FAULT | PLANNED | MAPPED | 空间不足 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md |
+| TST-VSN-001 | POSITIVE | IMPLEMENTED | MAPPED | 精确0.1版本被接受 | crates/nwb-format/src/version.rs |
+| TST-VSN-002 | NEGATIVE | IMPLEMENTED | MAPPED | 0.0和0.2拒绝且诊断包含发现/支持版本 | crates/nwb-format/src/version.rs |
+| TST-VSN-003 | NEGATIVE | IMPLEMENTED | MAPPED | 1.0和未来Major版本拒绝 | crates/nwb-format/src/version.rs |
+| TST-VSN-004 | POSITIVE | IMPLEMENTED | MAPPED | 共享状态行明确显示Draft限制 | crates/nwb-format/src/version.rs |
+| TST-VSN-005 | POSITIVE | IMPLEMENTED | MAPPED | 真实产品CLI --version显示Draft身份 | tests/version_cli_tests.rs |
 
 ## 4. Source-scoped测试库存
 
@@ -395,6 +401,11 @@
 | REQ-020 | TST-FIX-003 | NEGATIVE | 内容篡改导致长度或SHA-256不一致并明确失败。 |
 | REQ-020 | TST-FIX-004 | NEGATIVE | 非空目标不被覆盖，额外文件不能静默进入Fixture。 |
 | REQ-020 | TST-FIX-005 | SECURITY | 危险路径与同时篡改数据及Manifest均不能绕过批准数据集校验。 |
+| REQ-021 | TST-VSN-001 | POSITIVE | 精确0.1在Draft期间被接受，直接证明版本兼容策略。 |
+| REQ-021 | TST-VSN-002 | NEGATIVE | 0.0和0.2被拒绝且诊断包含发现版本和支持版本。 |
+| REQ-021 | TST-VSN-003 | NEGATIVE | 1.0和未来Major版本被拒绝，防止未授权兼容。 |
+| REQ-021 | TST-VSN-004 | POSITIVE | 共享Draft状态行明确显示internal testing only和not for release。 |
+| REQ-021 | TST-VSN-005 | POSITIVE | 真实产品CLI --version输出NWB format版本和Draft限制。 |
 
 ## 6. 旧测试库存（非正式追溯分母）
 

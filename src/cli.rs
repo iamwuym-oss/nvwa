@@ -66,7 +66,10 @@ impl Command {
                 std::process::exit(0);
             }
             "--version" | "-V" => {
+                let v = nwb_format::version::FormatVersion::current();
                 println!("nuwa-backup v{}", env!("CARGO_PKG_VERSION"));
+                println!("NWB format {}", v);
+                println!("{}", v.lifecycle_banner());
                 std::process::exit(0);
             }
             _ => Err(NuwaError::InvalidArgument {

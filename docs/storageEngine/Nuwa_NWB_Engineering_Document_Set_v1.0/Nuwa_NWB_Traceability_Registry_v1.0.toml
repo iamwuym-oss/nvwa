@@ -8,16 +8,20 @@ source_allowlist = [
   "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Implementation_Plan_v1.0.md",
   "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md",
   "crates/nwb-format/tests/registry_tests.rs",
+  "crates/nwb-format/src/version.rs",
   "crates/nwb-diagnostics/tests/diagnostics_contracts.rs",
   "tools/fixture-generator/tests/fixture_contracts.rs",
   "tools/traceability-checker/tests/traceability_tests.rs",
+  "tests/version_cli_tests.rs",
   "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Traceability_Registry_v1.0.toml",
 ]
 code_test_id_sources = [
   "crates/nwb-format/tests/registry_tests.rs",
+  "crates/nwb-format/src/version.rs",
   "crates/nwb-diagnostics/tests/diagnostics_contracts.rs",
   "tools/fixture-generator/tests/fixture_contracts.rs",
   "tools/traceability-checker/tests/traceability_tests.rs",
+  "tests/version_cli_tests.rs",
 ]
 
 [[legacy_test_inventory]]
@@ -204,6 +208,15 @@ priority = "P0"
 source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Implementation_Plan_v1.0.md"
 anchor = "| `IMP-004` |"
 excerpt = "建立测试Fixture生成器 | Fixture可重复、Manifest固定"
+[[requirement]]
+id = "REQ-021"
+source_id = "IMP-005"
+title = "0.x Draft格式仅接受精确0.1版本且CLI明确显示Draft限制"
+priority = "P0"
+source = "docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Implementation_Plan_v1.0.md"
+anchor = "| `IMP-005` |"
+excerpt = "建立格式0.x版本策略 | Draft不伪装1.0 | CLI明确显示Draft | 兼容拒绝测试 | 版本策略ADR"
+
 
 [[requirement]]
 id = "FMT-001"
@@ -369,6 +382,56 @@ excerpt = "归档不得嵌入或执行Provider代码"
 
 # The 87 planned IDs are authoritative Test Plan cases. Their source ID is the
 # unique excerpt; PLANNED means no execution claim is made by this registry.
+[[test]]
+id = "TST-VSN-001"
+title = "精确0.1版本被接受"
+kind = "POSITIVE"
+status = "IMPLEMENTED"
+traceability = "MAPPED"
+source = "crates/nwb-format/src/version.rs"
+anchor = "// TST-VSN-001:"
+excerpt = "fn current_version_is_compatible_with_exact_match"
+
+[[test]]
+id = "TST-VSN-002"
+title = "0.0和0.2拒绝且诊断包含发现/支持版本"
+kind = "NEGATIVE"
+status = "IMPLEMENTED"
+traceability = "MAPPED"
+source = "crates/nwb-format/src/version.rs"
+anchor = "// TST-VSN-002:"
+excerpt = "fn error_diagnostic_contains_found_and_supported"
+
+[[test]]
+id = "TST-VSN-003"
+title = "1.0和未来Major版本拒绝"
+kind = "NEGATIVE"
+status = "IMPLEMENTED"
+traceability = "MAPPED"
+source = "crates/nwb-format/src/version.rs"
+anchor = "// TST-VSN-003:"
+excerpt = "fn one_zero_is_rejected"
+
+[[test]]
+id = "TST-VSN-004"
+title = "共享状态行明确显示Draft限制"
+kind = "POSITIVE"
+status = "IMPLEMENTED"
+traceability = "MAPPED"
+source = "crates/nwb-format/src/version.rs"
+anchor = "// TST-VSN-004:"
+excerpt = "fn lifecycle_banner_displays_draft_restriction"
+
+[[test]]
+id = "TST-VSN-005"
+title = "真实产品CLI --version显示Draft身份"
+kind = "POSITIVE"
+status = "IMPLEMENTED"
+traceability = "MAPPED"
+source = "tests/version_cli_tests.rs"
+anchor = "// TST-VSN-005:"
+excerpt = "fn cli_version_shows_draft_identity"
+
 [[test]]
 id = "TST-FMT-001"
 title = "Header编码解码"
@@ -2135,6 +2198,36 @@ path = "crates/nwb-diagnostics/tests/diagnostics_contracts.rs"
 symbol = "diagnostic_event_derives_severity_and_stage"
 
 [[locator]]
+test = "TST-VSN-001"
+kind = "rust_test"
+path = "crates/nwb-format/src/version.rs"
+symbol = "current_version_is_compatible_with_exact_match"
+
+[[locator]]
+test = "TST-VSN-002"
+kind = "rust_test"
+path = "crates/nwb-format/src/version.rs"
+symbol = "zero_zero_is_rejected"
+
+[[locator]]
+test = "TST-VSN-003"
+kind = "rust_test"
+path = "crates/nwb-format/src/version.rs"
+symbol = "one_zero_is_rejected"
+
+[[locator]]
+test = "TST-VSN-004"
+kind = "rust_test"
+path = "crates/nwb-format/src/version.rs"
+symbol = "lifecycle_banner_displays_draft_restriction"
+
+[[locator]]
+test = "TST-VSN-005"
+kind = "rust_test"
+path = "tests/version_cli_tests.rs"
+symbol = "cli_version_shows_draft_identity"
+
+[[locator]]
 test = "TST-FIX-001"
 kind = "rust_test"
 path = "tools/fixture-generator/tests/fixture_contracts.rs"
@@ -2236,6 +2329,36 @@ requirement = "REQ-020"
 test = "TST-FIX-005"
 role = "SECURITY"
 rationale = "危险路径与同时篡改数据及Manifest均不能绕过批准数据集校验。"
+
+[[mapping]]
+requirement = "REQ-021"
+test = "TST-VSN-001"
+role = "POSITIVE"
+rationale = "精确0.1在Draft期间被接受，直接证明版本兼容策略。"
+
+[[mapping]]
+requirement = "REQ-021"
+test = "TST-VSN-002"
+role = "NEGATIVE"
+rationale = "0.0和0.2被拒绝且诊断包含发现版本和支持版本。"
+
+[[mapping]]
+requirement = "REQ-021"
+test = "TST-VSN-003"
+role = "NEGATIVE"
+rationale = "1.0和未来Major版本被拒绝，防止未授权兼容。"
+
+[[mapping]]
+requirement = "REQ-021"
+test = "TST-VSN-004"
+role = "POSITIVE"
+rationale = "共享Draft状态行明确显示internal testing only和not for release。"
+
+[[mapping]]
+requirement = "REQ-021"
+test = "TST-VSN-005"
+role = "POSITIVE"
+rationale = "真实产品CLI --version输出NWB format版本和Draft限制。"
 
 [[mapping]]
 requirement = "REQ-001"

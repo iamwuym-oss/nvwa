@@ -72,13 +72,13 @@ fn copy_fixture() -> TempDir {
 fn valid_registry_passes() {
     let report = validate_registry(&committed_registry(), &workspace_root())
         .expect("registry must validate");
-    assert_eq!(report.requirements, 38);
-    assert_eq!(report.tests, 150);
-    assert_eq!(report.mappings, 153);
-    assert_eq!(report.p0_requirements, 35);
+    assert_eq!(report.requirements, 39);
+    assert_eq!(report.tests, 155);
+    assert_eq!(report.mappings, 158);
+    assert_eq!(report.p0_requirements, 36);
     assert_eq!(report.planned_tests, 115);
-    assert_eq!(report.implemented_tests, 35);
-    assert_eq!(report.mapped_tests, 131);
+    assert_eq!(report.implemented_tests, 40);
+    assert_eq!(report.mapped_tests, 136);
     assert_eq!(report.source_scoped_tests, 19);
     let registry = committed_registry();
     assert!(registry

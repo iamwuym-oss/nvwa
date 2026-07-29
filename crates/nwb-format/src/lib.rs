@@ -8,6 +8,7 @@
 pub const NWB_FORMAT_VERSION: &str = "0.1.0-dev";
 
 pub mod registry;
+pub mod version;
 
 #[cfg(test)]
 mod tests {
