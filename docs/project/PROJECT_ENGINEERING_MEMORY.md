@@ -110,6 +110,13 @@ The repository still does not contain a complete NWB Writer, Reader, Catalog, Ch
 | Fixture CLI hash evidence | Pre-commit Windows local validation; verified by TST-FIX-001/002 in CI |
 | PR #1 | Remains Draft and unmerged |
 | IMP-005 | NOT_RUN |
+| Closure evidence commit | `4f9b5b7929985906b6c82c8a12d730a69a9ee8d5` |
+| Closure evidence title | `docs(storage): close IMP-004 evidence` |
+| Closure evidence CI Run | `30437421409` |
+| Closure evidence CI URL | https://github.com/iamwuym-oss/nvwa/actions/runs/30437421409 |
+| Closure evidence Windows Job | `90528335193` — all gates PASS (3m38s) |
+| Closure evidence Ubuntu Job | `90528335403` — all gates PASS (2m10s) |
+| Final metadata closure | Final Metadata Commit at `<<FINAL_SHA>>` completes the bounded loop. This commit's own CI is recorded in the final execution report and final independent closure review, and does NOT trigger further repository metadata write-back. |
 
 ## 6. Current Evidence Sources
 
