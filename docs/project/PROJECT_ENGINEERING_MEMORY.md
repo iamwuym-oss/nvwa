@@ -1,9 +1,9 @@
 # Nüwa Backup — Project Engineering Memory
 
-**Version:** 1.4.0
+**Version:** 1.4.1
 **Last Updated:** 2026-07-30
 **Status:** CURRENT REFERENCE SNAPSHOT
-**Latest verified code commit:** `718a096bfdb834b58f36bb59100c81a105e3811e`
+**Latest verified code commit:** `43942dcc5c38bb97e856486ee8f6703a2fc5512e`
 
 ---
 
@@ -36,7 +36,7 @@ The verified baseline contains:
 - the IMP-003 `nwb-diagnostics` crate with generated ErrorId identity, fixed structured fields, deterministic JSON Lines, sanitized writer failures and redacted `Secret`;
 - CI enforcement of Format Registry freshness, requirements traceability and dedicated Secret Canary tests before the remaining Rust quality gates.
 
-IMP-004 committed as `f89cad8`. IMP-005 committed as `718a096`. The committed traceability inventory contains 38 requirements, 150 formal tests and 153 mappings (35 P0). Of the formal tests, 35 are `IMPLEMENTED` and 115 are `PLANNED`. The 115 planned tests have not been executed merely because they are registered.
+IMP-004 committed as `f89cad8` (38 req / 150 tests / 153 maps / 35 P0). IMP-005 committed as `718a096` (39 req / 155 tests / 158 maps / 36 P0).
 
 The repository still does not contain a complete NWB Writer, Reader, Catalog, Chunk engine, Crypto subsystem, Verify/Salvage implementation, Provider implementation or recovery loop. Existing `src-tauri/` and `ui/` code contains old Repository-semantic residuals and remains outside the accepted IMP-000–003 storage-engine scope.
 
@@ -44,14 +44,13 @@ The repository still does not contain a complete NWB Writer, Reader, Catalog, Ch
 
 | Gate / IMP | Status | Evidence |
 |---|---|---|
-| GATE-0 | IN_PROGRESS | IMP-004 is implemented locally but not accepted; IMP-005 remains NOT_RUN |
+| GATE-0 | IN_PROGRESS | IMP-000 through IMP-005 CLOSED; IMP-006 NOT_DEFINED / NOT_STARTED |
 | IMP-000 | CLOSED / PASS / ACCEPTANCE MET | `e1f1adb`, run `29426443433` |
 | IMP-001 | CLOSED / PASS / ACCEPTANCE MET | `3bceb34`, run `29684903853`, EVD v1.2 |
 | IMP-002 | CLOSED / PASS / ACCEPTANCE MET | `8b2a68b`, run `29691731514`, EVD v1.0 |
 | IMP-003 | CLOSED / PASS / ACCEPTANCE MET | `d08a92b`, run `30184529945`, EVD v1.0 |
 | IMP-004 | CLOSED / PASS / ACCEPTANCE MET | `f89cad8`, run `30430862143` |
 | IMP-005 | CLOSED / PASS / ACCEPTANCE MET | `718a096`, run `30456312056` |
-| IMP-005 | NOT_RUN | Execute only with bounded scope and role authorization |
 | IMP-006–009 | NOT_DEFINED / NOT_STARTED | Must be defined before work starts |
 | IMP-100+ | FORBIDDEN UNTIL GATE-0 CLOSES | Post-GATE-0 work |
 
@@ -110,7 +109,7 @@ The repository still does not contain a complete NWB Writer, Reader, Catalog, Ch
 | Independent closure review | APPROVED_FOR_CLOSURE at IMP-004-FINAL-CLOSURE-REVIEW-1 |
 | Fixture CLI hash evidence | Pre-commit Windows local validation; verified by TST-FIX-001/002 in CI |
 | PR #1 | Remains Draft and unmerged |
-| IMP-005 | NOT_RUN |
+| IMP-005 | CLOSED / PASS / ACCEPTANCE MET — commit `718a096`, run `30456312056` |
 | Closure evidence commit | `4f9b5b7929985906b6c82c8a12d730a69a9ee8d5` |
 | Closure evidence title | `docs(storage): close IMP-004 evidence` |
 | Closure evidence CI Run | `30437421409` |
@@ -177,4 +176,4 @@ The repository still does not contain a complete NWB Writer, Reader, Catalog, Ch
 
 ## 8. Next Authorized Planning Point
 
-IMP-003, IMP-004 and IMP-005 are CLOSED. GATE-0 remains IN_PROGRESS. The next work package must be selected and authorized with a bounded scope. The next work package must be selected and authorized with a bounded scope. IMP-005 and all post-GATE-0 implementation remain unauthorized.
+IMP-003, IMP-004 and IMP-005 are CLOSED. GATE-0 remains IN_PROGRESS. The next work package must be selected and authorized with a bounded scope. The next work package must be selected and authorized with a bounded scope. IMP-006 NOT_DEFINED / NOT_STARTED; must be defined and independently architecture-reviewed before work begins.
