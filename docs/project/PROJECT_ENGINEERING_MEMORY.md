@@ -3,7 +3,8 @@
 **Version:** 1.4.1
 **Last Updated:** 2026-07-30
 **Status:** CURRENT REFERENCE SNAPSHOT
-**Latest verified code commit:** `43942dcc5c38bb97e856486ee8f6703a2fc5512e`
+**Latest verified code commit:** `718a096bfdb834b58f36bb59100c81a105e3811e`
+**Latest verified documentation commit:** `8d65945ee0bc81c376aa6d1e4d93325a3d750670`
 
 ---
 
@@ -116,7 +117,7 @@ The repository still does not contain a complete NWB Writer, Reader, Catalog, Ch
 | Closure evidence CI URL | https://github.com/iamwuym-oss/nvwa/actions/runs/30437421409 |
 | Closure evidence Windows Job | `90528335193` — all gates PASS (3m38s) |
 | Closure evidence Ubuntu Job | `90528335403` — all gates PASS (2m10s) |
-| Final metadata closure | Final Metadata Commit at `<<FINAL_SHA>>` completes the bounded loop. This commit's own CI is recorded in the final execution report and final independent closure review, and does NOT trigger further repository metadata write-back. |
+| Final metadata closure | Final Metadata Commit at `15dcae9` completes the bounded loop. This commit's own CI is recorded in the final execution report and final independent closure review, and does NOT trigger further repository metadata write-back. |
 
 
 ## 5c. IMP-005 Evidence Snapshot
@@ -152,6 +153,18 @@ The repository still does not contain a complete NWB Writer, Reader, Catalog, Ch
 | Independent final acceptance | FINAL_ACCEPTANCE_PASS |
 | PR #1 | Remains Draft and unmerged |
 | IMP-006 | NOT_STARTED |
+| Archive evidence commit | `43942dcc5c38bb97e856486ee8f6703a2fc5512e` |
+| Archive evidence title | `docs(storage): close IMP-005 evidence` |
+| Archive evidence CI Run | `30526518455` |
+| Archive CI URL | https://github.com/iamwuym-oss/nvwa/actions/runs/30526518455 |
+| Archive Windows Job | `90818589550` — all gates PASS |
+| Archive Ubuntu Job | `90818589572` — all gates PASS |
+| Metadata correction commit | `8d65945ee0bc81c376aa6d1e4d93325a3d750670` |
+| Metadata correction title | `docs(storage): correct IMP-005 closure metadata` |
+| Metadata correction CI Run | `30529818150` |
+| Metadata correction CI URL | https://github.com/iamwuym-oss/nvwa/actions/runs/30529818150 |
+| Metadata correction Windows Job | `90829231858` — all gates PASS |
+| Metadata correction Ubuntu Job | `90829231549` — all gates PASS |
 
 ## 6. Current Evidence Sources
 
@@ -176,4 +189,4 @@ The repository still does not contain a complete NWB Writer, Reader, Catalog, Ch
 
 ## 8. Next Authorized Planning Point
 
-IMP-003, IMP-004 and IMP-005 are CLOSED. GATE-0 remains IN_PROGRESS. The next work package must be selected and authorized with a bounded scope. The next work package must be selected and authorized with a bounded scope. IMP-006 NOT_DEFINED / NOT_STARTED; must be defined and independently architecture-reviewed before work begins.
+IMP-003, IMP-004 and IMP-005 are CLOSED. GATE-0 remains IN_PROGRESS. The next work package must be selected and authorized with a bounded scope. IMP-006 NOT_DEFINED / NOT_STARTED; must be defined and independently architecture-reviewed before work begins.
