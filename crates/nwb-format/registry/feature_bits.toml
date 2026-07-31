@@ -1,0 +1,31 @@
+﻿# Schema v1 — Format Registry input file
+# This file is the authoritative source of feature bit constants.
+
+[meta]
+schema_version = 1
+kind = "bit"
+
+[entries.COMPRESSION_ZSTD]
+rust_name = "COMPRESSION_ZSTD"
+bit = 0
+description = "Zstandard compression"
+
+[entries.ENCRYPTION_AES256_GCM]
+rust_name = "ENCRYPTION_AES256_GCM"
+bit = 1
+description = "AES-256-GCM encryption"
+
+[entries.VOLUME_SET]
+rust_name = "VOLUME_SET"
+bit = 2
+description = "Multi-volume set support"
+
+[entries.CHECKPOINT]
+rust_name = "CHECKPOINT"
+bit = 3
+description = "Checkpoint/resume support"
+
+[entries.BMR_METADATA]
+rust_name = "BMR_METADATA"
+bit = 4
+description = "Bare-metal recovery metadata present"

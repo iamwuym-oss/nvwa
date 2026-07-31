@@ -1,0 +1,5 @@
+crates/nwb-format/src/registry/error_id.rs text eol=lf
+crates/nwb-format/src/registry/feature_bit.rs text eol=lf
+crates/nwb-format/src/registry/header_enums.rs text eol=lf
+crates/nwb-format/src/registry/record_type.rs text eol=lf
+crates/nwb-format/registry/*.toml text eol=lf

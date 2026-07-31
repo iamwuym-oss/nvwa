@@ -32,7 +32,7 @@ pub struct JobConfigView {
     pub retention_keep_days: Option<u64>,
     /// Schedule profile ID (None = manual only)
     pub schedule_id: Option<String>,
-    /// Storage type: flat-file (default) or repository
+    /// Storage type (reserved for future backends; all backups use repository)
     pub storage_type: Option<String>,
     /// Repository UUID (when storage_type = repository)
     pub repository_id: Option<String>,
@@ -55,7 +55,7 @@ pub struct JobConfigRequest {
     pub retention_keep_days: Option<u64>,
     /// Schedule profile ID (None = manual only)
     pub schedule_id: Option<String>,
-    /// Storage type: flat-file (default) or repository
+    /// Storage type (reserved for future backends; all backups use repository)
     pub storage_type: Option<String>,
     /// Repository UUID (when storage_type = repository)
     pub repository_id: Option<String>,

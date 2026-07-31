@@ -1,283 +1,207 @@
-# N¨¹wa Backup ¡ª Document Index
+# NÃ¼wa Backup â€” Document Index
 
-**Last Updated:** 2026-07-11 (Phase S GUI Integration Complete)
+**Last Updated:** 2026-07-30 (IMP-005 metadata correction)
 
 ---
 
 ## Overview
 
-This index lists every document in the `docs/` hierarchy with its purpose,
-authority level, and applicability.
+This index lists every Markdown file in the docs/ hierarchy with its purpose and authority level. It is the single source of truth for document classification across all roles.
 
-### Authority Levels
+---
+
+## Authority Levels
 
 | Level | Meaning |
 |-------|---------|
-| **AUTHORITATIVE** | Must be followed. If conflicted, higher priority documents win. |
-| **REFERENCE** | Informational. Provides context but does not override authoritative docs. |
-| **DRAFT** | Work in progress. Subject to change. |
-| **HISTORICAL** | Superseded. Kept for traceability only. |
+| **AUTHORITATIVE** | Must be followed. Active contract for implementation, architecture, or governance. |
+| **DERIVED IMPLEMENTATION STANDARD** | Binding implementation rule for its approved work-package scope; subordinate to the authoritative contract documents and cannot change them. |
+| **TRACEABILITY AUTHORITY** | Authoritative only for requirement/test IDs, priorities, source bindings, mappings and traceability dispositions. Cannot override implementation contracts. |
+| **REFERENCE** | Informational context. Not binding for implementation decisions. |
+| **HISTORICAL** | Superseded. Entries marked **ACCEPTED BASELINE** record formally accepted phase outcomes. |
+| **SUPERSEDED** | Replaced by later decisions or documents. Do not cite as current authority. |
+| **STALE / PENDING_CORRECTION** | Previously authoritative but known to be outdated. Must be corrected before reuse. |
+
+### Classification Rules
+
+1. **AGENTS.md** at project root is the highest-priority general engineering governance document. It governs execution discipline, safety boundaries, and multi-agent collaboration. It does not define storage format, implementation plans, or phase-specific contracts.
+2. **NWB Engineering Document Set** (docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/) is the current storage engine implementation authority. Its Architecture, Format Specification, Provider SDK, Product Support Matrix, Implementation Plan, and Verification/Acceptance/Test Plan are **AUTHORITATIVE**. Approved derived implementation standards are binding only inside their named work-package scope and remain subordinate to documents #1â€“6.
+3. `Nuwa_NWB_Traceability_Registry_v1.0.toml` is **TRACEABILITY AUTHORITY** only for ID, priority, test, source and mapping governance. It cannot change the meaning of contract documents #1â€“6. Its generated Markdown Matrix is **REFERENCE**.
+4. **Test Result Record** and **Evidence Documents** (EVD) record actual test evidence only. They cannot modify architecture contracts.
+5. **Phase closing reports and their test evidence** are classified as **HISTORICAL / ACCEPTED BASELINE** â€” formally accepted phase outcomes that serve as traceability anchors.
+6. Documents for directories or files that no longer exist on disk must not be listed.
 
 ---
 
-## docs/project/ ¡ª Cross-Phase, Long-Term Valid
+## Repository-Level Documents
 
 | Document | Authority | Purpose |
 |----------|-----------|---------|
-| `PROJECT_ENGINEERING_MEMORY.md` | AUTHORITATIVE | Long-term project state, phase boundaries, task-before-read checklist |
-| `DOCUMENT_INDEX.md` | AUTHORITATIVE | This file ¡ª document index and navigation |
-| `PROPOSAL_FOR_NEW_PROJECT.md` | REFERENCE | Original project proposal |
-| `01_Product_Requirements_Document.md` | REFERENCE | Original PRD |
-| `02_Development_Plan.md` | REFERENCE | Task breakdown by phase |
-| `03_Nuwa_Architecture_Design.md` | REFERENCE | Architecture design document |
-| `04_Functional_Specification.md` | REFERENCE | Functional specification |
-| `05_Pipeline_Optimization_Design.md` | REFERENCE | Pipeline optimization (future phase) |
-| `06_Nuwa_Image_Format_Spec.md` | REFERENCE | .nwb image format spec (future phase) |
-| `07_Checklist.md` | REFERENCE | Feature acceptance checklist by phase |
+| AGENTS.md (repo root) | AUTHORITATIVE | Highest general engineering governance, safety rules, multi-agent roles |
+| README.md (repo root) | REFERENCE | Current repository overview and navigation entry. Derived from authoritative contracts and repository state; cannot override them |
 
 ---
 
-## docs/phase-0/ ¡ª Phase 0: Project Setup & Guardrails
+## docs/ â€” Root Level
 
 | Document | Authority | Purpose |
 |----------|-----------|---------|
-| `00_Codex_Working_Guardrails.md` | AUTHORITATIVE (highest) | Codex work boundary rules and behavior constraints |
-| `08_Design_Decision_Log.md` | AUTHORITATIVE | All confirmed design decisions |
-| `09_MVP_Boundary_and_Risk_Correction.md` | AUTHORITATIVE | MVP scope freeze and risk list |
-| `10_Document_Correction_Report.md` | HISTORICAL | Document correction audit report |
+| docs/NÃ¼wa_NWB_å­˜å‚¨å¼•æ“Ž_SubAgent_ä¸­æ–‡ä½¿ç”¨æ‰‹å†Œ_v1.0.md | REFERENCE | Chinese user manual for storage engine Sub-Agent |
 
 ---
 
-## docs/phase-1/ ¡ª Phase 1: File-Level Backup/Restore CLI (CLOSED)
+## docs/project/ â€” Cross-Phase
 
 | Document | Authority | Purpose |
 |----------|-----------|---------|
-| `Phase_1_Final_Acceptance_Report.md` | AUTHORITATIVE | Phase 1 final acceptance report (upgraded from Draft) |
-| `Phase_1_Technical_Baseline.md` | AUTHORITATIVE | Module structure, data flow, safety rules, error code system |
-| `Phase_1_Known_Limitations_and_Risks.md` | AUTHORITATIVE | All known limitations and risks from Phase 1 |
-| `Phase_1_Code_Map.md` | REFERENCE | Source code file-by-file map |
-| `Phase_1_to_Phase_2_Handoff.md` | AUTHORITATIVE | Phase handoff boundary: what Phase 2 can build on |
-| `Phase_1_Manual_Test_Plan.md` | REFERENCE | Manual test procedures |
-| Phase_1_Closing_Report.md | AUTHORITATIVE | Phase 1 closing decision, freeze status, evidence summary, accepted limitations |
-| Phase_1_Test_Evidence.md | AUTHORITATIVE | All test results, E2E validation evidence, quality gate results |
+| docs/project/DOCUMENT_INDEX.md | AUTHORITATIVE | This file |
+| docs/project/PROJECT_ENGINEERING_MEMORY.md | REFERENCE | Current cross-phase operational snapshot. Derived from authoritative contracts, evidence, and repository state; cannot override them |
+| docs/project/PROPOSAL_FOR_NEW_PROJECT.md | HISTORICAL | Original project proposal. Retained for traceability |
+| docs/project/01_Product_Requirements_Document.md | REFERENCE | Original PRD |
+| docs/project/02_Development_Plan.md | REFERENCE | Original task breakdown by phase |
+| docs/project/03_Nuwa_Architecture_Design.md | REFERENCE | Original architecture design |
+| docs/project/04_Functional_Specification.md | REFERENCE | Original functional specification |
+| docs/project/05_Pipeline_Optimization_Design.md | REFERENCE | Pipeline optimization design (future reference) |
+| docs/project/06_Nuwa_Image_Format_Spec.md | REFERENCE | .nwb image format specification |
+| docs/project/07_Checklist.md | REFERENCE | Feature acceptance checklist |
 
 ---
 
-## docs/phase-2/ ¡ª Phase 2: CLI Usability + GUI Dashboard (CLOSED)
+## docs/phase-0/ â€” Phase 0: Project Setup & Guardrails
+
+All Phase 0 documents are **HISTORICAL**. They guided initial project setup but have been superseded by later phase documents and the NWB Engineering Document Set.
 
 | Document | Authority | Purpose |
 |----------|-----------|---------|
-| `Phase_2_PRD.md` | AUTHORITATIVE | Phase 2 product requirements and approved coding basis for task-specific implementation |
-| `Phase_2_Technical_Design.md` | AUTHORITATIVE | Phase 2 technical design and approved engineering basis for task-specific implementation |
-| `Phase_2_Revised_Plan.md` | AUTHORITATIVE | Phase 2 revised plan: 6 usability features + local desktop GUI implementation + Clone disabled placeholder. .nwb moved to Phase 3. |
-| `Phase_2_Planning_Source_Baseline.md` | AUTHORITATIVE | Phase 2 planning source baseline: confirmed/optional/forbidden scope, contamination cleanup record, required user decisions |
-| `Phase_2_UI_Direction_Decision.md` | HISTORICAL | Phase 2 UI direction (superseded). egui/eframe replaced by Tauri 2.0+React. See Phase_2_5_Tauri_Migration_Decision.md. |
-
-Phase 2 implementation has started under task-specific approval.
-
-Current task status:
-- T2-01 ¡ª Configuration system / backup job: DONE / PASS
-- T2-02 ¡ª Backup history / SQLite schema: DONE / PASS
-- T2-03 ¡ª CLI output enhancement: DONE / PASS
-- T2-04 ¡ª Retention policy / prune: DONE / PASS
-- T2-05 ¡ª Windows Task Scheduler: DONE / PASS
-- T2-06 ¡ª SMB / UNC path support: DONE / PASS (manual SMB validation completed on \\localhost\C$ admin share; backup/list/verify/restore all confirmed working)
-- T2-07 ¡ª GUI dependency + scaffold: DONE / PASS
-- T2-08 ¡ª GUI 7 pages: NOT STARTED / requires user approval
-- T2-09 ¡ª GUI Clone placeholder: NOT STARTED / requires user approval
-
-Language compliance:
-- Product runtime language is English-only (T2-LANG-01 enforced).
-- Chinese is allowed only in documentation.
-- Language compliance check is required before PASS for coding tasks.
-- All src/, tests/, and Cargo.toml files are English-only as of T2-LANG-01.
-
-Phase 2 implementation has started.
-Coding approval is task-specific.
-T2-01 through T2-04 have been completed and passed.
-No further Phase 2 coding task, starting from T2-05, is approved until the user explicitly approves it.
-
-Phase 2 must NOT implement:
-- `.nwb` image format
-- VSS snapshot integration
-- Volume-level backup
-- Disk-level backup
-- System restore
-- WinPE recovery media
-- Real disk cloning functionality (Clone UI placeholder is allowed and required, but must be disabled and clearly marked as Phase 5)
-- Differential backup
-- Incremental backup
-- Encryption
-- Daemon / system service
-- Web GUI / browser-based admin console
-- FastAPI / Python backend
-- Vanilla JS / Tailwind / React / Vue / jQuery
-
-No clone engine, clone CLI command, disk access, partition access, PhysicalDrive access, VSS, or .nwb code may be introduced in Phase 2.
+| docs/phase-0/00_Codex_Working_Guardrails.md | HISTORICAL | Previously claimed highest authority. Superseded by AGENTS.md and NWB Engineering Document Set |
+| docs/phase-0/08_Design_Decision_Log.md | HISTORICAL | Early design decisions, superseded by subsequent architecture work |
+| docs/phase-0/09_MVP_Boundary_and_Risk_Correction.md | HISTORICAL | MVP scope freeze from Phase 0, superseded by later phase scoping |
+| docs/phase-0/10_Document_Correction_Report.md | HISTORICAL | Document correction record from Phase 0 |
 
 ---
 
-
-## docs/phase-2.5/ ¡ª Phase 2.5: Tauri Desktop GUI + Application Layer
+## docs/phase-1/ â€” Phase 1: File-Level Backup CLI (CLOSED)
 
 | Document | Authority | Purpose |
 |----------|-----------|---------|
-| Phase_2_5_Tauri_Migration_Decision.md | AUTHORITATIVE | GUI technology migration from egui/eframe to Tauri 2.0 + React + TypeScript |
-| Phase_2_5_T2_5_01_Tauri_Scaffold_Report.md | AUTHORITATIVE | T2.5-01 Tauri 2.0 scaffold + command bridge completion report |
-| Phase_2_5_T2_5_02_Dashboard_UI_Architecture_Report.md | AUTHORITATIVE | T2.5-02 Dashboard UI architecture, mock data, and page structure |
-| Phase_2_5_T2_5_03A_Application_Layer_Report.md | AUTHORITATIVE | T2.5-03A Application API Layer foundation |
-| Phase_2_5_T2_5_03A_1_Dashboard_Polish_Report.md | AUTHORITATIVE | T2.5-03A.1 Dashboard product polish |
-| Phase_2_5_Closing_Report.md | AUTHORITATIVE | Phase 2.5 closing report: completed tasks, architecture summary, frozen modules, next phase
+| docs/phase-1/Phase_1_Closing_Report.md | HISTORICAL / ACCEPTED BASELINE | Phase 1 closing decision and acceptance record |
+| docs/phase-1/Phase_1_Final_Acceptance_Report.md | HISTORICAL / ACCEPTED BASELINE | Phase 1 final acceptance outcome |
+| docs/phase-1/Phase_1_Test_Evidence.md | HISTORICAL / ACCEPTED BASELINE | Phase 1 test evidence and log |
+| docs/phase-1/Phase_1_Signed_Acceptance_by_Stakeholder.md | HISTORICAL / ACCEPTED BASELINE | Phase 1 stakeholder acceptance |
+| docs/phase-1/Phase_1_User_Manual.md | HISTORICAL | Phase 1 user manual; superseded by later documentation |
+| docs/phase-1/Restore_Phase_1_Test_Report_and_Code_Review.md | HISTORICAL / ACCEPTED BASELINE | Phase 1 restore test + code review |
 
+---
 
-### Missing Report Documents
-
-The following tasks were completed but do not have individual report files. Their key details are captured in Phase_2_5_Current_Status.md and Phase_2_5_Codex_Handoff.md:
-
-- T2.5-03D (Restore Service + UI)
-- T2.5-03D.1 (Restore Safety Hardening)
-- T2.5-04A (Config Job CRUD Service)
-- T2.5-04B (Settings Backup Plan UI)
-- T2.5-04C (Native Path Picker ¡ª superseded)
-- T2.5-04C.1 (In-App File Browser)
-
-### Phase 2.5 Task Status
-
-| Task | Status |
-|:----:|:------:|
-| T2.5-00 ¡ª Remove egui GUI & Cleanup | ? DONE / PASS |
-| T2.5-01 ¡ª Tauri 2.0 Scaffold + Command Bridge | ? DONE / PASS |
-| T2.5-02 ¡ª Dashboard UI Architecture | ? DONE / PASS |
-| T2.5-03A ¡ª Application API Layer Foundation | ? DONE / PASS |
-| T2.5-03A.1 ¡ª Dashboard Product Polish | ? DONE / PASS |
-| T2.5-03B ¡ª Backup Application Service Foundation | ? DONE / PASS |
-| T2.5-03C ¡ª Backup UI Integration | ? DONE / PASS |
-| T2.5-03D ¡ª Restore Service + UI | ? DONE / PASS |
-| T2.5-03D.1 ¡ª Restore Safety Hardening | ? DONE / PASS |
-| T2.5-04A ¡ª Config Job CRUD Service | ? DONE / PASS |
-| T2.5-04B ¡ª Settings Backup Plan UI | ? DONE / PASS |
-| T2.5-04C ¡ª Native Path Picker | ? DONE / PASS (superseded by 04C.1) |
-| T2.5-04C.1 ¡ª In-App File Browser | ? DONE / PASS |
-| T2.5-04D ¡ª Backup Content Browser | ? DONE / PASS (committed 8ea7355) |
-| T2.5-DOC-01A ¡ª Documentation sync | ? DONE / PASS |
-| T2.5-DOC-02 ¡ª AGENTS + README alignment | ? DONE / PASS |
-
-
-## docs/phase-s/ ¡ª Phase S: Repository Engine (NEW)
+## docs/phase-2/ â€” Phase 2: CLI Usability + egui GUI (CLOSED)
 
 | Document | Authority | Purpose |
 |----------|-----------|---------|
-| Nuwa_Repository_Engine_Architecture_v1.0.md | **AUTHORITATIVE** | Phase S architecture baseline. Frozen. |
-| Nuwa_Repository_Engine_Architecture_v1.1.md | **AUTHORITATIVE** | Enterprise Readiness revision. Amendment on v1.0. |
-| Nuwa_Repository_Engine_Implementation_Plan_v1.0.md | **AUTHORITATIVE** | Phase S implementation plan. Rust module structure, task breakdown, test strategy, error model. |
-| Phase_S_Wave_1_Completion_Report.md | REFERENCE | Wave 1 (S-01/S-02/S-03) completion evidence. |
-| Phase_S_API_Freeze_Review.md | REFERENCE | API freeze review and Volume Backup compatibility assessment. |
-| S-12_Benchmark_Framework.md | REFERENCE | Scale benchmark methodology documentation. |
-| Phase_S_Stage1_Audit_Report.md | REFERENCE | Stage 1: Architecture re-audit. 5 issues fixed. |
-| Phase_S_Stage2_Audit_Report.md | REFERENCE | Stage 2: Integration, Retention, Crash tests (337 pass). |
-| Phase_S_Stage3_API_Freeze_Report.md | **AUTHORITATIVE** | Stage 3: API freeze validation. Volume Backup compatible. |
-| Phase_S_Scale_Analysis.md | REFERENCE | A-08: Block store scale and SQLite query complexity analysis. |
-| Phase_S_Volume_Compatibility.md | REFERENCE | A-09: Volume Backup data flow compatibility. |
-| Phase_S_Known_Limitations_and_Roadmap.md | REFERENCE | Phase S known limitations and future roadmap. Updated as features are implemented. |
-| Phase_S_Closing_Report.md | **AUTHORITATIVE** | Phase S closing report. Baseline freeze. 5 audit gates PASS. |
-| P-00_File_Backup_Repository_Data_Contract.md | **AUTHORITATIVE** | P-00 File Backup Repository Data Contract v0.7. Defines Restore Point state machine, Catalog Path Security Contract, crash recovery rules, Gate 1-6 definitions. |
-| P-02_Repository_Restore_Plan.md | **AUTHORITATIVE** | P-02 Repository Restore Reader implementation plan. Defines 14-step preflight, restore algorithm, error semantics, Gate 2-3 test cases (27). |
-## docs/phase-3/ ¡ª Reserved: NTFS Volume Image, VSS, Block Backup
-
-*(reserved)*
+| docs/phase-2/Phase_2_Design_and_Acceptance_v2.md | HISTORICAL / ACCEPTED BASELINE | Phase 2 design and acceptance record |
+| docs/phase-2/Phase_2_Tauri_Upgrade_Design_and_Acceptance.md | HISTORICAL / ACCEPTED BASELINE | Phase 2 Tauri acceptance record |
 
 ---
 
-## docs/phase-4/ ¡ª Reserved: WinPE Recovery Media, System Restore
+## docs/phase-2.5/ â€” Phase 2.5: Tauri 2 Desktop GUI (CLOSED)
 
-*(reserved)*
-
----
-
-## docs/phase-5/ ¡ª Reserved: Disk Cloning
-
-*(reserved)*
+| Document | Authority | Purpose |
+|----------|-----------|---------|
+| docs/phase-2.5/Phase_2.5_Closing_Report.md | HISTORICAL / ACCEPTED BASELINE | Phase 2.5 closing decision and acceptance record |
+| docs/phase-2.5/Phase_2.5_Component_Redesign_Report.md | HISTORICAL | Phase 2.5 component redesign |
+| docs/phase-2.5/Phase_2.5_Security_Audit_Checklist.md | HISTORICAL | UI surface audit checklist |
 
 ---
 
-## docs/phase-6-plus/ ¡ª Reserved: Differential, Encryption, Cross-Platform
+## docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/ â€” Current NWB Storage Engine Authority
 
-*(reserved)*
+This directory contains the **current storage engine implementation authority**. Contract documents #1â€“6 follow the authority order defined by the Engineering Document Set README Â§2. Traceability authority, generated references, evidence and metadata are listed afterward and cannot override implementation contracts.
+
+### AUTHORITATIVE Documents (implementation contracts)
+
+| # | Document | Purpose |
+|---|----------|---------|
+| 1 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Storage_Engine_Architecture_v2.0.md | Current storage engine architecture â€” highest NWB architecture authority |
+| 2 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Binary_Format_Specification_v1.0_Draft.md | NWB binary format specification (Draft) |
+| 3 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Provider_SDK_Specification_v1.0_Draft.md | Provider SDK specification (Draft) |
+| 4 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Product_Support_Matrix_v1.0.md | Product support matrix for NWB format |
+| 5 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Implementation_Plan_v1.0.md | Implementation plan and Gate roadmap |
+| 6 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Verification_Acceptance_and_Test_Plan_v1.0.md | Verification, acceptance, and test plan |
+
+### TRACEABILITY AUTHORITY
+
+| Document | Scope of authority |
+|---|---|
+| docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Traceability_Registry_v1.0.toml | Canonical requirement/test IDs, priorities, authority-source bindings, mappings and `MAPPED` / `SOURCE_SCOPED` dispositions. Cannot override documents #1â€“6 |
+
+### DERIVED IMPLEMENTATION STANDARDS
+
+| Document | Scope and boundary |
+|---|---|
+| docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Structured_Error_and_Logging_Specification_v1.0.md | IMP-003 structured error, secret handling and JSON logging contract. Subordinate to documents #1â€“6; cannot alter ErrorId values, binary format, recovery semantics or support scope |
+| docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/ADR-IMP-004_Deterministic_Fixture_Contract_v1.0.md | IMP-004 deterministic ordinary-file Fixture contract. Excludes NWB archives, Writer/Reader, platform metadata, block data and BMR |
+| docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/ADR-IMP-005_Format_0x_Version_Policy_v1.0.md | IMP-005 Format 0.x version policy. Establishes Draft 0.1 compatibility gate; does not alter Header layout, Writer, Reader or Feature negotiation |
+
+### REFERENCE Documents (evidence records, metadata)
+
+| # | Document | Classification | Purpose |
+|---|----------|----------------|---------|
+| 7 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Requirements_Test_Traceability_Matrix_v1.0.md | GENERATED REFERENCE | Deterministic rendering of the Traceability Registry; do not edit manually |
+| 8 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Test_Result_Record_v1.3.md | REFERENCE / CURRENT | Current result record; IMP-003 closes at d08a92b / run 30184529945 |
+| 9 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/IMP-000_EVD_Build_Evidence_v1.0.md | REFERENCE / CURRENT FOR IMP-000 | IMP-000 evidence; closed, acceptance met |
+| 10 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/IMP-001_EVD_Test_Result_Evidence_v1.2.md | REFERENCE / CURRENT FOR IMP-001 | IMP-001 evidence; CLOSED / PASS / ACCEPTANCE MET at 3bceb34 / run 29684903853 |
+| 11 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/IMP-002_EVD_Requirements_Traceability_Evidence_v1.0.md | REFERENCE / CURRENT FOR IMP-002 | IMP-002 evidence; CLOSED / PASS / ACCEPTANCE MET at 8b2a68b / run 29691731514 |
+| 12 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/IMP-003_EVD_Structured_Diagnostics_Evidence_v1.0.md | REFERENCE / CURRENT FOR IMP-003 | IMP-003 evidence; CLOSED / PASS / ACCEPTANCE MET at d08a92b / run 30184529945 |
+| 13 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Engineering_Document_Set_README_v1.0.md | REFERENCE / CURRENT | Document set README and reading order |
+| 14 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Engineering_Document_Set_Manifest_v1.0.md | REFERENCE / CURRENT | Current 21-file SHA-256 inventory; manifest excludes itself |
+| 15 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Test_Result_Record_v1.2.md | HISTORICAL / SUPERSEDED | Replaced by Test Result Record v1.3; retains the accepted IMP-002 snapshot |
+| 16 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Test_Result_Record_v1.1.md | HISTORICAL / SUPERSEDED | Replaced by Test Result Record v1.2; retains the accepted IMP-001 snapshot |
+| 17 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/Nuwa_NWB_Test_Result_Record_v1.0.md | HISTORICAL / SUPERSEDED | Malformed source retained for traceability; contains control bytes and old d550907 state; never cite as current |
+| 18 | docs/storageEngine/Nuwa_NWB_Engineering_Document_Set_v1.0/IMP-001_EVD_Test_Result_Evidence_v1.0.md | HISTORICAL / SUPERSEDED | Malformed source retained for traceability; stale state; never cite as current |
+
+---
+
+## Current Project State
+
+| Dimension | Status |
+|-----------|--------|
+| **Gate** | GATE-0 â€” IN_PROGRESS |
+| **IMP-000** (Workspace) | CLOSED / PASS / ACCEPTANCE MET |
+| **IMP-001** (Format Registry) | CLOSED / PASS / ACCEPTANCE MET â€” Generator remediation closed at 3bceb34, run 29684903853, 172/172 on Windows and Ubuntu |
+| **IMP-002** (Requirementsâ€“Test Traceability Matrix) | CLOSED / PASS / ACCEPTANCE MET â€” final tested commit 8b2a68b, run 29691731514, 188/188 on Windows and Ubuntu |
+| **IMP-003** (Structured Diagnostics) | CLOSED / PASS / ACCEPTANCE MET â€” final PR head d08a92b, run 30184529945, 195/195 plus Canary 2/2 on Windows and Ubuntu |
+| **IMP-004** (Deterministic Fixture Generator) | CLOSED / PASS / ACCEPTANCE MET â€” commit `f89cad8`, run `30430862143` |
+| **IMP-005** (Format 0.x Version Policy) | CLOSED / PASS / ACCEPTANCE MET â€” implementation `718a096`, run `30456312056`; archive `43942dc`, run `30526518455`; metadata `8d65945`, run `30529818150` |
+| **IMP-100 and later** | NOT_STARTED / FORBIDDEN UNTIL GATE-0 â€” must not be initiated before GATE-0 is closed |
+
+### Key Constraints
+
+1. All new storage functionality must follow the NWB Storage Engine architecture: each successful Full or Differential backup produces an immutable, self-describing logical NWB archive. It must not depend on the superseded Repository architecture.
 
 ---
 
 ## Navigation Rules
 
-1. Start at `PROJECT_ENGINEERING_MEMORY.md` for every new task.
-2. Use this index to find the correct document.
-3. Authoritative documents take precedence over Reference documents.
-4. If documents conflict, higher-priority documents (lower number) win.
-5. AGENTS.md at project root is the highest-priority operational document.
-## docs/phase-2/ ¡ª Phase 2: CLI Usability + GUI Dashboard (CLOSED)
+1. Start at this index to identify the correct authority level for each document.
+2. **AUTHORITATIVE** documents take precedence over all lower levels.
+3. In case of conflict between AUTHORITATIVE documents, the NWB Storage Engine Architecture v2.0 takes precedence for storage engine matters; AGENTS.md takes precedence for governance and execution discipline.
+4. **STALE / PENDING_CORRECTION** documents must be corrected before reuse as authority.
+5. Documents classified as **HISTORICAL** or **SUPERSEDED** must not be cited as current implementation authority.
+6. When a document on disk is not listed in this index, treat it as unclassified and do not rely on it for authoritative guidance until classified.
 
-| Document | Authority | Purpose |
-|----------|-----------|---------|
-| `Phase_2_PRD.md` | AUTHORITATIVE | Phase 2 product requirements and approved coding basis |
-| `Phase_2_Technical_Design.md` | AUTHORITATIVE | Phase 2 technical design |
-| `Phase_2_Revised_Plan.md` | AUTHORITATIVE | Phase 2 revised plan: 6 usability features + GUI Dashboard |
-| `Phase_2_Planning_Source_Baseline.md` | AUTHORITATIVE | Phase 2 planning baseline, confirmed/forbidden scope |
-| `Phase_2_UI_Direction_Decision.md` | HISTORICAL | Phase 2 UI direction (superseded). egui/eframe replaced by Tauri 2.0+React. See Phase_2_5_Tauri_Migration_Decision.md. |
-| `Phase_2_Closing_Report.md` | AUTHORITATIVE | Phase 2 closing report, final validation evidence |
+---
 
-### Phase 2 Task Status (Final)
+## Revision
 
-| Task | Status |
-|:----:|:------:|
-| T2-01 ¡ª Config / Job | ? DONE / PASS |
-| T2-02 ¡ª Backup History / SQLite | ? DONE / PASS |
-| T2-03 ¡ª CLI Output Enhancement | ? DONE / PASS |
-| T2-04 ¡ª Retention / Prune | ? DONE / PASS |
-| T2-05 ¡ª Windows Task Scheduler | ? DONE / PASS |
-| T2-06 ¡ª SMB / UNC Path | ? DONE / PASS |
-| T2-07 ¡ª GUI Scaffold | ? DONE / PASS |
-| T2-08 ¡ª GUI Dashboard | ? DONE / PASS |
-| T2-09 ¡ª GUI Clone Placeholder | ? DONE / PASS |
-
-### Phase 2 Deferred Items
-
-| Item | Reason |
-|------|--------|
-| GUI Backup page (stub) | User decision ¡ª stop at Dashboard baseline |
-| GUI Restore page (stub) | User decision ¡ª stop at Dashboard baseline |
-| GUI History page (stub) | User decision ¡ª stop at Dashboard baseline |
-| GUI Schedule page (stub) | User decision ¡ª stop at Dashboard baseline |
-| GUI Settings page (stub) | User decision ¡ª stop at Dashboard baseline |
-
-**Phase 2: CLOSED / ACCEPTED WITH KNOWN LIMITATIONS**
-**Phase 3 coding is NOT authorized without explicit user approval.**
-
-## docs/phase-3/ ¡ª Phase 3: NTFS Non-System Volume Image MVP (PLANNING)
-
-| Document | Authority | Purpose |
-|----------|-----------|---------|
-| `Phase_3_Plan.md` | AUTHORITATIVE | Phase 3 scope, safety boundary, task chain, deferred items |
-
-### Phase 3 Task Status
-
-| Task | Status |
-|:----:|:------:|
-| T3-00 ¡ª Scope Reset & Documentation | ? DONE / PASS |
-| T3-01 ¡ª .nwb v0.2 Format + Block SHA-256 | ? NOT STARTED |
-| T3-02 ¡ª VSS Snapshot Lifecycle Proof | ? NOT STARTED |
-| T3-03 ¡ª Non-System NTFS Volume Backup CLI | ? NOT STARTED |
-| T3-04 ¡ª Non-System NTFS Volume Restore CLI | ? NOT STARTED |
-| T3-CLOSE ¡ª Phase 3 Final Validation | ? NOT STARTED |
-
-### Phase 3.5/4 Status
-
-| Phase | Scope | Status |
-|-------|-------|:------:|
-| Phase 2.5 | Tauri desktop GUI + Application Layer | ? IN PROGRESS (152 tests, 14 Tauri commands, 5 services, 4 active pages) |
-| Phase 3.5 | GUI volume pages, GPT/MBR, boot partition, dynamic disk/RAID, BCD design | ? NOT AUTHORIZED |
-| Phase 4 | System recovery / WinPE / BMR | ? NOT AUTHORIZED |
-| Phase 5 | Disk clone | ? NOT AUTHORIZED |
-| Phase 6+ | Differential, encryption, cross-platform | ? NOT AUTHORIZED |
-
-**Phase 3 is in PLANNING. T3-00 complete. Coding not started.**
-
-
+- **Version:** 1.0
+- **Task:** IMP-003 structured diagnostics evidence closure
+- **Purpose:** Register the traceability authority, generated Matrix, current evidence and actual Gate status
+- **Previous update:** 2026-07-19 (IMP-001 Generator Remediation evidence closure)
+- **Closure IMP-000:** IMP-000-EVIDENCE-CLOSURE-1 closed IMP-000 as PASS/ACCEPTANCE MET with full CI evidence (e1f1adb, run 29426443433)
+- **Closure IMP-001 (v1.0):** IMP-001 evidence closed as PASS/ACCEPTANCE MET at d550907 (CI run 29471690977)
+- **Historical reopen checkpoint (v1.1, superseded):** IMP-001 was reopened by Generator Remediation (RIR-005, 2026-07-18). That intermediate snapshot is retained only in the historical EVD and is not a current status source.
+- **Closure IMP-001 (v1.2):** Generator remediation closed at 3bceb34 with Code Review APPROVED, Validation PASS (172/172 on Windows and Ubuntu), Recovery Integrity APPROVED and CI run 29684903853 SUCCESS. Current evidence is EVD v1.2 and TRR v1.1. Old malformed v1.0 records are HISTORICAL / SUPERSEDED.
+- **Closure IMP-002:** Requirementsâ€“test traceability closed at 8b2a68b with final Code Review APPROVED, dual-platform CI 188/188 PASS, Recovery Integrity APPROVED and CI run 29691731514 SUCCESS. Current evidence is IMP-002 EVD v1.0 and TRR v1.2; TRR v1.1 is historical/superseded.
+- **Closure IMP-003:** Structured diagnostics closed at PR head d08a92b with independent remediation review APPROVED, final rustfmt delta review APPROVED, dual-platform CI 195/195 plus Canary 2/2 PASS and run 30184529945 SUCCESS. Current evidence is IMP-003 EVD v1.0 and TRR v1.3; TRR v1.2 is historical/superseded.
+- **Closure IMP-004:** â€” commit `f89cad8`, CI run `30430862143`; archive `4f9b5b7`, CI run `30437421409`; final metadata `15dcae9`, CI run `30440836031`
+- **Closure IMP-005:** Implementation commit `718a096`, CI run `30456312056`; archive commit `43942dc`, CI run `30526518455`; metadata correction commit `8d65945`, CI run `30529818150`
+- **Maintenance:** Update when documents are added, removed, reclassified, or when project gate status changes

@@ -1,0 +1,9 @@
+error[E0081]: discriminant value `1` assigned more than once
+ --> tests/compile-fail/error_id_duplicate.rs:5:1
+  |
+5 | pub enum DuplicateDiscriminant {
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+6 |     First = 0x0001,
+  |             ------ `1` assigned here
+7 |     Second = 0x0001,
+  |              ------ `1` assigned here

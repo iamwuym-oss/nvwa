@@ -1,0 +1,16 @@
+[package]
+name = "traceability-checker"
+version = "0.1.0"
+edition = "2021"
+description = "NWB requirement and test traceability registry checker"
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+toml = "0.8"
+
+[dev-dependencies]
+tempfile = "3"
+
+[[bin]]
+name = "traceability-checker"
+path = "src/main.rs"

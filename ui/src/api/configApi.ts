@@ -1,13 +1,13 @@
-// ============================================================================
+﻿// ============================================================================
 // configApi.ts -- Settings page API bridge for job configuration CRUD
 //
 // This file is the ONLY place where the Settings page talks to the backend.
 // It provides:
-//   - listJobConfigs() — list all job configurations
-//   - getJobConfig(name) — get a single job config
-//   - createJobConfig(request) — create a new job config
-//   - updateJobConfig(name, request) — update an existing job config
-//   - deleteJobConfig(name) — delete a job config
+//   - listJobConfigs() 鈥?list all job configurations
+//   - getJobConfig(name) 鈥?get a single job config
+//   - createJobConfig(request) 鈥?create a new job config
+//   - updateJobConfig(name, request) 鈥?update an existing job config
+//   - deleteJobConfig(name) 鈥?delete a job config
 //
 // The Settings.tsx page never calls invoke() directly.
 // ============================================================================
@@ -55,7 +55,7 @@ const MOCK_CONFIGS: JobConfigView[] = [
     retention_keep_count: 7,
     retention_keep_days: 30,
     schedule_id: "daily-evening",
-    storage_type: null,
+    storage_type: "repository",
     repository_id: null,
   },
   {
@@ -66,7 +66,7 @@ const MOCK_CONFIGS: JobConfigView[] = [
     retention_keep_count: 10,
     retention_keep_days: null,
     schedule_id: null,
-    storage_type: null,
+    storage_type: "repository",
     repository_id: null,
   },
 ];
@@ -163,3 +163,4 @@ export async function deleteJobConfig(name: string): Promise<void> {
     throw err;
   }
 }
+

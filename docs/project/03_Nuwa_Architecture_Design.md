@@ -1,4 +1,4 @@
-﻿> **⚠️ 架构演进声明（v2.2 修订）**
+﻿﻿> **⚠️ 架构演进声明（v2.2 修订）**
 >
 > **重要：本文档主体描述的是 Nüwa Backup 的早期架构设计（egui + ZeroMQ + daemon）。该架构已被取代。**
 >
@@ -11,7 +11,7 @@
 > | IPC | **Tauri invoke()**（替换 ZeroMQ） |
 > | Command Layer | Rust thin wrapper（src-tauri/src/commands/） |
 > | Application Layer | **src/app/**（models + services + error） |
-> | Core Engine | Rust（src/）— backup, restore, verify, storage |
+> | Core Engine | Rust（.nwb 格式引擎重设计中） |
 >
 > ## 当前架构图详见「附录 D：Current Desktop GUI Architecture (Tauri 2.0)」
 >
@@ -76,6 +76,22 @@
 
 ### 1.1 四层架构
 
+> **⚠️ 架构演进声明**
+>
+> 下图展示的是**已被替代的早期服务化架构设计**（egui UI + ZeroMQ IPC + nuwa-daemon 守护进程）。
+> 当前实际架构已迁移至 **Tauri 2.0 + React + 直接调用模式**，无 daemon、无 ZeroMQ IPC。
+>
+> | 层次 | 原始设计（已替代） | 当前实现 |
+> |------|-------------------|---------|
+> | UI | egui + eframe | **Tauri 2.0 + React 19 + TypeScript + Vite 6** |
+> | IPC | ZeroMQ | **Tauri invoke()** |
+> | 服务层 | nuwa-daemon（守护进程） | **无守护进程，直接调用 Application Layer** |
+> | 调用路径 | UI IPC daemon Core | UI invoke() Command Service Core |
+>
+> 当前架构图详见「**附录 D：Current Desktop GUI Architecture (Tauri 2.0)**」。
+>
+> 以下架构图仅作为终局设计参考，不作为当前开发依据。
+
 ```
 ┌──────────────────────────────────────────────────────────────────┐
 │              UI LAYER (egui — HISTORICAL, see Appendix D)           │
@@ -138,6 +154,18 @@
 ```
 
 ### 1.2 进程模型
+
+> **⚠️ 架构演进声明**
+>
+> 下图展示的进程模型（nuwa-daemon / nuwa-agent / nuwa-ui / ZeroMQ IPC）是**已被替代的早期服务化设计**。
+> 当前实现采用 **Tauri 2.0 单进程架构**：
+> - **Tauri 桌面应用**（单个进程）：包含 React UI 前端 + Rust 后端
+> - **无守护进程**：备份/恢复操作通过 Rust 直接调用，无需后台常驻服务
+> - **CLI**: 独立命令行工具（src/main.rs），直接调用 Core Engine
+>
+> 当前架构图详见「**附录 D：Current Desktop GUI Architecture (Tauri 2.0)**」。
+>
+> 以下进程模型仅作为终局设计参考，不作为当前开发依据。
 
 ```
 ┌────────────────────────────────────────────────────────────┐
@@ -710,6 +738,14 @@ Windows 系统恢复完成后引导修复：
 
 ## 8. 服务架构
 
+> **⛔ 本节描述的是已被替代的早期设计**
+>
+> nuwa-daemon（核心守护进程）、nuwa-agent（代理进程）、ZeroMQ IPC 均为 **HISTORICAL / SUPERSEDED** 设计。
+> 当前架构采用 **Tauri 2.0 单进程直接调用模式**，无 daemon、无 agent、无 ZeroMQ IPC。
+>
+> 本节内容仅作为技术决策追溯保留，**不得作为当前开发依据**。
+> 当前服务层实现在 src/app/（Application Service Layer），详见 AGENTS.md 和附录 D。
+
 ### 8.1 nuwa-daemon（核心守护进程 — HISTORICAL / SUPERSEDED）
 
 ```
@@ -800,6 +836,26 @@ Linux:   ~/.config/autostart 或 systemd --user
 ---
 
 ## 9. UI 架构
+
+> **⛔ 本节描述的是已被替代的早期设计**
+>
+> 以下内容（egui + eframe UI 技术选型、页面结构、WinPE 恢复环境 UI）均为 **HISTORICAL / SUPERSEDED**。
+> 当前桌面 GUI 已迁移至 **Tauri 2.0 + React 19 + TypeScript + Vite 6**。
+>
+> 当前 UI 页面结构：
+> - Dashboard（仪表盘）— ui/src/pages/Dashboard/
+> - Backup（备份）— ui/src/pages/Backup.tsx
+> - Restore（恢复）— ui/src/pages/Restore.tsx
+> - History（历史）— ui/src/pages/History.tsx
+> - Schedule（计划任务）— ui/src/pages/Schedule.tsx
+> - Settings（设置）— ui/src/pages/Settings.tsx
+> - Clone（克隆，禁用占位）— ui/src/pages/Clone.tsx
+>
+> 所有 UI 操作路径：React UI → Tauri invoke() → Tauri Command Layer → Application Service Layer → Core Engine
+>
+> 详见「**附录 D：Current Desktop GUI Architecture (Tauri 2.0)**」和 docs/phase-2.5/。
+>
+> 以下 9.1~9.3 节内容仅作为技术决策追溯保留，**不得作为当前开发依据**。
 
 ### 9.1 技术选型：egui + eframe（纯 Rust）
 
@@ -1068,36 +1124,40 @@ Nüwa Backup/
 │   │       ├── main.rs
 │   │       └── notifier.rs
 │   │
-│   ├── nuwa-cli/                  ★ 命令行工具
-│   │   └── src/
-│   │       └── main.rs
-│   │
-│   └── lcb-ipc/                  ★ 共享 IPC 协议和消息类型
-│       └── src/
-│           └── messages.rs
+│   ├── src/                        ★ Rust 核心引擎（当前实现）
+│   │   ├── main.rs               · CLI 入口
+│   │   ├── lib.rs                 · 库入口
+│   │   ├── app/                   · Application Layer（模型 + 服务）
+│   │   │   ├── models/            · API 数据模型
+│   │   │   └── services/          · 业务服务
+│   │   ├── nwb/                  · .nwb 单文件存储引擎（设计中）
+│   │   └── nwb/                   · .nwb 单文件存储引擎（设计中）
 │
-├── ui/                           ★ egui UI
-│   ├── src/
-│   │   ├── main.rs               · egui 入口，加载 Rust 核心引擎
-│   │   ├── ipc_client.cpp        · ZeroMQ IPC 客户端
-│   │   └── models/               · QML 数据模型（C++ 侧）
-│   ├── qml/
-│   │   ├── main.qml
-│   │   ├── pages/
-│   │   │   ├── Dashboard.qml
-│   │   │   ├── FileBackup.qml
-│   │   │   ├── VolumeBackup.qml
-│   │   │   ├── FileRestore.qml
-│   │   │   ├── VolumeRestore.qml
-│   │   │   ├── DiskClone.qml
-│   │   │   └── Settings.qml
-│   │   ├── components/           · 可复用组件
-│   │   │   ├── DiskMap.qml       · 磁盘拓扑可视化
-│   │   │   ├── BackupCalendar.qml
-│   │   │   └── ProgressCard.qml
-│   │   └── theme/                · 深色科技风主题
-│   ├── CMakeLists.txt
-│   └── resources/
+│   └── ui/                          ★ React UI (Tauri 2.0 — 当前实现)
+│       ├── src/
+│       │   ├── main.tsx              · React 入口
+│       │   ├── App.tsx               · 路由和布局
+│       │   ├── api/                  · Tauri invoke() API 封装
+│       │   ├── pages/
+│       │   │   ├── Dashboard/        · 仪表盘页面
+│       │   │   ├── Backup.tsx        · 文件备份页面
+│       │   │   ├── Restore.tsx       · 恢复页面
+│       │   │   ├── History.tsx       · 备份历史
+│       │   │   ├── Schedule.tsx      · 计划任务
+│       │   │   ├── Settings.tsx      · 设置
+│       │   │   └── Clone.tsx         · 克隆（禁用占位）
+│       │   ├── components/           · 可复用组件
+│       │   │   ├── cards/            · 概览卡片
+│       │   │   ├── charts/           · 图表
+│       │   │   ├── common/           · 通用组件
+│       │   │   ├── feedback/         · 反馈组件
+│       │   │   └── layout/           · 布局组件
+│       │   ├── styles/               · CSS 样式
+│       │   └── types/                · TypeScript 类型
+│       ├── index.html
+│       ├── vite.config.ts
+│       ├── package.json
+│       └── tsconfig.json
 │
 ├── recovery/                     ★ 恢复环境构建脚本
 │   ├── winpe/
@@ -1173,6 +1233,13 @@ Phase 1 交付物：
 ``"
 
 ### 12.2 Phase 2 — Windows 桌面 UI
+
+> **⚠️ 本节的 egui 里程碑已被替代**
+>
+> Phase 2 原计划使用 egui + eframe 实现桌面 UI，该计划已在 **Phase 2.5（2026-07）** 中被替换为 **Tauri 2.0 + React + TypeScript + Vite**。
+> 以下里程碑列表仅供参考，实际实现的 Tauri GUI 功能清单见：
+> - docs/phase-2.5/Phase_2_5_Closing_Report.md
+> - docs/phase-2.5/Phase_2_5_Tauri_Migration_Decision.md
 
 ``"
 Milestone 2.1: egui 基础框架
@@ -1295,8 +1362,8 @@ Phase 4 交付物：
 | 决策 | 选项 | 选择 | 理由 |
 |------|------|------|------|
 | 核心语言 | Rust / C++ / Go | **Rust** | 跨平台编译、零运行时、内存安全、C ABI |
-| UI 框架 | egui / Qt6 / Web+Electron / WPF | **egui + eframe（纯 Rust）** | 原生性能、真跨平台、Electron 太重 |
-| IPC | ZeroMQ / gRPC / Named Pipes | **ZeroMQ** | 轻量、跨平台、异步模式支持 |
+| UI 框架 | egui / Qt6 / Web+Electron / WPF | ~~egui + eframe（纯 Rust）~~→ **Tauri 2.0 + React** | 原生性能、真跨平台（Phase 2.5 已迁移至 Tauri） |
+| IPC | ZeroMQ / gRPC / Named Pipes | ~~ZeroMQ~~→ **Tauri invoke()** | Tauri 内置 IPC，无需额外依赖（Phase 2.5 已替换） |
 | 加密 | OpenSSL / RustCrypto / bcrypt | **AES-256-GCM (RustCrypto)** | 认证加密、无外部依赖 |
 | 压缩 | zstd / lz4 / deflate | **zstd** | 压缩比和速度的平衡，Acronis 也用它 |
 | 镜像挂载 | WinFsp+FUSE / 自研 | **WinFsp + FUSE** | 工业级 Windows FUSE 实现 |
@@ -1355,7 +1422,7 @@ Nüwa Backup 的架构设计遵循以下核心思想：
 
 1. **核心引擎跨平台**：Rust 编写的 .nwb 镜像格式、压缩、加密、校验——所有平台 100% 共享
 2. **OS 交互隔离**：通过 Rust traits 将 VSS、NTFS、BCD（Windows 侧）与 fsfreeze、ext4、GRUB（Linux 侧）隔离开来
-3. **服务化架构**：核心功能以 daemon 形式运行，UI/CLI 通过 IPC 调用——解耦、安全、可测试
+3. **分层架构**：React UI → Tauri invoke() → Command Layer → Application Service Layer → Core Engine。UI、业务逻辑、核心引擎三层分离——解耦、安全、可测试（注：早期设计曾计划 daemon+IPC 模式，Phase 2.5 已改用 Tauri 直接调用模式）
 4. **恢复优先**：每个功能模块在开发时，恢复路径的测试优先级高于备份路径
 5. **渐进式交付**：先核心引擎 + CLI → 再桌面 UI → 再高级功能 → 再跨平台
 
@@ -1396,8 +1463,8 @@ Phase 1 MVP 仅实现文件级备份/恢复的最小闭环，架构极其简单�
 |---------|------|---------|
 | .nwb 镜像格式 | ❌ 不实现 | Phase 2 实验 / Phase 3 正式 |
 | VSS 快照 | ❌ 不实现 | Phase 3 |
-| lcb-daemon / IPC | ❌ 不实现 | Phase 4 |
-| 桌面 GUI (egui) | ❌ 不实现 | Phase 6+ |
+| lcb-daemon / ZeroMQ IPC | ❌ 不实现 | **Phase 2.5 已取消**（改用 Tauri 直接调用模式，无需 daemon） |
+| 桌面 GUI | ~~egui~~ → **Tauri 2.0 + React** | 🟢 **Phase 2.5 已实现**（原计划 Phase 6+，实际在 Phase 2.5 通过 Tauri 完成） |
 | 差异备份 | ❌ 不实现 | Future |
 | XOR Parity | ❌ 不实现 | Future |
 | AES 加密 | ❌ 不实现 | Future |
@@ -1424,7 +1491,7 @@ Phase 1 开发以本附录 +  2_Development_Plan.md +  9_MVP_Boundary_and_Risk_C
 | IPC | Tauri invoke() | Frontend-backend communication |
 | Command Layer | Rust (src-tauri/src/commands/) | Thin wrapper: params, invoke, error convert |
 | Application Layer | Rust (src/app/) | Models, services, error types |
-| Core Engine | Rust (src/) | Backup, restore, verify, storage |
+| Core Engine | Rust（.nwb 格式引擎重设计中） |
 
 ### Architecture Diagram
 
@@ -1442,7 +1509,7 @@ Phase 1 开发以本附录 +  2_Development_Plan.md +  9_MVP_Boundary_and_Risk_C
                       |
                       v
             Core Engine (src/)
-      backup restore verify storage
+      .nwb Storage Engine (src/nwb/, 设计中)
 
   CLI (src/main.rs) also calls Core Engine directly
 `
@@ -1454,7 +1521,7 @@ Phase 1 开发以本附录 +  2_Development_Plan.md +  9_MVP_Boundary_and_Risk_C
 | React UI | Display, interaction, state rendering | Direct core access, SQLite queries |
 | Tauri Command | Parameter validation, invoke handling, error conversion | Business logic |
 | Application Service | Data aggregation, orchestration, model mapping | Core module modification |
-| Core Engine | Backup/restore, verification, storage operations | UI coupling |
+| Core Engine | .nwb Storage Engine (backup, restore, verify via nwb/, 设计中) | UI coupling |
 
 ### Key Differences from egui Design
 
@@ -1466,5 +1533,6 @@ Phase 1 开发以本附录 +  2_Development_Plan.md +  9_MVP_Boundary_and_Risk_C
 | UI Location | src/gui/ | ui/ |
 | Dev Toolchain | Rust only | Rust + Node.js |
 | Application Layer | Not planned | src/app/ (models + services) |
+
 
 

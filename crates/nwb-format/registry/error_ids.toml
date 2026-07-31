@@ -1,0 +1,53 @@
+﻿# Schema v1 — Format Registry input file
+# This file is the authoritative source of ErrorId discriminant values.
+
+[meta]
+schema_version = 1
+kind = "discriminant"
+enum_name = "ErrorId"
+
+[entries.INVALID]
+rust_name = "Invalid"
+value = 0x0000
+description = "Invalid/zero sentinel, must not appear in valid output"
+
+[entries.CHECKSUM_MISMATCH]
+rust_name = "ChecksumMismatch"
+value = 0x0001
+description = "Data integrity verification failed"
+
+[entries.FORMAT_VERSION]
+rust_name = "FormatVersion"
+value = 0x0002
+description = "Unsupported or unrecognized format version"
+
+[entries.COMPRESSION]
+rust_name = "Compression"
+value = 0x0003
+description = "Compression or decompression error"
+
+[entries.SEGMENT_CORRUPT]
+rust_name = "SegmentCorrupt"
+value = 0x0004
+description = "Segment data is corrupt or truncated"
+
+[entries.IO_ERROR]
+rust_name = "IoError"
+value = 0x0100
+description = "Input/output operation failed"
+
+[entries.VOLUME_MISSING]
+rust_name = "VolumeMissing"
+value = 0x0101
+description = "Required volume is not available"
+
+[entries.ENCRYPTION_AUTH]
+rust_name = "EncryptionAuth"
+value = 0x0200
+description = "Encryption authentication or decryption failure"
+
+[entries.CATALOG_CORRUPT]
+rust_name = "CatalogCorrupt"
+value = 0x0300
+description = "Catalog data is corrupt or inconsistent"
+

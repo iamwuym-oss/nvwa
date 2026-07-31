@@ -1,0 +1,39 @@
+﻿# Schema v1 — Format Registry input file
+# This file is the authoritative source of header enum types.
+
+[meta]
+schema_version = 1
+kind = "enum_set"
+
+[enums.BACKUP_KIND]
+rust_name = "BackupKind"
+repr = "u8"
+
+[enums.BACKUP_KIND.entries.FULL]
+rust_name = "Full"
+value = 1
+description = "Full backup: all selected data"
+
+[enums.BACKUP_KIND.entries.DIFFERENTIAL]
+rust_name = "Differential"
+value = 2
+description = "Differential backup: changes since last full backup"
+
+[enums.PLATFORM_HINT]
+rust_name = "PlatformHint"
+repr = "u8"
+
+[enums.PLATFORM_HINT.entries.UNKNOWN]
+rust_name = "Unknown"
+value = 0
+description = "Unknown or unspecified platform"
+
+[enums.PLATFORM_HINT.entries.WINDOWS]
+rust_name = "Windows"
+value = 1
+description = "Microsoft Windows"
+
+[enums.PLATFORM_HINT.entries.LINUX]
+rust_name = "Linux"
+value = 2
+description = "Linux"

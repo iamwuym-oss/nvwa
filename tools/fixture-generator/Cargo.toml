@@ -1,0 +1,19 @@
+[package]
+name = "fixture-generator"
+version = "0.1.0"
+edition = "2021"
+description = "Deterministic test fixture generator for the NWB storage engine"
+
+[dependencies]
+hex = "0.4"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sha2 = "0.10"
+thiserror = "1"
+
+[dev-dependencies]
+tempfile = "3"
+
+[[bin]]
+name = "fixture-generator"
+path = "src/main.rs"

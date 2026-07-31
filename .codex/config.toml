@@ -1,0 +1,4 @@
+[agents]
+# Controlled fan-out: one parent coordinator, no nested delegation.
+max_threads = 4
+max_depth = 1

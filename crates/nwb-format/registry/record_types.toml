@@ -1,0 +1,98 @@
+﻿# Schema v1 — Format Registry input file
+# This file is the authoritative source of RecordType discriminant values.
+
+[meta]
+schema_version = 1
+kind = "discriminant"
+enum_name = "RecordType"
+
+[entries.INVALID]
+rust_name = "Invalid"
+value = 0x0000
+description = "Invalid/zero sentinel — reserved, must not appear in valid streams"
+
+[entries.MANIFEST]
+rust_name = "Manifest"
+value = 0x0001
+description = "Volume manifest: metadata about the current physical volume"
+
+[entries.VOLUME_SET_MANIFEST]
+rust_name = "VolumeSetManifest"
+value = 0x0002
+description = "Volume set manifest: linkage across a multi-volume archive"
+
+[entries.VOLUME_FOOTER]
+rust_name = "VolumeFooter"
+value = 0x0003
+description = "Volume footer: final record sealing the volume"
+
+[entries.TOMBSTONE]
+rust_name = "Tombstone"
+value = 0x0004
+description = "Tombstone: marks a removed or voided record slot"
+
+[entries.DATA_CHUNK]
+rust_name = "DataChunk"
+value = 0x0101
+description = "Compressed/encrypted data chunk"
+
+[entries.ZERO_RUN]
+rust_name = "ZeroRun"
+value = 0x0102
+description = "Zero-byte run (sparse region descriptor)"
+
+[entries.HOLE_RUN]
+rust_name = "HoleRun"
+value = 0x0103
+description = "Hole run (unallocated region descriptor)"
+
+[entries.FILE_EXTENT]
+rust_name = "FileExtent"
+value = 0x0104
+description = "File extent: contiguous byte range within a file backup"
+
+[entries.DISK_EXTENT]
+rust_name = "DiskExtent"
+value = 0x0105
+description = "Disk extent: contiguous sector range within a disk backup"
+
+[entries.DIFF_OPERATION]
+rust_name = "DiffOperation"
+value = 0x0106
+description = "Differential operation: binary diff patch"
+
+[entries.CATALOG_PAGE]
+rust_name = "CatalogPage"
+value = 0x0201
+description = "Catalog page: sorted index of backed-up items"
+
+[entries.CHUNK_INDEX_PAGE]
+rust_name = "ChunkIndexPage"
+value = 0x0202
+description = "Chunk index page: mapping of chunk hashes to storage locations"
+
+[entries.ERROR_RECORD]
+rust_name = "ErrorRecord"
+value = 0x0301
+description = "Error record: logged I/O or integrity fault within the archive"
+
+[entries.FILE_ENTRY]
+rust_name = "FileEntry"
+value = 0x0401
+description = "File entry: metadata for a single backed-up file"
+
+[entries.PARTITION_LAYOUT]
+rust_name = "PartitionLayout"
+value = 0x0402
+description = "Partition layout: partition table snapshot"
+
+[entries.BMR_ARTIFACT]
+rust_name = "BmrArtifact"
+value = 0x0403
+description = "BMR artifact: bare-metal recovery artifact (boot image, config, etc.)"
+
+[entries.KEY_SLOT]
+rust_name = "KeySlot"
+value = 0x0501
+description = "Key slot: encrypted key material for envelope encryption"
+

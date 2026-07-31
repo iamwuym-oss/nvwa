@@ -287,11 +287,22 @@ mod tests {
         assert!(validate_unc_path(r"\\server\shared folder\backup repo").is_ok());
     }
 
+    #[cfg(target_os = "windows")]
     #[test]
     fn test_classify_local_absolute() {
         assert_eq!(classify_path(Path::new(r"C:\Users")), PathType::LocalPath);
         assert_eq!(
             classify_path(Path::new(r"D:\Backup\Folder")),
+            PathType::LocalPath
+        );
+    }
+
+    #[cfg(not(target_os = "windows"))]
+    #[test]
+    fn test_classify_local_absolute() {
+        assert_eq!(classify_path(Path::new("/home/user")), PathType::LocalPath);
+        assert_eq!(
+            classify_path(Path::new("/var/backups/nuwa")),
             PathType::LocalPath
         );
     }
@@ -316,11 +327,18 @@ mod tests {
         );
         assert_eq!(classify_path(Path::new(r"")), PathType::Unsupported);
     }
-
+    #[cfg(target_os = "windows")]
     #[test]
     fn test_validate_repo_local_absolute() {
         assert!(validate_repository_path(Path::new(r"C:\Backup")).is_ok());
         assert!(validate_repository_path(Path::new(r"D:\Data\Backup")).is_ok());
+    }
+
+    #[cfg(not(target_os = "windows"))]
+    #[test]
+    fn test_validate_repo_local_absolute() {
+        assert!(validate_repository_path(Path::new("/home/user")).is_ok());
+        assert!(validate_repository_path(Path::new("/var/backups/nuwa")).is_ok());
     }
 
     #[test]

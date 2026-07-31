@@ -1,0 +1,10 @@
+[package]
+name = "nwb-diagnostics"
+version = "0.1.0"
+edition = "2021"
+description = "Structured diagnostics and secret-safe logging contract for Nuwa NWB"
+
+[dependencies]
+nwb-format = { path = "../nwb-format" }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"

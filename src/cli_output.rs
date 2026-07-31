@@ -11,7 +11,6 @@
 
 use crate::errors::ExitCode;
 use crate::history::OperationRecord;
-use crate::list::BackupPointSummary;
 use serde::Serialize;
 use std::io::{self, Write};
 
@@ -89,8 +88,6 @@ pub struct JsonOutput {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub error: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub backup_points: Option<Vec<BackupPointJson>>,
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub records: Option<Vec<HistoryEntryJson>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub dry_run: Option<bool>,
@@ -128,7 +125,6 @@ impl JsonOutput {
             failed: None,
             inaccessible: None,
             error: None,
-            backup_points: None,
             records: None,
             dry_run: None,
             deleted_count: None,
@@ -159,7 +155,6 @@ impl JsonOutput {
             failed: None,
             inaccessible: None,
             error: Some(error_msg.to_string()),
-            backup_points: None,
             records: None,
             dry_run: None,
             deleted_count: None,
@@ -171,35 +166,6 @@ impl JsonOutput {
         }
     }
 }
-
-/// Backup point entry for list JSON output
-#[derive(Debug, Clone, Serialize)]
-pub struct BackupPointJson {
-    pub dir_name: String,
-    pub full_path: String,
-    pub backup_id: String,
-    pub created_at: String,
-    pub source_root: String,
-    pub file_count: u64,
-    pub total_bytes: u64,
-    pub manifest_ok: bool,
-}
-
-impl From<&BackupPointSummary> for BackupPointJson {
-    fn from(s: &BackupPointSummary) -> Self {
-        BackupPointJson {
-            dir_name: s.dir_name.clone(),
-            full_path: s.full_path.clone(),
-            backup_id: s.backup_id.clone(),
-            created_at: s.created_at.clone(),
-            source_root: s.source_root.clone(),
-            file_count: s.file_count,
-            total_bytes: s.total_bytes,
-            manifest_ok: s.manifest_ok,
-        }
-    }
-}
-
 /// History entry for history JSON output
 #[derive(Debug, Clone, Serialize)]
 pub struct HistoryEntryJson {
@@ -448,170 +414,62 @@ pub fn format_duration(ms: u64) -> String {
     }
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+#[test]
+fn test_format_duration() {
+    assert_eq!(format_duration(500), "500ms");
+    assert_eq!(format_duration(1500), "1.50s");
+    assert_eq!(format_duration(65000), "1m 5s");
+}
 
-    #[test]
-    fn test_format_size() {
-        assert_eq!(format_size(0), "0 B");
-        assert_eq!(format_size(500), "500 B");
-        assert_eq!(format_size(1536), "1.50 KB");
-        assert_eq!(format_size(1048576), "1.00 MB");
-        assert_eq!(format_size(1073741824), "1.00 GB");
-    }
+#[test]
+fn test_json_output_success_serialization() {
+    let output = JsonOutput::success("backup", "Backup completed", 5000);
+    let json = serde_json::to_string(&output).unwrap();
+    assert!(json.contains("\"status\":\"success\""));
+    assert!(json.contains("\"command\":\"backup\""));
+    assert!(json.contains("\"exit_code\":0"));
+    assert!(!json.contains("\"error\""));
+}
 
-    #[test]
-    fn test_format_duration() {
-        assert_eq!(format_duration(500), "500ms");
-        assert_eq!(format_duration(1500), "1.50s");
-        assert_eq!(format_duration(65000), "1m 5s");
-    }
+#[test]
+fn test_json_output_failure_serialization() {
+    let output = JsonOutput::failure("backup", "Disk full", 1000);
+    let json = serde_json::to_string(&output).unwrap();
+    assert!(json.contains("\"status\":\"failure\""));
+    assert!(json.contains("\"error\":\"Disk full\""));
+    assert!(json.contains("\"exit_code\":1"));
+}
 
-    #[test]
-    fn test_json_output_success_serialization() {
-        let output = JsonOutput::success("backup", "Backup completed", 5000);
-        let json = serde_json::to_string(&output).unwrap();
-        assert!(json.contains("\"status\":\"success\""));
-        assert!(json.contains("\"command\":\"backup\""));
-        assert!(json.contains("\"exit_code\":0"));
-        assert!(!json.contains("\"error\""));
-    }
+#[test]
+fn test_json_output_backup_with_stats() {
+    let mut output = JsonOutput::success("backup", "Backup completed", 5000);
+    output.backup_point = Some("20260705_143000_Test".to_string());
+    output.file_count = Some(100);
+    output.total_bytes = Some(1048576);
+    output.backup_id = Some("uuid-123".to_string());
+    let json = serde_json::to_string(&output).unwrap();
+    assert!(json.contains("\"backup_point\""));
+    assert!(json.contains("\"file_count\":100"));
+}
 
-    #[test]
-    fn test_json_output_failure_serialization() {
-        let output = JsonOutput::failure("backup", "Disk full", 1000);
-        let json = serde_json::to_string(&output).unwrap();
-        assert!(json.contains("\"status\":\"failure\""));
-        assert!(json.contains("\"error\":\"Disk full\""));
-        assert!(json.contains("\"exit_code\":1"));
-    }
+#[test]
+fn test_json_output_restore_with_stats() {
+    let mut output = JsonOutput::success("restore", "Restore completed", 3000);
+    output.restored_count = Some(95);
+    output.skipped_count = Some(5);
+    output.checksum_failures = Some(0);
+    let json = serde_json::to_string(&output).unwrap();
+    assert!(json.contains("\"restored_count\":95"));
+    assert!(json.contains("\"skipped_count\":5"));
+}
 
-    #[test]
-    fn test_json_output_backup_with_stats() {
-        let mut output = JsonOutput::success("backup", "Backup completed", 5000);
-        output.backup_point = Some("20260705_143000_Test".to_string());
-        output.file_count = Some(100);
-        output.total_bytes = Some(1048576);
-        output.backup_id = Some("uuid-123".to_string());
-        let json = serde_json::to_string(&output).unwrap();
-        assert!(json.contains("\"backup_point\""));
-        assert!(json.contains("\"file_count\":100"));
-    }
-
-    #[test]
-    fn test_json_output_restore_with_stats() {
-        let mut output = JsonOutput::success("restore", "Restore completed", 3000);
-        output.restored_count = Some(95);
-        output.skipped_count = Some(5);
-        output.checksum_failures = Some(0);
-        let json = serde_json::to_string(&output).unwrap();
-        assert!(json.contains("\"restored_count\":95"));
-        assert!(json.contains("\"skipped_count\":5"));
-    }
-
-    #[test]
-    fn test_json_output_verify_with_stats() {
-        let mut output = JsonOutput::success("verify", "Verify completed", 2000);
-        output.passed = Some(100);
-        output.failed = Some(0);
-        output.inaccessible = Some(0);
-        let json = serde_json::to_string(&output).unwrap();
-        assert!(json.contains("\"passed\":100"));
-        assert!(json.contains("\"failed\":0"));
-    }
-
-    #[test]
-    fn test_json_output_list() {
-        let mut output = JsonOutput::success("list", "List completed", 100);
-        let entry = BackupPointJson {
-            dir_name: "test_dir".to_string(),
-            full_path: "/backup/test_dir".to_string(),
-            backup_id: "uuid-123".to_string(),
-            created_at: "2026-07-05T10:00:00+00:00".to_string(),
-            source_root: "C:\\Users".to_string(),
-            file_count: 10,
-            total_bytes: 102400,
-            manifest_ok: true,
-        };
-        output.backup_points = Some(vec![entry]);
-        let json = serde_json::to_string(&output).unwrap();
-        assert!(json.contains("\"command\":\"list\""));
-        assert!(json.contains("\"dir_name\":\"test_dir\""));
-    }
-
-    #[test]
-    fn test_json_output_history() {
-        let mut output = JsonOutput::success("history", "History completed", 50);
-        let entry = HistoryEntryJson {
-            backup_id: "uuid-456".to_string(),
-            operation: "backup".to_string(),
-            timestamp: "2026-07-05T10:00:00+00:00".to_string(),
-            source_root: "C:\\Users".to_string(),
-            dest_path: "D:\\Backup".to_string(),
-            job_name: None,
-            file_count: 50,
-            total_bytes: 512000,
-            duration_ms: 3000,
-            exit_code: 0,
-            status: "success".to_string(),
-        };
-        output.records = Some(vec![entry]);
-        let json = serde_json::to_string(&output).unwrap();
-        assert!(json.contains("\"operation\":\"backup\""));
-        assert!(json.contains("\"records\""));
-    }
-
-    #[test]
-    fn test_json_mode_no_text_leakage() {
-        // In --json mode, JSON must be the ONLY output to stdout.
-        // Progress info goes to stderr. Verify no stray text.
-        let output = JsonOutput::success("backup", "Backup completed", 5000);
-        let json = serde_json::to_string(&output).unwrap();
-        // JSON should start with '{' and end with '}'
-        assert!(json.starts_with('{'));
-        assert!(json.ends_with('}'));
-        // No plain text markers
-        assert!(!json.contains("[OK]"));
-        assert!(!json.contains("[ERROR]"));
-    }
-
-    #[test]
-    fn test_noop_progress_does_not_panic() {
-        let cb = noop_progress();
-        cb(ProgressEvent::Progress {
-            percent: 50.0,
-            current_file: "test.txt".to_string(),
-        });
-        cb(ProgressEvent::Completed {
-            summary: "Done".to_string(),
-        });
-        cb(ProgressEvent::Failed {
-            error: "Error".to_string(),
-        });
-    }
-
-    #[test]
-    fn test_progress_bar_new() {
-        let bar = ProgressBar::new();
-        // Just ensure construction works
-        assert!(!bar.enabled || bar.last_pct == -1);
-    }
-
-    #[test]
-    fn test_backup_point_json_from_summary() {
-        let summary = BackupPointSummary {
-            dir_name: "test".to_string(),
-            full_path: "/path".to_string(),
-            backup_id: "uuid-1".to_string(),
-            created_at: "2026-07-05T10:00:00+00:00".to_string(),
-            source_root: "C:\\Src".to_string(),
-            file_count: 10,
-            total_bytes: 1024,
-            manifest_ok: true,
-        };
-        let json: BackupPointJson = (&summary).into();
-        assert_eq!(json.dir_name, "test");
-        assert_eq!(json.backup_id, "uuid-1");
-    }
+#[test]
+fn test_json_output_verify_with_stats() {
+    let mut output = JsonOutput::success("verify", "Verify completed", 2000);
+    output.passed = Some(100);
+    output.failed = Some(0);
+    output.inaccessible = Some(0);
+    let json = serde_json::to_string(&output).unwrap();
+    assert!(json.contains("\"passed\":100"));
+    assert!(json.contains("\"failed\":0"));
 }

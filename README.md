@@ -1,390 +1,127 @@
-﻿# Nüwa Backup (女娲备份)
+# Nüwa Backup
 
-**Version:** 0.3.0
-**Phase:** 2.5 — Tauri Desktop GUI + Application Layer
-**Status:** ACTIVE
-Nüwa Backup is a **local-first desktop backup and recovery application** for Windows.
-It combines a high-performance Rust backup engine with a modern Tauri 2.0 desktop GUI
-built with React + TypeScript.
+**Status:** GATE-0 IN_PROGRESS
 
-### Current Architecture
-
-```
-React UI (TypeScript)
-    |
-    | Tauri invoke() IPC
-    v
-Tauri Command Layer (Rust, thin wrapper)
-    |
-    v
-Application Service Layer (Rust, src/app/)
-    |
-    v
-Core Engine (Rust, src/) — backup, restore, verify, storage
-    |
-    v
-Application Service Layer (Rust, src/app/) — 7 services
-    |
-    v
-Tauri Commands (Rust, src-tauri/) — 25+ invoke() handlers
-    |
-    v
-React UI (TypeScript, ui/) — 7 pages + components
-
-**Phase S — Repository Engine (parallel track, src/repository/):**
-`
-  Repository CLI
-       |
-  repo_manager
-       |
-  block_store -> metadata -> chunk_engine -> catalog -> block_map
-       |
-  transaction -> verify -> retention -> recovery -> legacy
-`
-File System / SQLite
-```
-
-### Phase 1 & 2 (CLOSED)
-- File-level backup/restore CLI with SHA-256 verification
-- Configuration system with multi-job TOML support
-- Backup history with SQLite database
-- Windows Task Scheduler integration
-- SMB/UNC path support
-- Retention policy with count/dry-run/prune
-
-### Phase 2.5 (CLOSED)
-
-**Completed UI Pages:**
-
-| Page | Status |
-|------|--------|
-| Dashboard | ✅ Real data, health status, activity list, storage chart, navigation to Backup/Restore pages |
-| Settings | ✅ Backup Job CRUD + Repository Management section |
-| Backup | ✅ Job list, run backup, empty state, Storage Type dropdown (Flat File / Repository) |
-| Restore | ✅ 3-column layout with plan grouping, file tree, restore form, Provider dispatch backend |
-| History | ✅ Filterable operation history table, real HistoryDb backend, shows delete_backup_set operations |
-| Schedule | ✅ Full CRUD with enable/disable toggle, job linking |
-
-**Completed Infrastructure:**
-- Tauri 2.0 desktop GUI (replaces egui)
-- React + TypeScript + Vite frontend
-- Application Service Layer (src/app/) -- 10 services (added: repo_service, repo_registry, restore_provider)
-- In-App File Browser (FileBrowserModal) -- replaces OS native dialog
-- 25+ Tauri commands across 8 modules
-- 372 Rust tests, all passing
-
-**Phase S GUI Integration (T2.5-05):**
-- Repository Management in Settings (create/list/verify)
-- RestoreProvider trait with FlatFileRestoreProvider + RepositoryRestoreProvider dispatch
-- Backup Plan extended: storage_type + repository_id fields on JobConfig
-- RepoRegistry: JSON-based repository registration (name/UUID/path)
-- FT-01~FT-05 automated integration tests: 5/5 PASS
-- UT-01~UT-07 manual UI acceptance: 7/7 PASS
-
-**Known Gaps (deferred):**
-| ID | Gap | Target |
-|:--:|-----|--------|
-| G-01 | Repository-backed backup execution | Future phase |
-| G-02 | Repository-backed restore execution | Future phase |
-
-**Configuration:**
-- `VITE_MOCK_DATA=false` in `ui/.env` -- uses real Tauri backend for all API calls
-
-**Not Yet Implemented:**
-- Disk Clone -- disabled placeholder (Phase 5)
-- Enterprise Backup Catalog Browser -- future
-
-### Phase S — Repository Engine (CLOSED BASELINE)
-
-Phase S establishes Nüwa's unified backup storage foundation. **CLOSED BASELINE.** All 13 tasks complete. 337 tests pass. 5-stage audit passed.
-
-**Wave 1 Complete (S-01/S-02/S-03):**
-
-| Module | File | Status | Tests |
-|--------|------|--------|-------|
-| Repository Init | src/repository/repo_manager.rs | Complete | 8 |
-| Block Store | src/repository/block_store/ | Complete | 18 |
-| Metadata Engine | src/repository/metadata/ | Complete | 11 |
-
-**Enterprise Readiness (Architecture v1.1):**
-- Repository identity: UUID + repository.json manifest
-- Capability model: compression, encryption, dedup flags
-- Asset abstraction: asset_id/asset_type reserved fields
-- Version migration: format_version + min_compatible_version
-- Block Map logical_address semantics (unified address space)
-
-**Architecture Documents:**
-- docs/phase-s/Nuwa_Repository_Engine_Architecture_v1.0.md — Frozen baseline
-- docs/phase-s/Nuwa_Repository_Engine_Architecture_v1.1.md — Enterprise Readiness Revision
-- docs/phase-s/Nuwa_Repository_Engine_Implementation_Plan_v1.1.md — Implementation baseline
-- docs/phase-s/Phase_S_Wave_1_Completion_Report.md — Wave 1 evidence
-
-**Quality Gates:**
-- 225 tests passing (lib 156 + integration 69)
-- cargo build --features repository — zero warnings
-- All Phase 1/2.5/acceptance tests maintained
+Nüwa Backup is a local-first, single-machine backup and disaster recovery application currently under active development. The existing desktop and application code is primarily Windows-oriented. The NWB product architecture targets Windows x86-64 and Linux x86-64 as defined by the Product Support Matrix; these are release targets, not claims of current certified support.
 
 ---
 
-## CLI Usage
+## Authority Boundary
 
-### Global Options
+This README is a **REFERENCE** project entry point. It cannot override:
 
-| Flag | Description |
-|------|-------------|
-| `--help`, `-h` | Show full usage help |
-| `--version`, `-V` | Show program version |
+- AGENTS.md — general engineering governance and safety rules
+- docs/project/DOCUMENT_INDEX.md — authoritative document classification (start here)
+- NWB Engineering Document Set contract documents #1–6 — current storage architecture and implementation authority; evidence records cannot override these contracts
 
-### Commands
+Start navigating at docs/project/DOCUMENT_INDEX.md rather than relying on this file.
 
-#### `nuwa backup --source <path> --dest <path> [--compress]`
+---
 
-Perform a complete file backup from source to destination.
+## Current Architecture
 
-| Parameter | Required | Description |
-|-----------|----------|-------------|
-| `--source <path>` | Yes | Source directory to back up |
-| `--dest <path>` | Yes | Destination root directory for backup storage |
-| `--compress` | No | Enable zstd compression (requires `compress` feature; returns error if feature not compiled in) |
+The current implementation target is the **NWB Storage Engine**:
 
-**Safety rules:**
-- Source path must exist.
-- Source and destination must not be the same path.
-- Destination must not be inside source (prevents circular backup).
-- Source must not be inside destination.
-- Destination disk must have sufficient free space (10% safety margin).
+- Each successful Full or Differential backup produces an immutable, self-describing logical NWB Archive
+- The system does not depend on the superseded Repository architecture (Phase S: repo.db, BlockStore, block-map.db, backup-objects, external transaction journal)
+- Old Phase S Repository track is abandoned
 
-**Example:**
+**Note:** Phase 1, Phase 2, and Phase 2.5 are HISTORICAL / ACCEPTED BASELINE. Their old storage designs are not the current implementation target.
+
+---
+
+## Current Implementation Status
+
+The current verified GATE-0 baseline contains the IMP-001 Format Registry/Generator, the IMP-002 requirements–test traceability controls, and the IMP-003 structured diagnostics foundation:
+
+- RecordType identifiers (18 variants)
+- Feature-bit constants (5 constants)
+- Header enums (BackupKind 5, PlatformHint 3)
+- ErrorId identifiers (9 variants)
+- Registry TOML files (4)
+- `format-registry-generator` with `check` and `generate` paths
+- Registry contract tests, Generator negative tests, and trybuild compile-fail coverage
+- a machine-readable Traceability Registry with 37 requirements, 145 formal tests and 148 mappings
+- a deterministic generated Requirements–Test Traceability Matrix
+- `traceability-checker` validation of IDs, authority sources, P0 coverage, implementation locators and Matrix drift
+- `nwb-diagnostics` with generated ErrorId identity, typed severity/stage/retry/recovery semantics, deterministic JSON Lines and sanitized write failures
+- a `Secret` type whose normal formatting is always redacted
+- seven `TST-ERR` contracts and a dedicated Secret Canary CI gate
+- Windows and Ubuntu CI enforcement of both dedicated checkers and Secret Canary tests
+
+Of the 145 formal traceability tests, 30 are `IMPLEMENTED` and 115 remain `PLANNED`; registration does not mean those 115 tests have run.
+
+It is not a complete NWB Storage Engine. The following have not yet been implemented as a complete closed loop:
+
+- NWB Writer
+- NWB Reader / Restore Reader
+- Archive production (Full / Differential)
+- Catalog engine targeting NWB archives
+- Chunk engine for the NWB path
+- Crypto (encryption / signing)
+- Verify / Salvage
+- Provider abstraction (file, volume, network)
+
+src/ still contains app/, main.rs, cli.rs, config.rs, history.rs, scheduler.rs and other modules. The backup and restore CLI arguments can still be parsed, but main.rs returns a clear "temporarily unavailable during storage engine redesign" message.
+
+src-tauri/ and ui/ exist but contain old Repository semantic residuals that have not yet been cleaned. The frontend is not yet wired to a complete NWB engine.
+
+---
+
+## Quality Status
+
+- IMP-000: CI evidence complete (e1f1adb, run 29426443433) — PASS / ACCEPTANCE MET
+- IMP-001: Generator remediation evidence complete (3bceb34, run 29684903853) — PASS / ACCEPTANCE MET; 172/172 workspace tests passed on Windows and Ubuntu
+- IMP-002: requirements–test traceability evidence complete (8b2a68b, run 29691731514) — PASS / ACCEPTANCE MET; 188/188 workspace tests passed on Windows and Ubuntu
+- IMP-003: structured diagnostics evidence complete (d08a92b, run 30184529945) — PASS / ACCEPTANCE MET; 195/195 workspace tests and dedicated Canary 2/2 passed on Windows and Ubuntu
+- pnpm build is known to fail:
+  - ui/src/components/common/BackupTreeView.tsx — garbled characters
+  - ui/src/pages/Backup.tsx — JSX structural errors
+- Current acceptance record: `Nuwa_NWB_Test_Result_Record_v1.3.md`
+- Current IMP evidence: `IMP-001_EVD_Test_Result_Evidence_v1.2.md`, `IMP-002_EVD_Requirements_Traceability_Evidence_v1.0.md`, and `IMP-003_EVD_Structured_Diagnostics_Evidence_v1.0.md`
+- PR #1 remains Draft and unmerged; product release is NOT_APPROVED
+
+---
+
+## Project State
+
+| IMP | Title | Status |
+|-----|-------|--------|
+| IMP-000 | Workspace (build, CI, scaffolding) | CLOSED / PASS / ACCEPTANCE MET |
+| IMP-001 | Format Registry (nwb-format crate) | CLOSED / PASS / ACCEPTANCE MET |
+| IMP-002 | Requirements-Test Traceability Matrix | CLOSED / PASS / ACCEPTANCE MET |
+| IMP-003 | Structured Errors and Logging | CLOSED / PASS / ACCEPTANCE MET |
+| IMP-004-005 | Defined remaining GATE-0 work packages | NOT_RUN |
+| IMP-006-009 | Not defined in current plan | NOT_STARTED |
+| IMP-100+ | Post-GATE-0 work | FORBIDDEN until GATE-0 closes |
+
+---
+
+## Repository Structure (top-level)
+
 ```
-nuwa backup --source C:\Users\Me\Documents --dest D:\Backups
-nuwa backup --source C:\Data --dest E:\Backup --compress
+crates/nwb-format/   - Format Registry (initial)
+crates/nwb-diagnostics/ - Structured diagnostics and secret-safe logging
+tools/               - Format Registry generator and traceability checker
+src/                 - Rust application services
+src-tauri/           - Tauri 2 desktop shell
+ui/                  - React + TypeScript frontend
+docs/                - Project documentation
 ```
 
 ---
 
-#### `nuwa restore --backup <path> --dest <path> [--overwrite]`
+## Development Commands
 
-Restore files from a backup point.
+These commands execute the corresponding tools. They are not evidence of passing results.
 
-| Parameter | Required | Description |
-|-----------|----------|-------------|
-| `--backup <path>` | Yes | Path to the backup point directory (containing manifest.json) |
-| `--dest <path>` | Yes | Destination directory for restored files |
-| `--overwrite` | No | Overwrite existing files at destination |
-
-**Behavior:**
-- Without `--overwrite`, existing files at the destination are skipped.
-- With `--overwrite`, existing files are overwritten after a lock check.
-- Files locked by other processes are skipped with a warning.
-- SHA-256 checksum is verified on every restored file.
-
-**Example:**
-```
-nuwa restore --backup D:\Backups\20260705_143000_Documents --dest C:\Users\Me\Documents
-nuwa restore --backup D:\Backups\20260705_143000_Documents --dest C:\Restore --overwrite
-```
-
----
-
-#### `nuwa verify --backup <path>`
-
-Verify the integrity of a backup point.
-
-| Parameter | Required | Description |
-|-----------|----------|-------------|
-| `--backup <path>` | Yes | Path to the backup point directory |
-
-**Verification checks:**
-1. Manifest file exists and is valid JSON.
-2. Manifest schema version is compatible (major version match).
-3. Every file listed in manifest exists in backup storage.
-4. SHA-256 checksum matches for every file.
-5. `.tmp` residue files are ignored (they do not cause verification failure).
-
-**Example:**
-```
-nuwa verify --backup D:\Backups\20260705_143000_Documents
-```
-
----
-
-#### `nuwa list --dest <path>`
-
-List all backup points stored at the given destination.
-
-| Parameter | Required | Description |
-|-----------|----------|-------------|
-| `--dest <path>` | Yes | Backup root directory to scan |
-
-**Example:**
-```
-nuwa list --dest D:\Backups
-```
-
-Output:
-```
-Backup points in D:\Backups:
-  20260705_143000_Documents  (7 files, 5 dirs, 1.2 MB)
-  20260705_123000_Photos     (142 files, 8 dirs, 512.3 MB)
-```
-
----
-
-### Exit Codes
-
-| Code | Meaning | When |
-|------|---------|------|
-| 0 | Success | Operation completed successfully |
-| 1 | General failure | Unexpected error |
-| 2 | Invalid arguments | Missing or incorrect CLI parameters |
-| 3 | I/O error | Disk full, permission denied, file locked, etc. |
-| 4 | Checksum failure | File content does not match recorded checksum |
-| 5 | Restore validation failure | Restored file checksum verification failed |
-| 6 | Safety violation | src = dest, dest inside src, or src inside dest |
-| 7 | Manifest error | Missing, corrupted, or incompatible manifest.json |
-
----
-
-## Backup Storage Layout (Phase 1 flat-file, Phase S+ Repository Engine)
-
-**Phase 1 (CLOSED):** Each backup operation creates a timestamped directory under the destination root:
-
-**Phase S (CLOSED):** The Repository Engine manages a unified block-based repository at a configured root path. See docs/phase-s/ for the full architecture.
-
----
-
-### Phase 1 Flat-File Layout
-
-Each backup operation creates a timestamped directory under the destination root:
-
-```
-<dest_root>/
-  YYYYMMDD_HHMMSS_<source_name>/
-    manifest.json          # Backup metadata and file index
-    files/                 # Flat copy of all backed-up files
-      <relative_path_1>
-      <relative_path_2>
-      ...
-```
-
-**Directory naming:** `YYYYMMDD_HHMMSS_<source_dir_name>`
-- Timestamp uses local time for human readability.
-- If collision occurs (two backups in the same second), a millisecond suffix is appended.
-
-**Atomic writes:**
-- Each file is written as `.tmp` first, then renamed to its final name.
-- Manifest is written as `manifest.json.tmp` first, then renamed to `manifest.json`.
-- If the process crashes mid-backup, existing backup points are not affected.
-- Leftover `.tmp` files are silently ignored during verify.
-
----
-
-## Manifest Schema
-
-**Version:** `1.0` (current, only supported version)
-
-```json
-{
-  "schema_version": "1.0",
-  "backup_id": "uuid-v4-string",
-  "created_at": "2026-07-05T14:30:00+00:00",
-  "source_root": "C:\\Users\\Me\\Documents",
-  "storage_format": "flat-file",
-  "compression": {
-    "enabled": false,
-    "algorithm": null
-  },
-  "files": [
-    {
-      "relative_path": "docs/report.txt",
-      "size_bytes": 1024,
-      "modified_time": "2026-07-04T10:00:00+00:00",
-      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "stored_path": "docs/report.txt"
-    }
-  ],
-  "directories": [
-    {
-      "relative_path": "docs"
-    },
-    {
-      "relative_path": "docs/reports"
-    }
-  ],
-  "summary": {
-    "file_count": 1,
-    "directory_count": 2,
-    "total_bytes": 1024
-  }
-}
-```
-
-### Schema Stability Rules
-- `schema_version` uses `major.minor` format.
-- `verify` rejects any manifest whose major version differs from the current version.
-- Any schema change must be documented and version-bumped.
-- Do not silently change schema fields.
-
----
-
-## Known Limitations
-
-| Limitation | Status | Details |
-|------------|--------|---------|
-| 10GB+ large file backup/restore | Manual test only | Not automated; run `--ignored` tests manually |
-| Destination disk full during backup | Manual test only | Hard to simulate safely in automated tests |
-| Locked file detection | Best-effort | Uses `OpenOptions::write(true).create(false).truncate(false)` to detect locks. Covers `PermissionDenied` and `WouldBlock` on Windows, but does not cover all Windows file lock scenarios (e.g., mapped file locks, transactional locks). |
-| Destination space check (non-Windows) | PARTIAL | On Windows, uses `GetDiskFreeSpaceExW` Win32 API. On non-Windows platforms, falls back to a writability check only. True remaining-space check is not implemented. |
-| Compression | BUG / TODO | Without `compress` feature, `--compress` returns a clear unsupported-feature error (exit code 2, InvalidArgs). This is the correct behavior. See `backup.rs` `#[cfg(not(feature = "compress"))]` check. |
-| Symlinks | Skipped | Symbolic links are silently skipped during backup. |
-| Performance optimization | Not started | Phase 1 does not optimize for speed. 1000+ file directories work correctly but may be slow. |
-
----
-
-## Development
-
-### Prerequisites
-- Rust 1.79+ (MSVC toolchain on Windows)
-- No network access required for builds (all crates cached)
-
-### Build
 ```bash
-cargo build                          # Debug build
-cargo build --release                # Release build
-cargo build --features compress      # Build with compression support
-```
-
-### Test
-```bash
-cargo test                           # All tests (offline)
-cargo test -- --ignored              # Manual tests (large file, disk full)
-```
-
-### Quality Gates
-```bash
-cargo fmt --check
-cargo clippy --all-targets -- -D warnings
 cargo build
 cargo test
+cargo fmt --check
+cargo clippy --all-targets -- -D warnings
+cargo run --locked -p format-registry-generator -- check
+cargo run --locked -p traceability-checker -- check
+cd ui && pnpm build
+cd src-tauri && cargo check
 ```
-
-### Project Structure
-```
-src/
-  main.rs          # Program entry and CLI dispatch
-  cli.rs           # Manual CLI argument parser (no clap)
-  backup.rs        # Backup execution and directory traversal
-  restore.rs       # Restore execution and lock detection
-  verify.rs        # Backup point verification
-  list.rs          # Backup point listing
-  manifest.rs      # JSON manifest model (serde)
-  checksum.rs      # SHA-256 helpers
-  storage.rs       # Flat-file storage layout and atomic writes
-  errors.rs        # Error types and exit code mapping
-  diskspace.rs     # Win32 GetDiskFreeSpaceExW FFI
-  lib.rs           # Module exports
-
-tests/
-  backup_restore_tests.rs   # 19 integration tests (3 unit tests in src/)
-```
-

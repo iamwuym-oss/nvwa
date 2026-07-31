@@ -1,0 +1,12 @@
+[package]
+name = "nwb-format"
+version = "0.1.0"
+edition = "2021"
+description = "NWB format: binary format structures, encoding, and parsing"
+
+[dependencies]
+sha2 = "0.10"
+
+[dev-dependencies]
+format-registry-generator = { path = "../../tools/format-registry-generator" }
+trybuild = "1"

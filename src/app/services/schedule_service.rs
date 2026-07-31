@@ -174,15 +174,34 @@ pub fn update_schedule(
 ///   - If any backup jobs reference this schedule, returns affected_jobs
 ///     without deleting. Caller must present the list for user confirmation.
 ///   - If no jobs reference it, deletes immediately.
-///   - On confirmed deletion, also clears schedule_id on affected jobs.
 pub fn delete_schedule(id: &str, confirmed: bool) -> Result<ScheduleDeleteResult, AppError> {
     let mut config = Config::load().map_err(AppError::from)?;
+    let result = apply_delete_schedule(&mut config, id, confirmed)?;
 
+    if result.deleted {
+        // Best-effort scheduler cleanup
+        for job_name in &result.affected_jobs {
+            let _ = crate::scheduler::delete_task(job_name);
+        }
+        let _ = sync_remove_tasks(id);
+        save_config(&config)?;
+    }
+
+    Ok(result)
+}
+
+/// Internal: apply schedule deletion to an in-memory Config without filesystem or scheduler side effects.
+/// Returns the same ScheduleDeleteResult semantics as the public API.
+/// Used by delete_schedule() and directly by tests to avoid Config::load() / save_config() dependencies.
+fn apply_delete_schedule(
+    config: &mut Config,
+    id: &str,
+    confirmed: bool,
+) -> Result<ScheduleDeleteResult, AppError> {
     if !config.schedules.contains_key(id) {
         return Err(AppError::config(format!("Schedule '{}' not found", id)));
     }
 
-    // Find all jobs referencing this schedule
     let affected_jobs: Vec<String> = config
         .job
         .iter()
@@ -191,7 +210,6 @@ pub fn delete_schedule(id: &str, confirmed: bool) -> Result<ScheduleDeleteResult
         .collect();
 
     if !affected_jobs.is_empty() {
-        // Two-phase safety: if not confirmed, return affected_jobs. If confirmed, auto-clear references.
         if !confirmed {
             let sched_name = config
                 .schedules
@@ -212,22 +230,16 @@ pub fn delete_schedule(id: &str, confirmed: bool) -> Result<ScheduleDeleteResult
             });
         }
 
-        // confirmed=true: clear schedule_id from affected jobs, remove their schtasks.
+        // confirmed=true: clear schedule_id from affected jobs (in-memory only)
         for job_name in &affected_jobs {
             if let Some(job) = config.job.get_mut(job_name) {
                 job.schedule_id = None;
             }
-            // Remove Windows scheduled task for this job (best-effort)
-            let _ = crate::scheduler::delete_task(job_name);
         }
     }
 
-    // Remove Windows scheduled tasks for any remaining referencing jobs (safety net).
-    let _ = sync_remove_tasks(id);
-
-    // Delete the schedule profile itself.
+    // Delete the schedule profile itself
     config.schedules.remove(id);
-    save_config(&config)?;
 
     Ok(ScheduleDeleteResult {
         deleted: true,
@@ -664,49 +676,81 @@ mod tests {
 
     #[test]
     fn test_delete_schedule_not_found() {
-        let result = delete_schedule("nonexistent", false);
+        // Non-existent schedule returns error (no file system).
+        let mut config = make_empty_config();
+        let result = apply_delete_schedule(&mut config, "nonexistent", false);
         assert!(result.is_err());
+        let msg = result.unwrap_err().to_string();
+        assert!(
+            msg.contains("not found"),
+            "Expected 'not found' error, got: {}",
+            msg
+        );
     }
-
     #[test]
     fn test_delete_schedule_no_jobs() {
-        let (config, sched_id) = make_config_with_schedule();
-        let affected: Vec<String> = config
-            .job
-            .iter()
-            .filter(|(_, j)| j.schedule_id.as_deref() == Some(&sched_id))
-            .map(|(name, _)| name.clone())
-            .collect();
-        assert!(affected.is_empty());
+        // Schedule with no referencing jobs: immediate delete.
+        let (mut config, sched_id) = make_config_with_schedule();
+        let result = apply_delete_schedule(&mut config, &sched_id, false);
+        assert!(result.is_ok());
+        let r = result.unwrap();
+        assert!(r.deleted, "expected deleted=true");
+        assert!(r.affected_jobs.is_empty(), "expected no affected jobs");
+        assert!(
+            !config.schedules.contains_key(&sched_id),
+            "schedule should be removed from config"
+        );
     }
-
     #[test]
     fn test_delete_schedule_with_jobs_blocked() {
-        // Schedule with referencing jobs: confirmed=false returns affected jobs (not error).
-        // Schedule doesn't exist in test env (real config load), so we test not-found path.
-        let result = delete_schedule("test-daily", false);
-        assert!(result.is_err());
-        let msg = result.unwrap_err().to_string();
+        // Schedule with referencing jobs, confirmed=false.
+        let (mut config, sched_id) = make_config_with_job_referencing_schedule();
+        let result = apply_delete_schedule(&mut config, &sched_id, false);
+        assert!(result.is_ok());
+        let r = result.unwrap();
+        assert!(!r.deleted, "expected deleted=false when not confirmed");
         assert!(
-            msg.contains("not found"),
-            "Expected 'not found' error, got: {}",
-            msg
+            r.affected_jobs.contains(&"TestJob".to_string()),
+            "affected_jobs should include TestJob"
+        );
+        assert!(
+            config.schedules.contains_key(&sched_id),
+            "schedule should still exist when not confirmed"
+        );
+        assert!(
+            config
+                .job
+                .get("TestJob")
+                .and_then(|j| j.schedule_id.as_deref())
+                == Some(&sched_id),
+            "TestJob.schedule_id should remain unchanged"
         );
     }
-
     #[test]
     fn test_delete_schedule_confirmed_flow() {
-        // Two-phase delete with confirmed=true, schedule not found.
-        let result = delete_schedule("nonexistent", true);
-        assert!(result.is_err());
-        let msg = result.unwrap_err().to_string();
+        // Schedule with referencing jobs, confirmed=true: deletes and clears references.
+        let (mut config, sched_id) = make_config_with_job_referencing_schedule();
+        let result = apply_delete_schedule(&mut config, &sched_id, true);
+        assert!(result.is_ok());
+        let r = result.unwrap();
+        assert!(r.deleted, "expected deleted=true when confirmed");
         assert!(
-            msg.contains("not found"),
-            "Expected 'not found' error, got: {}",
-            msg
+            r.affected_jobs.contains(&"TestJob".to_string()),
+            "affected_jobs should include TestJob"
+        );
+        assert!(
+            !config.schedules.contains_key(&sched_id),
+            "schedule should be removed from config"
+        );
+        assert!(
+            config
+                .job
+                .get("TestJob")
+                .and_then(|j| j.schedule_id.as_deref())
+                .is_none(),
+            "TestJob.schedule_id should be None after confirmed delete"
         );
     }
-
     #[test]
     fn test_trigger_to_view_params_daily() {
         let trigger = ScheduleTriggerConfig::Daily {
